@@ -27,6 +27,7 @@ codepipe.setAttribute("id","codepipe");
 //var dsURI = "http://localhost:8080/WorldPipes/ds";
 var dsURI = "";
 //var URIGraphStore = dsURI + "/data?graph=";
+var URIGraphStore = null;
 var URISparql = dsURI + "/sparql";
 //var URIUpdate = dsURI + "/update";
 var URIUpdate = dsURI + "/sparql";

@@ -70,6 +70,14 @@ JsonToServer._combinedContext = {
 
 JsonToServer._conversionContext = JsonToServer._componentsBase;
 
+JsonToServer._uriEncode =
+	function (graphStore, graphName) {
+		return (
+				(graphStore == null)
+						? graphName
+						: graphStore + encodeURI(graphName) );
+	};
+
 JsonToServer._jsonEncode =
   function (key, value) {
     if (value == null || value === '') {
@@ -108,7 +116,7 @@ JsonToServer._generateSaveNQ =
       if (request == null) {
         alert("ERROR! Invalid Request");
       } else {
-        request.open("PUT",graphStore + encodeURI(graphName), false);
+        request.open("PUT", JsonToServer._uriEncode(graphStore, graphName), false);
         request.setRequestHeader("Content-Type","application/n-quads");
         request.send(nqString);
         if(request.status == 200 || request.status == 201 || request.status == 204) {
@@ -192,7 +200,7 @@ JsonToServer._loadNQ = function (graphStore, graphName) {
       if (request == null) {
         alert("ERROR! Invalid Request");
       } else {
-        request.open("GET",graphStore + encodeURI(graphName), false);
+        request.open("GET",	JsonToServer._uriEncode(graphStore, graphName), false);
         request.setRequestHeader("Accept","application/n-triples");
         request.send();
         if(request.status == 200 || request.status == 201 || request.status == 204) {
