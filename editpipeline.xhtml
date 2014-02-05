@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+<head>
+    <title resource="?this">{rdfs:label}</title>
+</head>
+<body resource="?this">
+    <h1 property="rdfs:label" />
+    <form role="form" method="POST" action="" enctype="application/sparql-update" resource="?this">
+        <fieldset>
+            <div class="form-group control-group">
+                <label for="label" class="control-label">Label</label>
+                <div class="controls">
+                    <input type="text" class="form-control" id="label" value="{rdfs:label}" required="required" />
+                </div>
+            </div>
+            <div class="form-group control-group">
+                <label for="comment" class="control-label">Comment</label>
+                <div class="controls">
+                    <textarea id="comment" class=" form-control auto-expand">{rdfs:comment}</textarea>
+                </div>
+            </div>
+            <div class="form-group form-actions">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" onclick="window.location.replace('?view')" class="btn">Cancel</button>
+                <button type="button" onclick="calli.deleteResource(event)" class="btn btn-danger">Delete</button>
+            </div>
+        </fieldset>
+    </form>
+</body>
+</html>
