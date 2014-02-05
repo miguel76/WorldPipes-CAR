@@ -24,10 +24,14 @@ codedataset.setAttribute("id","codedataset");
 var codepipe = document.createElement("p");
 codepipe.setAttribute("id","codepipe");
 
-var dsURI = "http://localhost:8080/WorldPipes/ds";
-var URIGraphStore = dsURI + "/data?graph=";
-var URIUpdate = dsURI + "/update";
-var GraphURIPrefix = "http://www.swows.org/Default/";
+//var dsURI = "http://localhost:8080/WorldPipes/ds";
+var dsURI = "";
+//var URIGraphStore = dsURI + "/data?graph=";
+var URISparql = dsURI + "/sparql";
+//var URIUpdate = dsURI + "/update";
+var URIUpdate = dsURI + "/sparql";
+// TODO: check for query and update callimachus uris
+//var GraphURIPrefix = "http://www.swows.org/Default/";
 var dataflowURI = GraphURIPrefix + "dataflow";
 var pipelineURI = GraphURIPrefix + "pipeline";
 var layoutURI = GraphURIPrefix + "pipeline/layout";
