@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="WorldPipes-CAR.makeCAR" default="makeCAR" basedir=".">
   <target name ="makeCAR" description="Create the CAR file">
-    <zip destfile="${dist}/WorldPipes.car">
-      <zipfileset dir="." excludes="LICENSE,README.md,.project,.git/*"/>
+    <zip destfile="${basedir}/bin/WorldPipes.car">
+      <zipfileset dir="." excludes="bin/WorldPipes.car,LICENSE,README.md,projectBuilder.xml,.project,.git/*,.externalToolBuilders/*"/>
     </zip>
   </target>
 </project>
