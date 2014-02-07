@@ -73,7 +73,7 @@ img.pulsanti{
 /*Creazione layout barra Tools*/
 .barratools{
 	position:absolute;
-	top:80px;
+	top:45px;
 	left:5px;
 	right:auto;
 	bottom:auto;
@@ -241,7 +241,7 @@ p#paragrafo{
 	overflow:auto;
 	display:block;
 	position:absolute;
-	top:80px;
+	top:45px;
 	left:215px;
 	right:5px;
 	bottom:auto;
