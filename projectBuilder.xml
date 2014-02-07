@@ -2,14 +2,11 @@
 <project name="WorldPipes-CAR.makeCAR" default="makeCAR" basedir=".">
   <target name ="makeCAR" description="Create the CAR file">
     <zip destfile="${basedir}/bin/WorldPipes.car">
-      <zipfileset dir="." excludes="bin/WorldPipes.car,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>
+      <zipfileset dir="." excludes="bin/WorldPipes.car,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>
     </zip>
   </target>
   <target name ="uploadCAR" description="Create the CAR file">
-    <zip destfile="${basedir}/bin/WorldPipes.car">
-      <zipfileset dir="." excludes="bin/WorldPipes.car,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>
-    </zip>
-    <property file="${basedir}/.callimachus.properties"/>
+    <property file="${basedir}/callimachus.properties"/>
   	<input
 	    message="Please enter callimachus username:"
   	    addproperty="callimachus.user"
