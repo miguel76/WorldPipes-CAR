@@ -4,5 +4,20 @@
     <zip destfile="${basedir}/bin/WorldPipes.car">
       <zipfileset dir="." excludes="bin/WorldPipes.car,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>
     </zip>
+    <property file="${basedir}/.callimachus.properties"/>
+  	<input
+  	    message="Please enter callimachus username:"
+  	    addproperty="callimachus.user"
+  	  />
+  	<input
+  	    message="Please enter callimachus password:"
+  	    addproperty="callimachus.pwd">
+    </input>
+	<exec executable="curl">
+ 	  <arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
+ 	  <arg value="--digest"/>
+ 	  <arg line="--upload-file ${basedir}/bin/WorldPipes.car"/>
+ 	  <arg value="http://localhost:4040/SWOWS/?archive"/>
+ 	</exec>
   </target>
 </project>
