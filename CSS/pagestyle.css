@@ -65,7 +65,7 @@ div#pulsante{
 }
 
 img.pulsanti{
-	width:23;
+	width:23px;
 	cursor:pointer;
 	z-index:1;
 }
