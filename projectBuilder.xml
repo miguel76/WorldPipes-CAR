@@ -4,11 +4,16 @@
     <zip destfile="${basedir}/bin/WorldPipes.car">
       <zipfileset dir="." excludes="bin/WorldPipes.car,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>
     </zip>
+  </target>
+  <target name ="uploadCAR" description="Create the CAR file">
+    <zip destfile="${basedir}/bin/WorldPipes.car">
+      <zipfileset dir="." excludes="bin/WorldPipes.car,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>
+    </zip>
     <property file="${basedir}/.callimachus.properties"/>
   	<input
-  	    message="Please enter callimachus username:"
+	    message="Please enter callimachus username:"
   	    addproperty="callimachus.user"
-  	  />
+ 	  />
   	<input
   	    message="Please enter callimachus password:"
   	    addproperty="callimachus.pwd">
