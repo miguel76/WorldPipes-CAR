@@ -1,15 +1,27 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 	<head>
- <!--
-    	<title resource="?this">{rdfs:label}</title>
      	<script type="text/javascript">
-	    	var GraphURIPrefix = "{?this}/";
+     		function getQueryParams(qs) {
+     	    	qs = qs.split("+").join(" ");
+
+     	    	var params = {}, tokens,
+     	        	re = /[?&]?([^=]+)=([^&]*)/g;
+
+     	    	while (tokens = re.exec(qs)) {
+     	        	params[decodeURIComponent(tokens[1])]
+     	            	= decodeURIComponent(tokens[2]);
+     	    	}
+
+     	    	return params;
+     		}
+     		var query = getQueryParams(document.location.search);
+     		     		
+	    	GraphURIPrefix = query.dfURI + "/";
+	    	alert(GraphURIPrefix);
     	</script>
-  -->   	
 
 		<link type="text/css" rel="stylesheet" href="CSS/pagestyle.css"/>
 		<link type="text/css" rel="stylesheet" href="CSS/actionListenerStyle.css"/>
@@ -44,11 +56,13 @@
 		<script type="text/javascript" src="JS/actionListenerResizeX.js"></script>
 		<script type="text/javascript" src="JS/actionListenerResizeY.js"></script>
 		<script type="text/javascript" src="JS/actionListenerImg.js"></script>
-		
+
+<!-- 		
 		<script type="text/javascript" src="JS/jquery.rdfquery.core-1.0.js"></script>
 		<script type="text/javascript" src="JS/jquery.rdfquery.rdfa-1.0.js"></script>
 		<script type="text/javascript" src="JS/jquery.rdfquery.rules-1.0.js"></script>
-	
+ -->
+ 	
 	</head>
 	<body>	
 	  <div id="editorContainer">	

@@ -94,14 +94,14 @@ var actionListenerImg =
 		}
 		if(pulsante.title == "Save"){
 			var sourcecode = Core.getElementsByClass("codeclass")[0];
-			Code.estraiTesto(sourcecode,pulsante.title,graphURIPrefix);
+			Code.estraiTesto(sourcecode,pulsante.title,GraphURIPrefix);
 		}
 		if(pulsante.title == "Properties"){
 			//var json = JSON.stringify(componentVett);
 		}
 		if(pulsante.title == "Play & Save"){
 			var sourcecode = Core.getElementsByClass("codeclass")[0];
-			Code.estraiTesto(sourcecode,pulsante.title,graphURIPrefix);
+			Code.estraiTesto(sourcecode,pulsante.title,GraphURIPrefix);
 			window.open("http://localhost:8080/swows-web/play?df=" + URIGraphStore + encodeURI(dataflowURI),"_blank");
 		}
 		

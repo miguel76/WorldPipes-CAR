@@ -414,10 +414,11 @@ Code.sendCodeDataflowURI = function(textCode,name,graphURIPrefix){
 };
 
 
-Code.sendCodeURIUpdate = function(dataflowURI,graphURIPrefix){
-
-	var pubDataflowURI = graphURIPrefix + "dataflow/public";
-
+Code.sendCodeURIUpdate = function(){
+//	Code.sendCodeURIUpdate = function(dataflowURI,graphURIPrefix){
+//
+//		var pubDataflowURI = graphURIPrefix + "dataflow/public";
+//
 	try{var request = new XMLHttpRequest();}
 	catch(error){var request = null;}
 	

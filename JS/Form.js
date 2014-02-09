@@ -189,7 +189,7 @@ Form.createForm = function(parent,cnt){
 		Code.modificaCodice(cnt);
 		
 		var sourcecode = Core.getElementsByClass("codeclass")[0];
-		Code.estraiTesto(sourcecode,"formSave",graphURIPrefix);
+		Code.estraiTesto(sourcecode,"formSave",GraphURIPrefix);
 		
 		var label = Component.scriviNome(parent,cnt);
 		var figli = parent.childNodes;
