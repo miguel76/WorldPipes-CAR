@@ -5,9 +5,9 @@
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 	<head>
     	<title resource="?this">{rdfs:label}</title>
-    	
 	</head>
 	<body>
-	  <iframe style="width: 100%; min-height: 100%;" src="WorldPipes.html?dfURI={?this}"></iframe>
+	  <iframe resource="?this" style="width: 100%; min-height: 100%;" src="WorldPipes.html?dfURI={?this}"></iframe>
+      <div resource="?this"></div>
 	</body>
 </html>

@@ -11,6 +11,7 @@
      	        	re = /[?&]?([^=]+)=([^&]*)/g;
 
      	    	while (tokens = re.exec(qs)) {
+     	    		alert(decodeURIComponent(tokens[1]) + ":" + decodeURIComponent(tokens[2]));
      	        	params[decodeURIComponent(tokens[1])]
      	            	= decodeURIComponent(tokens[2]);
      	    	}
