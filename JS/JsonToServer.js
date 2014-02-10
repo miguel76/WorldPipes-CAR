@@ -75,7 +75,7 @@ JsonToServer._uriEncode =
 		return (
 				(graphStore == null)
 						? graphName
-						: graphStore + encodeURI(graphName) );
+						: graphStore + encodeURIComponent(graphName) );
 	};
 
 JsonToServer._jsonEncode =
@@ -108,7 +108,7 @@ JsonToServer._generateSaveNQ =
   function (graphStore, graphName) {
     return function(err, nqString) {
 
-      if (err != null) { alert("JSON-LD conversion error: " + err); return; };
+      if (err != null) { alert("JSON-LD conversion error: " + JSON.stringify(err)); return; };
 
       try{var request = new XMLHttpRequest();}
       catch(error){var request = null;}
@@ -117,7 +117,9 @@ JsonToServer._generateSaveNQ =
         alert("ERROR! Invalid Request");
       } else {
         request.open("PUT", JsonToServer._uriEncode(graphStore, graphName), false);
-        request.setRequestHeader("Content-Type","application/n-quads");
+//        request.setRequestHeader("Content-Type","application/n-quads");
+//        request.setRequestHeader("Content-Type","application/n-triples");
+        request.setRequestHeader("Content-Type","text/turtle");
         request.send(nqString);
         if(request.status == 200 || request.status == 201 || request.status == 204) {
 //          alert("Data sent to " + graphName);
@@ -134,12 +136,15 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
 
   var jsonModified = JsonToServer._jsonConvertValues(componentsVector, JsonToServer._jsonEncode);
 //  alert(JSON.stringify(jsonModified));
+  
+  alert(JSON.stringify(jsonModified));
 
   jsonld.toRDF(
       jsonModified,
       { "base" : pipelineURI, 
         "expandContext" : JsonToServer._pipelineContext,
         "format" : "application/nquads"
+//        "format" : "application/n-triples"
       },
       JsonToServer._generateSaveNQ(graphStore, pipelineURI) );
 
@@ -148,6 +153,7 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
       { "base" : pipelineURI, 
         "expandContext" : JsonToServer._layoutContext,
         "format" : "application/nquads"
+//        "format" : "application/n-triples"
       },
       JsonToServer._generateSaveNQ(graphStore, layoutURI) );
 
@@ -250,7 +256,8 @@ JsonToServer._frame = function(input, callback) {
 JsonToServer.loadPipelineAndLayout = function(graphStore, pipelineURI, layoutURI, callback) {
   jsonld.fromRDF(
     JsonToServer._loadNQ(graphStore,pipelineURI) + JsonToServer._loadNQ(graphStore,layoutURI),
-    { "format" : "application/nquads",
+//    { "format" : "application/nquads",
+    { "format" : "application/n-triples",
       "useNativeTypes": true },
     function(err, output) {
       if (err)

@@ -27,7 +27,7 @@ codepipe.setAttribute("id","codepipe");
 //var dsURI = "http://localhost:8080/WorldPipes/ds";
 var dsURI = "";
 //var URIGraphStore = dsURI + "/data?graph=";
-var URIGraphStore = null;
+var URIGraphStore = dsURI + "/sparql?graph=";
 var URISparql = dsURI + "/sparql";
 //var URIUpdate = dsURI + "/update";
 var URIUpdate = dsURI + "/sparql";
@@ -375,22 +375,26 @@ Code.cercaTarget = function(source){
 };
 
 /*Invia il codice RDF al server*/
-Code.estraiTesto = function(code,name,graphURIPrefix){
+Code.estraiTesto = function(code,name){
 	
-	var dataflowURI = graphURIPrefix + "dataflow";
-	var pipelineURI = graphURIPrefix + "pipeline";
-	var layoutURI = graphURIPrefix + "pipeline/layout";
+//Code.estraiTesto = function(code,name,graphURIPrefix){
+//	
+//	var dataflowURI = graphURIPrefix + "dataflow";
+//	var pipelineURI = graphURIPrefix + "pipeline";
+//	var layoutURI = graphURIPrefix + "pipeline/layout";
 
 	var textCode = code.textContent;
 	
-	Code.sendCodeDataflowURI(textCode,name,dataflowURI);
+	Code.sendCodeDataflowURI(textCode,name);
 
 	JsonToServer.savePipelineAndLayout(URIGraphStore,pipelineURI,layoutURI,componentVett);
 };
 
-Code.sendCodeDataflowURI = function(textCode,name,graphURIPrefix){
+Code.sendCodeDataflowURI = function(textCode,name){
 
-	var dataflowURI = graphURIPrefix + "dataflow";
+//Code.sendCodeDataflowURI = function(textCode,name,graphURIPrefix){
+
+//	var dataflowURI = graphURIPrefix + "dataflow";
 
 	try{var request = new XMLHttpRequest();}
 	catch(error){var request = null;}
