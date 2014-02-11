@@ -198,24 +198,48 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
 
 //JsonToServer._jsonLdProcessor = new JsonLdProcessor();
 
-JsonToServer._loadNQ = function (graphStore, graphName) {
+JsonToServer._qualifyURL = function (url) {
+    var img = document.createElement('img');
+    img.src = url; // set string url
+    url = img.src; // get qualified/absolute url
+    img.src = null; // no server request
+    return url;
+}
+
+JsonToServer._loadNQ = function (graphStore, graphName, callback) {
 
       try{var request = new XMLHttpRequest();}
       catch(error){var request = null;}
   
       if (request == null) {
-        alert("ERROR! Invalid Request");
+//        alert("ERROR! Invalid Request");
+        callback("ERROR! Invalid Request");
       } else {
         request.open("GET",	JsonToServer._uriEncode(graphStore, graphName), false);
-        request.setRequestHeader("Accept","application/n-triples");
+//        request.setRequestHeader("Accept","application/n-triples");
+        request.setRequestHeader("Accept","text/turtle");
         request.send();
         if(request.status == 200 || request.status == 201 || request.status == 204) {
-//          alert("Data received from " + graphName);
-          return request.responseText;
+//          alert("Data received from " + graphName + ": " + request.responseText);
+//          return JsonToServer._fromTurtleToTriples(request.responseText);
+        	return JsonToServer._fromTurtleToTriples(
+        			JsonToServer._qualifyURL(graphStore.substr(0,graphStore.lastIndexOf("/")+1)),
+        			request.responseText,
+        			callback);
         }
-        if(request.status == 400 ){alert("Parse error");}
-        if(request.status == 500 ){alert("Server error");} 
-        if(request.status == 503 ){alert("Service not available");}
+        if (request.status == 400) {
+//        	alert("Parse error");
+        	return callback("Parse error");
+        }
+        if (request.status == 500) {
+//        	alert("Server error");
+        	return callback("Server error");
+        } 
+        if (request.status == 503) {
+//        	alert("Service not available");
+        	return callback("Service not available");
+        }
+    	return callback("Unknown HTTP Status: " + request.status);
       }
 
 }
@@ -253,31 +277,91 @@ JsonToServer._frame = function(input, callback) {
     function(err, framed, ctx) { callback(err,framed["@graph"]) } );
 }
 
-JsonToServer.loadPipelineAndLayout = function(graphStore, pipelineURI, layoutURI, callback) {
-  jsonld.fromRDF(
-    JsonToServer._loadNQ(graphStore,pipelineURI) + JsonToServer._loadNQ(graphStore,layoutURI),
-//    { "format" : "application/nquads",
-    { "format" : "application/n-triples",
-      "useNativeTypes": true },
-    function(err, output) {
-      if (err)
-        callback(err, output);
-      else {
-//        alert("From RDF:" + JSON.stringify(output));
-        JsonToServer._frame(
-          output,
-          function(err, framed) {
-            if (err)
-              callback(err, framed);
-            else {
-              callback(null, JsonToServer._jsonConvertValues(framed, JsonToServer._jsonDecode));
-            }
-          }               
-        );
-      }
-    }
-  );
+JsonToServer._fromTurtleToTriples = function(turtleBase,turtleText,receiveTriples) {
+	var parser = N3.Parser();
+	var triplesText = "";
+	parser.parse(
+			"@base <" + turtleBase + ">.\n" + turtleText,
+			function(error, triple, prefixes) {
+				if (error) {
+					receiveTriples(error,null);
+					return;
+				}
+				if (triple)
+					triplesText +=
+						"<" + triple.subject + "> <" + triple.predicate + "> " +
+						(triple.object.substr(0, 1) == '"' ? triple.object : "<" + triple.object + ">") + ".\n";
+				else {
+					alert(triplesText);
+					receiveTriples(null,triplesText);
+				}
+			});
 }
+
+//JsonToServer.loadPipelineAndLayout = function(graphStore, pipelineURI, layoutURI, callback) {
+//  jsonld.fromRDF(
+//    JsonToServer._loadNQ(graphStore,pipelineURI) + JsonToServer._loadNQ(graphStore,layoutURI),
+//    { "format" : "application/nquads",
+////    { "format" : "application/n-triples",
+//      "useNativeTypes": true },
+//    function(err, output) {
+//      if (err)
+//        callback(err, output);
+//      else {
+////        alert("From RDF:" + JSON.stringify(output));
+//        JsonToServer._frame(
+//          output,
+//          function(err, framed) {
+//            if (err)
+//              callback(err, framed);
+//            else {
+//              callback(null, JsonToServer._jsonConvertValues(framed, JsonToServer._jsonDecode));
+//            }
+//          }               
+//        );
+//      }
+//    }
+//  );
+//}
+
+JsonToServer.loadPipelineAndLayout = function(graphStore, pipelineURI, layoutURI, callback) {
+    JsonToServer._loadNQ(
+    		graphStore,
+    		pipelineURI,
+    		function(err, pipelineTriples) {
+    			if (err)
+    				callback(err, null);
+    			else
+    				JsonToServer._loadNQ(
+    						graphStore,
+    						layoutURI,
+    			    		function(err, layoutTriples) {
+    			    			if (err)
+    			    				callback(err, null);
+    			    			else
+    			    				  jsonld.fromRDF(
+    			    						  pipelineTriples + layoutTriples,
+    			    						  { "format" : "application/nquads",
+    			    							"useNativeTypes": true },
+    			    						  function(err, output) {
+    			    						      if (err)
+    			    						        callback(err, output);
+    			    						      else {
+    			    						        JsonToServer._frame(
+    			    						          output,
+    			    						          function(err, framed) {
+    			    						            if (err)
+    			    						              callback(err, framed);
+    			    						            else {
+    			    						              callback(null, JsonToServer._jsonConvertValues(framed, JsonToServer._jsonDecode));
+    			    						            }
+    			    						          }               
+    			    						        );
+    			    						      }
+    			    						    });
+    						});
+    		});
+	}
 
 JsonToServer._conversionContext = "";
 JsonToServer._componentId = "";
