@@ -303,18 +303,21 @@ Component.createConnection = function(editor){
 
 Component.jsonLoad = function(){
 	var editor = Core.getElementsByClass("areaeditor")[0];
-	Component.refreshEditor(editor);	
 	JsonToServer.loadPipelineAndLayout(URIGraphStore,pipelineURI,layoutURI,
 		function(err,result){
 			if(err != null){alert("Error!" + err);}
 			else{
-				componentVett = result;					
-				Component.scorriVettore(editor,componentVett);
+				if (result && result.length > 0) {
+					alert(JSON.stringify(result));
+					Component.refreshEditor(editor);	
+					componentVett = result;					
+					Component.scorriVettore(editor,componentVett);
+					for(var i=0;i<componentVett.length;i++){
+						if(componentVett[i].Code + 1 > cnt){
+							cnt = componentVett[i].Code + 1;
+						}
+					}
+				}
 			}
 		});
-	for(var i=0;i<componentVett.length;i++){
-		if(componentVett[i].Code + 1 > cnt){
-			cnt = componentVett[i].Code + 1;
-		}
-	}
 };

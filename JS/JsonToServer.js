@@ -137,8 +137,6 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
   var jsonModified = JsonToServer._jsonConvertValues(componentsVector, JsonToServer._jsonEncode);
 //  alert(JSON.stringify(jsonModified));
   
-  alert(JSON.stringify(jsonModified));
-
   jsonld.toRDF(
       jsonModified,
       { "base" : pipelineURI, 
@@ -292,7 +290,7 @@ JsonToServer._fromTurtleToTriples = function(turtleBase,turtleText,receiveTriple
 						"<" + triple.subject + "> <" + triple.predicate + "> " +
 						(triple.object.substr(0, 1) == '"' ? triple.object : "<" + triple.object + ">") + ".\n";
 				else {
-					alert(triplesText);
+//					alert(triplesText);
 					receiveTriples(null,triplesText);
 				}
 			});

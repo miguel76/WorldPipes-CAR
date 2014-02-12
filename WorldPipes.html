@@ -19,8 +19,23 @@
      		}
      		var query = getQueryParams(document.location.search);
      		     		
-	    	GraphURIPrefix = query.dfURI + "/";
-// 	    	alert(GraphURIPrefix);
+     		GraphURIPrefix = null;
+     		if (query.dfURI)
+	    		GraphURIPrefix = query.dfURI + "/";
+     		
+//      		function getGraphURIPrefix(callback) {
+//      			if (!GraphURIPrefix) {
+//      				openSaveAsDialog(
+//      						null, null, null,
+//      						function(ns, local) {
+//      							GraphURIPrefix = ns + local.toLowerCase();
+//      							callback(GraphURIPrefix);
+//      						});
+//      			}
+//     			callback(GraphURIPrefix);
+//      		}
+
+     		// 	    	alert(GraphURIPrefix);
     	</script>
 
 		<link type="text/css" rel="stylesheet" href="CSS/pagestyle.css" />
@@ -40,7 +55,7 @@
 		<script type="text/javascript" src="JS/Endpoint.js"></script>
 		<script type="text/javascript" src="JS/n3-browser.min.js"></script>
 		<script type="text/javascript" src="JS/JsonToServer.js"></script>
-		<script type="text/javascript" src="JS/activelink.js"></script>
+<!-- 		<script type="text/javascript" src="JS/activelink.js"></script> -->
 		
 		<!-- Controllo del Browser utente -->
 		<script type="text/javascript">
@@ -65,7 +80,7 @@
  -->
  	
 	</head>
-	<body>	
+	<body onload="Component.jsonLoad()">	
 	  <div id="editorContainer">	
 		<!-- Barra immagine -->
 		<!-- 
@@ -75,11 +90,11 @@
 		<div class="barrapulsanti">
 			<div id="pulsante">
 				<ul title="pulsanti">
-					<li><img class="pulsanti" src="IMG/new.gif" title="New" draggable="false"/></li>
+<!-- 					<li><img class="pulsanti" src="IMG/new.gif" title="New" draggable="false"/></li> -->
 					<li><img class="pulsanti" src="IMG/salva.gif" title="Save" draggable="false"/></li>
-					<li><img class="pulsanti" src="IMG/Proprieta.gif" title="Properties" draggable="false"/></li>
+<!-- 					<li><img class="pulsanti" src="IMG/Proprieta.gif" title="Properties" draggable="false"/></li> -->
 					<li><img class="pulsanti" src="IMG/play.gif" title="Play &amp; Save" draggable="false"/></li>
-					<li><img class="pulsanti" src="IMG/reload.gif" title="load" draggable="false"/></li>
+<!-- 					<li><img class="pulsanti" src="IMG/reload.gif" title="load" draggable="false"/></li> -->
 					<li><img class="pulsanti" src="IMG/publish.gif" title="publish" draggable="false"/></li>
 				</ul>
 			</div>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace"
+    xml:base="">
+	<head>
+    	<title>New Resource</title>
+	</head>
+	<body>
+<!-- 	  <iframe id="WorldPipes" style="width: 100%; min-height: 100%;" src="WorldPipes.html?dfURI={?this}"></iframe> -->
+	  <iframe id="WorldPipes" style="width: 100%; min-height: 70%; border:none"></iframe>
+      <script>
+		function openSaveAsDialog(form, label, create, callback) {
+ 		    var src = calli.getCallimachusUrl("pages/save-resource-as.html#");
+ 		    if (label) {
+ 		        src += encodeURIComponent(label.replace(/!/g,''));
+ 		    }
+ 		    if (location.search.search(/\?create=/) == 0) {
+ 		        var page = calli.getPageUrl();
+ 		        src += '!' + page.substring(0, page.indexOf('?')) + '?view';
+ 		    } else {
+ 		        try {
+ 		            if (window.sessionStorage.getItem("LastFolder")) {
+ 		                src += '!' + window.sessionStorage.getItem("LastFolder");
+ 		            } else if (window.localStorage.setItem("LastFolder")) {
+ 		                src += '!' + window.localStorage.setItem("LastFolder");
+ 		            }
+ 		        } catch (e) {
+ 		            // ignore
+ 		        }
+ 		    }
+ 		    var dialog = window.calli.openDialog(src, 'Save As...', {
+ 		        buttons: {
+ 		            "Save": function() {
+ 		                dialog.postMessage('GET label', '*');
+ 		            },
+ 		            "Cancel": function() {
+ 		                calli.closeDialog(dialog);
+ 		            }
+ 		        },
+ 		        onmessage: function(event) {
+ 		            if (event.data == 'POST save') {
+ 		                dialog.postMessage('OK\n\n' + event.data, '*');
+ 		                dialog.postMessage('GET label', '*');
+ 		            } else if (event.data.indexOf('OK\n\nGET label\n\n') == 0) {
+ 		                var data = event.data;
+ 		                label = data.substring(data.indexOf('\n\n', data.indexOf('\n\n') + 2) + 2);
+ 		                dialog.postMessage('GET url', '*');
+ 		            } else if (event.data.indexOf('OK\n\nGET url\n\n') == 0) {
+ 		                var data = event.data;
+ 		                var src = data.substring(data.indexOf('\n\n', data.indexOf('\n\n') + 2) + 2);
+ 		                if (src.indexOf('?') >= 0) {
+ 		                    src = src.substring(0, src.indexOf('?'));
+ 		                }
+ 		                var ns = src.replace(/\?.*/,'');
+ 		                if (ns.lastIndexOf('/') != ns.length - 1) {
+ 		                    ns += '/';
+ 		                }
+ 		                var local = encodeURI(label).replace(/%20/g,'+');
+//  		                updateFormAction(form, src, create);
+ 		                callback(ns, local);
+ 		                calli.closeDialog(dialog);
+ 		            }
+ 		        }
+ 		    });
+ 		    return dialog;
+ 		}
+ 		
+ 		openSaveAsDialog(
+ 				null, null, null,
+ 				function(ns, local) {
+ 						document.getElementById("WorldPipes").src =
+ 							"/SWOWS/WorldPipes.html?dfURI=" + encodeURIComponent(ns + local.toLowerCase());
+ 				});
+      	
+      </script>
+
+
+	</body>
+</html>

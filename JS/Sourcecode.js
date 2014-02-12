@@ -38,6 +38,14 @@ var pipelineURI = GraphURIPrefix + "pipeline";
 var layoutURI = GraphURIPrefix + "pipeline/layout";
 var pubDataflowURI = GraphURIPrefix + "dataflow/public";
 
+//getGraphURIPrefix(
+//		function(uri) {
+//			dataflowURI = uri + "dataflow";
+//			pipelineURI = uri + "pipeline";
+//			layoutURI = uri + "pipeline/layout";
+//			pubDataflowURI = uri + "dataflow/public";
+//		});
+
 /*Scrive il codice corrispondente ad ogni componente inserito nell'area edito non ancora connesso*/
 Code.scriviCodice = function(code){
 	var component = Component.getComponent(code);
