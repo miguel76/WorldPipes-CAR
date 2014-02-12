@@ -308,7 +308,7 @@ Component.jsonLoad = function(){
 			if(err != null){alert("Error!" + err);}
 			else{
 				if (result && result.length > 0) {
-					alert(JSON.stringify(result));
+//					alert(JSON.stringify(result));
 					Component.refreshEditor(editor);	
 					componentVett = result;					
 					Component.scorriVettore(editor,componentVett);

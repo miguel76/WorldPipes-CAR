@@ -196,7 +196,7 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
 
 //JsonToServer._jsonLdProcessor = new JsonLdProcessor();
 
-JsonToServer._qualifyURL = function (url) {
+JsonToServer.qualifyURL = function (url) {
     var img = document.createElement('img');
     img.src = url; // set string url
     url = img.src; // get qualified/absolute url
@@ -221,7 +221,7 @@ JsonToServer._loadNQ = function (graphStore, graphName, callback) {
 //          alert("Data received from " + graphName + ": " + request.responseText);
 //          return JsonToServer._fromTurtleToTriples(request.responseText);
         	return JsonToServer._fromTurtleToTriples(
-        			JsonToServer._qualifyURL(graphStore.substr(0,graphStore.lastIndexOf("/")+1)),
+        			JsonToServer.qualifyURL(graphStore.substr(0,graphStore.lastIndexOf("/")+1)),
         			request.responseText,
         			callback);
         }
