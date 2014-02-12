@@ -20,8 +20,8 @@
 /*Layout per collassare verticalmente*/
 .verticalresize{
 	position:absolute;
-	top:80px;
-	left:208px;
+	top:45px;
+	left:158px;
 	bottom:5px;
 	border:1px solid #FFFFFF;
 	width:4px;
@@ -43,8 +43,8 @@
 
 .verticalanimationresize{
 	position:absolute;
-	top:80px;
-	left:208px;
+	top:45px;
+	left:158px;
 	bottom:5px;
 	border:1px solid #89A;
 	width:4px;
@@ -72,41 +72,54 @@
 /*Layout per collassare orizzontalmente*/
 
 .orizontalresize{
-	position:absolute;
-	top:533px;
-	left:5px;
-	right:5px;
-	bottom:auto;
-	border:1px solid #FFFFFF;
-	height:4px;
-	background-color:#FFFFFF;
-	cursor:pointer;
-	z-index:0;
+	display:none;
 }
 
 #orizontalbotton{
-	position:absolute;
-	border:1px solid #333333;
-	left:650;
-	width:55px;
-	height:2px;
-	background-color:#333333;
-	cursor:pointer;
-	z-index:1;
+	display:none;
 }
 
 .orizontalanimationresize{
-	position:absolute;
-	top:533px;
-	left:5px;
-	right:5px;
-	bottom:auto;
-	border:1px solid #89A;
-	height:4px;
-	background-color:#89A;
-	cursor:pointer;
-	z-index:3;
+	display:none;
 }
+
+/* .orizontalresize{ */
+/* 	position:absolute; */
+/* 	top:533px; */
+/* 	left:5px; */
+/* 	right:5px; */
+/* 	bottom:auto; */
+/* 	border:1px solid #FFFFFF; */
+/* 	height:4px; */
+/* 	background-color:#FFFFFF; */
+/* 	cursor:pointer; */
+/* 	z-index:0; */
+/* } */
+
+/* #orizontalbotton{ */
+/* 	position:absolute; */
+/* 	border:1px solid #333333; */
+/* 	left:650; */
+/* 	width:55px; */
+/* 	height:2px; */
+/* 	background-color:#333333; */
+/* 	cursor:pointer; */
+/* 	z-index:1; */
+/* } */
+
+/* .orizontalanimationresize{ */
+/* 	display:none; */
+/* 	position:absolute; */
+/* 	top:533px; */
+/* 	left:5px; */
+/* 	right:5px; */
+/* 	bottom:auto; */
+/* 	border:1px solid #89A; */
+/* 	height:4px; */
+/* 	background-color:#89A; */
+/* 	cursor:pointer; */
+/* 	z-index:3; */
+/* } */
 
 .collapsedresizeY{
 	position:absolute;

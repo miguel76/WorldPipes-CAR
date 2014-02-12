@@ -78,8 +78,8 @@ img.pulsanti{
 	right:auto;
 	bottom:auto;
 	border: 1px solid #999999;
-	width:200px;
-	height:450px;
+	width:150px;
+	height:336px;
 	overflow:auto;
 	display:block;
 	text-align:center;
@@ -92,10 +92,20 @@ img.pulsanti{
 	left:5px;
 	right:5px;
 	height:240px;
-	border:1px solid #FF6600;
+	border: 1px solid #999999;
 	overflow:auto;
 	display:block;
 	z-index:1;
+}
+
+td {
+	vertical-align:bottom;
+	margin: auto;
+	text-align: center;
+}
+
+table {
+	margin:auto;
 }
 
 .datapipe{
@@ -103,8 +113,8 @@ img.pulsanti{
 	top:253px;
 	left:5px;
 	right:5px;
-	height:190px;
-	border:1px solid #FF6600;
+	height:76px;
+	border: 1px solid #999999;
 	overflow:auto;
 	display:block;
 	z-index:1;
@@ -112,7 +122,7 @@ img.pulsanti{
 
 /* Layout per il tab componenti*/
 #tabscomp{
-	border-bottom:1px solid #FF6600;
+	border: 1px solid #999999;
 	padding-top:0px;
 	padding-left:20px;
 	text-align:left;
@@ -133,8 +143,8 @@ img.pulsanti{
 
 #tabscomp li a{
 	text-decoration:none;
-	border-left:1px solid #FF6600;
-	border-right:1px solid #FF6600;
+	border-left:1px solid #999999;
+	border-right:1px solid #999999;
 	padding:1px 0.3em;
 	font-style:italic;
 	color: black;
@@ -164,7 +174,7 @@ img.pulsanti{
 .content.hide{display:none;}
 
 #tabs{
-	border-bottom:1px solid #FF6600;
+	border-bottom:1px solid #999999;
 	padding-top:0px;
 	padding-left:20px;
 	text-align:left;
@@ -185,8 +195,8 @@ img.pulsanti{
 
 #tabs li a{
 	text-decoration:none;
-	border-left:1px solid #FF6600;
-	border-right:1px solid #FF6600;
+	border-left:1px solid #999999;
+	border-right:1px solid #999999;
 	padding:1px 0.3em;
 	font-style:italic;
 	color: black;
@@ -242,11 +252,11 @@ p#paragrafo{
 	display:block;
 	position:absolute;
 	top:45px;
-	left:215px;
+	left:165px;
 	right:5px;
-	bottom:auto;
+	bottom:5px;
 	border:1px solid #999999;
-	height:450px;	
+/* 	height:450px;	 */
 	text-align: left;
 }
 
@@ -280,12 +290,12 @@ p#paragrafo{
 /*Creazione layout area helper*/
 .areahelper{
 	position:absolute;
-	top:540px;
+	top:390px;
 	left:5px;
 	right:5px;
 	bottom:5px;
 	border:1px solid #999999;
-	width:200px;
+	width:150px;
 	/*height:200px;*/
 	overflow:scroll;
 	display:block;
@@ -294,17 +304,21 @@ p#paragrafo{
 
 /*Creazione layout SourceCode*/
 .sourcecode{
-	position:absolute;
-	top:540px;
-	left:215px;
-	right:5px;
-	bottom: 5px;
-	border:1px solid #999999;
-	/*height:200px;*/
-	overflow:scroll;
-	display:block;
-	z-index:1;
+	display:none;
 }
+
+/* .sourcecode{ */
+/* 	position:absolute; */
+/* 	top:540px; */
+/* 	left:5px; */
+/* 	right:5px; */
+/* 	bottom: 5px; */
+/* 	border:1px solid #999999; */
+/* 	/*height:200px;*/ */
+/* 	overflow:scroll; */
+/* 	display:block; */
+/* 	z-index:1; */
+/* } */
 
 .codeclass{
 	padding-left:10px;
