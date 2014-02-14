@@ -11,8 +11,10 @@
 	<body resource="?this">
 <!-- 	  <iframe id="WorldPipes" style="width: 100%; min-height: 100%;" src="WorldPipes.html?dfURI={?this}"></iframe> -->
 	  <iframe id="WorldPipes" style="width: 100%; min-height: 70%; border:none"></iframe>
+      <a id="magic" href="./" style="display:none;"/>
       <script>
-      	document.getElementById("WorldPipes").src="/SWOWS/WorldPipes.html?dfURI=" + encodeURIComponent("{?this}");
+        baseURI = document.getElementById("magic").href;
+      	document.getElementById("WorldPipes").src= baseURI + "WorldPipes.html?dfURI=" + encodeURIComponent("{?this}");
       </script>
       <div style="display:none">{rdfs:label}</div>
 	</body>

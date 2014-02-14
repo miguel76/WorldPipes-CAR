@@ -4,8 +4,32 @@
     <zip destfile="${basedir}/bin/WorldPipes.car">
       <zipfileset dir="." excludes="bin/WorldPipes.car,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>
     </zip>
+    <zip destfile="${basedir}/bin/WorldPipes-system.car">
+      <zipfileset dir="system"/>
+<!--        <zipfileset dir="system" excludes="bin/WorldPipes.car,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>-->
+    </zip>
+    <zip destfile="${basedir}/bin/WorldPipes-data.car">
+      <zipfileset dir="data"/>
+    </zip>
   </target>
-  <target name ="uploadCAR" description="Create the CAR file">
+	  <target name ="upload-all" description="Create the CAR file">
+	    <property file="${basedir}/callimachus.properties"/>
+	  	<input
+		    message="Please enter callimachus username:"
+	  	    addproperty="callimachus.user"
+	 	  />
+	  	<input
+	  	    message="Please enter callimachus password:"
+	  	    addproperty="callimachus.pwd">
+	    </input>
+		<exec executable="curl">
+	 	  <arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
+	 	  <arg value="--digest"/>
+	 	  <arg line="--upload-file ${basedir}/bin/WorldPipes.car"/>
+	 	  <arg value="http://localhost:4040/SWOWS/?archive"/>
+	 	</exec>
+	  </target>
+  <target name ="upload-system" description="Create the CAR file">
     <property file="${basedir}/callimachus.properties"/>
   	<input
 	    message="Please enter callimachus username:"
@@ -18,8 +42,8 @@
 	<exec executable="curl">
  	  <arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
  	  <arg value="--digest"/>
- 	  <arg line="--upload-file ${basedir}/bin/WorldPipes.car"/>
- 	  <arg value="http://localhost:4040/SWOWS/?archive"/>
+ 	  <arg line="--upload-file ${basedir}/bin/WorldPipes-system.car"/>
+ 	  <arg value="http://localhost:4040/SWOWS/system/?archive"/>
  	</exec>
   </target>
 </project>

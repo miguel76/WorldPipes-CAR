@@ -3,6 +3,7 @@
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 	<head>
+		<script type="text/javascript" src="JS/JsonToServer.js"></script>
      	<script type="text/javascript">
      		function getQueryParams(qs) {
      	    	qs = qs.split("+").join(" ");
@@ -22,6 +23,8 @@
      		GraphURIPrefix = null;
      		if (query.dfURI)
 	    		GraphURIPrefix = query.dfURI + "/";
+     		
+     		DataURIPrefix = JsonToServer.qualifyURL("../data/");
      		
 //      		function getGraphURIPrefix(callback) {
 //      			if (!GraphURIPrefix) {
@@ -54,7 +57,6 @@
 		<script type="text/javascript" src="JS/Form.js"></script>
 		<script type="text/javascript" src="JS/Endpoint.js"></script>
 		<script type="text/javascript" src="JS/n3-browser.min.js"></script>
-		<script type="text/javascript" src="JS/JsonToServer.js"></script>
 <!-- 		<script type="text/javascript" src="JS/activelink.js"></script> -->
 		
 		<!-- Controllo del Browser utente -->

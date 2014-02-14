@@ -2,7 +2,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-<> a </callimachus/1.0/types/Class> , </callimachus/1.0/types/Creatable> , <http://www.w3.org/2002/07/owl#Class> ;
+<> a </callimachus/1.0/types/Class> , </callimachus/1.0/types/Editable> , </callimachus/1.0/types/Creatable> , <http://www.w3.org/2002/07/owl#Class> ;
     rdfs:comment "Pure RDF Pipeline, see swows.org" ;
     rdfs:label "SWOWS Pipeline" ;
     calli:administrator </auth/groups/admin> ;

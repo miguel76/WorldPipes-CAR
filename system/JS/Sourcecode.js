@@ -28,6 +28,8 @@ codepipe.setAttribute("id","codepipe");
 var dsURI = "";
 //var URIGraphStore = dsURI + "/data?graph=";
 var URIGraphStore = dsURI + "/sparql?graph=";
+var URISystemGraphStore = DataURIPrefix + "system?graph=";
+var URIPublicGraphStore = DataURIPrefix + "public?graph=";
 var URISparql = dsURI + "/sparql";
 //var URIUpdate = dsURI + "/update";
 var URIUpdate = dsURI + "/sparql";
@@ -411,7 +413,7 @@ Code.sendCodeDataflowURI = function(textCode,name){
 		alert("ERROR! Invalid Request");
 	}
 	else{
-		request.open("PUT",URIGraphStore + encodeURIComponent(dataflowURI), false);
+		request.open("PUT",URISystemGraphStore + encodeURIComponent(dataflowURI), false);
 		request.setRequestHeader("Content-Type","text/turtle");
 		request.send(textCode);
 		if(name == "Save"){
@@ -438,7 +440,7 @@ Code.sendCodeURIUpdate = function(){
 		alert("ERROR! Invalid Request");
 	}
 	else{
-		request.open("POST",URIUpdate, false);
+		request.open("POST",URISystemGraphStore, false);
 		request.setRequestHeader("Content-Type","application/sparql-update");
 		request.send("COPY <" +  dataflowURI + "> TO <" +  pubDataflowURI + ">");
 		if(request.status == 200 || request.status == 201 || request.status == 204){

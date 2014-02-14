@@ -1,0 +1,17 @@
+@prefix calli: <http://callimachusproject.org/rdf/2009/framework#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sd: <http://www.w3.org/ns/sparql-service-description#> .
+
+<> a calli:Datasource , </callimachus/1.0/types/Datasource> , sd:Service ;
+    rdfs:comment "DataStore accessible only from the same machine" ;
+    rdfs:label "System" ;
+    calli:administrator </auth/groups/admin> ;
+    calli:editor </auth/groups/power> , </auth/groups/staff> ;
+    calli:reader </auth/groups/system> ;
+    calli:subscriber </auth/groups/everyone> ;
+    sd:endpoint <> ;
+    sd:feature sd:BasicFederatedQuery , sd:UnionDefaultGraph ;
+    sd:inputFormat <http://www.w3.org/ns/formats/RDF_XML> , <http://www.w3.org/ns/formats/Turtle> ;
+    sd:resultFormat <http://www.w3.org/ns/formats/RDF_XML> , <http://www.w3.org/ns/formats/SPARQL_Results_XML> ;
+    sd:supportedLanguage sd:SPARQL11Query , sd:SPARQL11Update .
