@@ -1,8 +1,10 @@
 @prefix calli: <http://callimachusproject.org/rdf/2009/framework#> .
+@prefix calliTypes: </callimachus/1.0/types/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:<http://www.w3.org/2002/07/owl#>.
 
-<> a </callimachus/1.0/types/Class> , </callimachus/1.0/types/Editable> , </callimachus/1.0/types/Creatable> , <http://www.w3.org/2002/07/owl#Class> ;
+<> a owl:Class, calliTypes:Class , calliTypes:Editable , calliTypes:Creatable ;
     rdfs:comment "Pure RDF Pipeline, see swows.org" ;
     rdfs:label "SWOWS Pipeline" ;
     calli:administrator </auth/groups/admin> ;
@@ -15,4 +17,4 @@
     calli:reader </auth/groups/public> , </auth/groups/system> ;
     calli:subscriber </auth/groups/everyone> ;
     calli:view <viewpipeline.xhtml> ;
-    rdfs:subClassOf </callimachus/1.0/types/Composite> , </callimachus/1.0/types/Editable> , </callimachus/1.0/types/Serviceable> , </callimachus/1.0/types/Viewable> .
+    rdfs:subClassOf calliTypes:Composite, calliTypes:Serviceable, calliTypes:Viewable, calliTypes:Folder .
