@@ -26,20 +26,20 @@ Form.createForm = function(parent,cnt){
 	}
 			
 	if(componente == "input"){
-		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
+//		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
 		fieldset.innerHTML += "<label id='label'> URI</br> <input id='input' name='URI' type='text' size = '35' value='"+ Component.getURI(cnt) + "'></br> </label>";
 		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ Component.getName(cnt) +"'></br></br> </label>";
 	}
 	
 	if(componente == "union"){
-		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
+//		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
 		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ Component.getName(cnt) + "'></br> </label>";
 	}
 	
 	if(componente == "construct"){
 		var inputConstr = Component.getVett(cnt);
 		
-		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
+//		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
 		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ Component.getName(cnt) + "'></br> </label>";
 		fieldset.innerHTML += "<label id='label'> Query</br> <textarea name='Query' rows='10' cols='30' id='input'>" + Component.getQuery(cnt) + "</textarea></br></br> </label>";
 		
@@ -48,14 +48,14 @@ Form.createForm = function(parent,cnt){
 	if(componente == "updatable"){
 		var inputUpdat = Component.getVett(cnt);
 		
-		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
+//		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
 		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='" + Component.getName(cnt) + "'></br> </label>";
 		fieldset.innerHTML += "<label id='label'> Query</br> <textarea name='Query' rows='10' cols='30' id='input'>" + Component.getQuery(cnt) + "</textarea></br></br> </label>";
 		
 		Form.createAddTable(fieldset,inputUpdat);
 	}
 	if(componente == "pipeline"){
-		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
+//		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
 		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ Component.getName(cnt) + "'></br> </label>";
 		fieldset.innerHTML += "<label id='label'><b>Input table</b></label></br>";
 		fieldset.innerHTML += "<table id='tableInput'><thead><tr><th id='label'>ID</th> <th id='label'>Type</th></tr></thead>";
