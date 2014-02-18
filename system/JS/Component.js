@@ -99,14 +99,16 @@ Component.cercaElem = function(){
 Component.modifica = function(code,ID,URI,NAME,QUERY,inputVett,X,Y){
 	for(var i=0;i<componentVett.length;i++){
 		if(componentVett[i].Code == code){
-			if(componentVett[i].ID != null && componentVett[i].ID != ID){
-				componentVett[i].ID = ID;
-			}
+//			if(componentVett[i].ID != null && componentVett[i].ID != ID){
+//				componentVett[i].ID = ID;
+//			}
 			if(componentVett[i].URI != null && componentVett[i].URI != URI){
 				componentVett[i].URI = URI;
 			}
 			if(componentVett[i].Name != null && componentVett[i].Name != NAME){
 				componentVett[i].Name = NAME;
+				componentVett[i].ID = encodeURIComponent(NAME);
+				alert(componentVett[i].ID);
 			}
 			if(componentVett[i].Query != null && componentVett[i].Query != QUERY){
 				componentVett[i].Query = QUERY;
