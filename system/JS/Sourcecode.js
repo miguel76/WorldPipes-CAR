@@ -37,7 +37,7 @@ var URIUpdate = dsURI + "/sparql";
 //var GraphURIPrefix = "http://www.swows.org/Default/";
 var dataflowURI = GraphURIPrefix + "dataflow";
 var pipelineURI = GraphURIPrefix + "pipeline";
-var layoutURI = GraphURIPrefix + "pipeline/layout";
+var layoutURI = GraphURIPrefix + "pipeline-layout";
 var pubDataflowURI = GraphURIPrefix + "dataflow/public";
 
 //getGraphURIPrefix(

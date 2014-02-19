@@ -2,14 +2,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:calli="http://callimachusproject.org/rdf/2009/framework#">
 <head>
     <title>New Resource</title>
+    <script>
+    	function createPipeline() {
+    		var resource = calli.slugify($('#label').val());
+    		$('#pipelineGraph').val(resource + '/pipeline');
+    		$('#layoutGraph').val(resource + '/pipeline-layout');
+    		return calli.saveResourceAs(event,resource);
+    	}
+    </script>
 </head>
 <body>
     <h1>New Resource</h1>
-    <form role="form" method="POST" action="" enctype="application/rdf+xml" typeof=""
-            onsubmit="return calli.saveResourceAs(event,calli.slugify($('#label').val()))">
+    <form
+    		role="form"
+    		method="POST" action=""
+    		enctype="application/rdf+xml" typeof=""
+            onsubmit="createPipeline()">
         <fieldset>
             <div class="form-group control-group">
                 <label for="label" class="control-label">Label</label>
@@ -23,6 +35,14 @@
                     <textarea id="comment" class="form-control auto-expand">{rdfs:comment}</textarea>
                 </div>
             </div>
+
+<!--             <a style="display:none" id="pipelineGraph" rel="calli:hasComponent"/> -->
+<!--             <a style="display:none" id="layoutGraph" rel="calli:hasComponent"/> -->
+            <input type="hidden" id="pipelineGraph" rel="calli:hasComponent" value="{calli:hasComponent}"/>
+            <input type="hidden" id="layoutGraph" rel="calli:hasComponent" value="{calli:hasComponent}"/>
+     
+<!--             <input type="hidden" id="pipelineGraph" rel="calli:hasComponent"/> -->
+<!--             <input type="hidden" id="layoutGraph" rel="calli:hasComponent"/> -->
             <div class="form-group form-actions">
                 <button type="submit" class="btn btn-success">Create</button>
             </div>
