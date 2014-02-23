@@ -305,7 +305,7 @@ Component.createConnection = function(editor){
 
 Component.jsonLoad = function(){
 	var editor = Core.getElementsByClass("areaeditor")[0];
-	JsonToServer.loadPipelineAndLayout(URIGraphStore,pipelineURI,layoutURI,
+	JsonToServer.loadPipelineData(URIGraphStore,PipelineMainURI,
 		function(err,result){
 			if(err != null){alert("Error!" + err);}
 			else{

@@ -27,7 +27,8 @@ codepipe.setAttribute("id","codepipe");
 //var dsURI = "http://localhost:8080/WorldPipes/ds";
 var dsURI = "";
 //var URIGraphStore = dsURI + "/data?graph=";
-var URIGraphStore = dsURI + "/sparql?graph=";
+//var URIGraphStore = dsURI + "/sparql?graph=";
+var URIGraphStore = dsURI + "/sparql";
 var URISystemGraphStore = DataURIPrefix + "system?graph=";
 var URIPublicGraphStore = DataURIPrefix + "public?graph=";
 var URISparql = dsURI + "/sparql";
@@ -36,8 +37,8 @@ var URIUpdate = dsURI + "/sparql";
 // TODO: check for query and update callimachus uris
 //var GraphURIPrefix = "http://www.swows.org/Default/";
 var dataflowURI = GraphURIPrefix + "dataflow";
-var pipelineURI = GraphURIPrefix + "pipeline";
-var layoutURI = GraphURIPrefix + "pipeline-layout";
+//var pipelineURI = GraphURIPrefix + "pipeline";
+//var layoutURI = GraphURIPrefix + "pipeline-layout";
 var pubDataflowURI = GraphURIPrefix + "dataflow/public";
 
 //getGraphURIPrefix(
@@ -397,7 +398,7 @@ Code.estraiTesto = function(code,name){
 	
 	Code.sendCodeDataflowURI(textCode,name);
 
-	JsonToServer.savePipelineAndLayout(URIGraphStore,pipelineURI,layoutURI,componentVett);
+	JsonToServer.savePipelineData(URIGraphStore,PipelineMainURI,componentVett);
 };
 
 Code.sendCodeDataflowURI = function(textCode,name){

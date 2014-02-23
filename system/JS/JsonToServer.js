@@ -18,11 +18,18 @@
 
 var JsonToServer = {};
 
+JsonToServer._pipelineVocabUri = "http://www.swows.org/pipeline#";
+JsonToServer._hasPipelineGraph = JsonToServer._pipelineVocabUri + "hasPipelineGraph";
+JsonToServer._hasPipelineLayoutGraph = JsonToServer._pipelineVocabUri + "hasPipelineLayoutGraph";
+
+JsonToServer._callVocabUri = "http://callimachusproject.org/rdf/2009/framework#";
+JsonToServer._hasComponent = JsonToServer._callVocabUri + "hasComponent";
+
 JsonToServer._componentsBase = "components/";
 
 JsonToServer._pipelineContext = { 
   "@context" : {
-    "@vocab" : "http://www.swows.org/pipeline#",
+    "@vocab" : JsonToServer._pipelineVocabUri,
     "Code" : "@id",
     "ConnectedComponentCode" : {
       "@type" : "@id"
@@ -32,12 +39,12 @@ JsonToServer._pipelineContext = {
     "X" : null,
     "Y" : null
   }
-}
+};
 
 JsonToServer._layoutContext = { 
   "@context" : {
     "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "pipe" : "http://www.swows.org/pipeline#",
+    "pipe" : JsonToServer._pipelineVocabUri,
     "Code" : "@id",
     "ConnectedComponentCode" : {
       "@id": "pipe:ConnectedComponentCode",
@@ -54,19 +61,118 @@ JsonToServer._layoutContext = {
       "@type" : "xsd:integer"
     }
   }
-}
+};
 
 JsonToServer._combinedContext = { 
   "@context" : {
     "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "@vocab" : "http://www.swows.org/pipeline#",
+    "@vocab" : JsonToServer._pipelineVocabUri,
     "ConnectedComponentCode" : {
       "@type" : "@id"
     },
     "Component" : "@type",
     "Id" : "@id"
   }
-}
+};
+
+JsonToServer._readPipelineAndLayoutUris = function(graphStore, pipelineMainURI, callback) {
+	var query =
+		'SELECT ?pipeline ?layout ' +
+		'WHERE { ' +
+				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasPipelineGraph + '> ?pipeline . } ' +
+			'UNION ' +
+				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasPipelineLayoutGraph + '> ?layout . } ' +
+		'} ';
+	return JsonToServer._httpGet(
+			graphStore + '?query=' + encodeURIComponent(query),
+			'application/sparql-results+xml',
+			function(err,resultText, resultXML) {
+				if (err)
+					return callback(err);
+				else {
+					if (!resultXML)
+						return callback('Server did not reply XML');
+					else {
+						var pipelineUri = null;
+						var layoutUri = null;
+						var bindings = resultXML.getElementsByTagNameNS('http://www.w3.org/2005/sparql-results#', 'binding');
+						for (var bindingIndex = 0; bindingIndex < bindings.length; bindingIndex++) {
+							var binding = bindings.item(bindingIndex);
+							var name = binding.getAttribute('name');
+							var uri = binding.getElementsByTagNameNS('http://www.w3.org/2005/sparql-results#', 'uri').item(0).textContent;
+						    if (name == 'pipeline') {
+						    	pipelineUri = uri;
+						    } else if (name == 'layout') {
+						    	layoutUri = uri;
+						    }
+						}
+						return callback(null, pipelineUri, layoutUri);
+					}
+				}
+			});
+};
+	
+JsonToServer._graphComponentTurtle = function(parentURI, graphURI) {
+//	alert('<' + parentURI + '> <' + JsonToServer._hasComponent + '> <' + graphURI + '> . ' +
+//		'<' + graphURI + '> ' +
+//			'a <callimachus/1.0/types/GraphDocument> , <http://www.w3.org/ns/sparql-service-description#NamedGraph> , <http://xmlns.com/foaf/0.1/Document> ; ' +
+//		    'rdfs:label "prova" . ');
+	return (
+		'<' + parentURI + '> <' + JsonToServer._hasComponent + '> <' + graphURI + '> . ' +
+		'<' + graphURI + '> ' +
+			'a <callimachus/1.0/types/GraphDocument> , <http://www.w3.org/ns/sparql-service-description#NamedGraph> , <http://xmlns.com/foaf/0.1/Document> ; ' +
+		    'rdfs:label "prova" . ');
+};
+
+JsonToServer._writePipelineAndLayoutUris = function(graphStore, pipelineMainURI, pipelineUri, layoutUri, callback) {
+	var update =
+		'INSERT { ' +
+			( pipelineUri ?
+					( 
+						'<' + pipelineMainURI + '> <' + JsonToServer._hasPipelineGraph + '> <' + pipelineUri + '> . ' +
+						JsonToServer._graphComponentTurtle(pipelineMainURI, pipelineUri) ) :
+					'' ) +
+			( layoutUri ?
+					(
+						'<' + pipelineMainURI + '> <' + JsonToServer._hasPipelineLayoutGraph + '> <' + layoutUri + '> . ' +
+						JsonToServer._graphComponentTurtle(pipelineMainURI, layoutUri) ) :
+					'' ) +
+		'} '+
+		'WHERE { }; ';
+	return JsonToServer._httpPost(graphStore, 'application/sparql-update', update, callback);
+};
+
+JsonToServer._getPipelineAndLayoutUris = function(graphStore, pipelineMainURI, callback) {
+	return JsonToServer._readPipelineAndLayoutUris(
+			graphStore,
+			pipelineMainURI, 
+			function(err, pipelineUri, layoutUri) {
+				if (err)
+					return callback(err);
+				else {
+					var pipelineUriToBeWritten = !pipelineUri;
+					var layoutUriToBeWritten = !layoutUri;
+					if (pipelineUriToBeWritten) {
+						pipelineUri = pipelineMainURI + '/pipeline';
+					}
+					if (layoutUriToBeWritten) {
+						layoutUri = pipelineMainURI + '/pipeline-layout';
+					}
+					if (pipelineUriToBeWritten || layoutUriToBeWritten)
+						return JsonToServer._writePipelineAndLayoutUris(
+								graphStore, pipelineMainURI,
+								pipelineUri, layoutUri,
+								function(err) {
+									if (err)
+										return callback(err);
+									else
+										return callback(null, pipelineUri, layoutUri);
+								});
+					else
+						return callback(null, pipelineUri, layoutUri);
+				}
+			});
+};
 
 JsonToServer._conversionContext = JsonToServer._componentsBase;
 
@@ -104,6 +210,55 @@ JsonToServer._jsonConvertValues =
     return JSON.parse( JSON.stringify( obj, convert ) );
   };
 
+JsonToServer._httpPost = function (uri, mimeType, content, callback) {
+    try{var request = new XMLHttpRequest();}
+    catch(error){var request = null;}
+
+    if (request == null) {
+      callback("Invalid Request");
+    } else {
+      request.open("POST", uri, false);
+      request.setRequestHeader("Content-Type",mimeType);
+      request.send(content);
+      if(request.status == 200 || request.status == 201 || request.status == 204) {
+    	  if (callback)
+    		  callback();
+      }
+      if(request.status == 400 ){callback("Parse error");}
+      if(request.status == 500 ){callback("Server error");} 
+      if(request.status == 503 ){callback("Service not available");}
+    }
+};
+	
+JsonToServer._httpPut = function (uri, mimeType, content, callback) {
+    try{var request = new XMLHttpRequest();}
+    catch(error){var request = null;}
+
+    if (request == null) {
+      callback("Invalid Request");
+    } else {
+      request.open("PUT", uri, false);
+      request.setRequestHeader("Content-Type",mimeType);
+      request.send(content);
+      if(request.status == 200 || request.status == 201 || request.status == 204) {
+    	  if (callback)
+    		  callback();
+      }
+      if(request.status == 400 ){callback("Parse error");}
+      if(request.status == 500 ){callback("Server error");} 
+      if(request.status == 503 ){callback("Service not available");}
+    }
+};
+	
+JsonToServer._saveTurtle =  function (graphStore, graphName, graphTurtle, callback) {
+	return JsonToServer._httpPut(
+			JsonToServer._uriEncode(graphStore, graphName),
+			"text/turtle",
+			graphTurtle,
+			callback);
+};
+
+
 JsonToServer._generateSaveNQ =
   function (graphStore, graphName) {
     return function(err, nqString) {
@@ -129,32 +284,76 @@ JsonToServer._generateSaveNQ =
         if(request.status == 503 ){alert("Service not available");}
       }
     };
-  };
+};
 
 
-JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutURI, componentsVector) {
-
+JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutURI, componentsVector, callback) {
+	
+  if (!callback)
+	  return JsonToServer.savePipelineAndLayout(
+			  graphStore, pipelineURI, layoutURI, componentsVector,
+			  function(err, result) {
+				  if (err)
+					  alert('Error: ' + err);
+			  });
+	
   var jsonModified = JsonToServer._jsonConvertValues(componentsVector, JsonToServer._jsonEncode);
 //  alert(JSON.stringify(jsonModified));
   
-  jsonld.toRDF(
+  return jsonld.toRDF(
       jsonModified,
       { "base" : pipelineURI, 
         "expandContext" : JsonToServer._pipelineContext,
         "format" : "application/nquads"
 //        "format" : "application/n-triples"
       },
-      JsonToServer._generateSaveNQ(graphStore, pipelineURI) );
+      function(err, result) {
+    	  if (err)
+    		  return callback(err);
+    	  else
+    		  return JsonToServer._saveTurtle(
+    				  graphStore,
+    				  pipelineURI,
+    				  result,
+    				  function(err, result) {
+    			    	  if (err)
+    			    		  return callback(err);
+    			    	  else
+    			    		  return jsonld.toRDF(
+    			    				  jsonModified,
+    			    				  { "base" : pipelineURI, 
+    			    					  "expandContext" : JsonToServer._layoutContext,
+    			    					  "format" : "application/nquads"
+//    						        	"format" : "application/n-triples"
+    			    				  },
+    			    				  function(err, result) {
+        		    			    	  if (err)
+        		    			    		  return callback(err);
+        		    			    	  else
+        		    			    		  return JsonToServer._saveTurtle(
+        		    			    				  graphStore,
+        		    			    				  layoutURI,
+        		    			    				  result,
+        		    			    				  callback);
+    			    				  });
+    				  });
+      });
 
-  jsonld.toRDF(
-      jsonModified,
-      { "base" : pipelineURI, 
-        "expandContext" : JsonToServer._layoutContext,
-        "format" : "application/nquads"
-//        "format" : "application/n-triples"
-      },
-      JsonToServer._generateSaveNQ(graphStore, layoutURI) );
 
+};
+
+JsonToServer.savePipelineData = function (graphStore, pipelineMainURI, componentsVector) {
+
+	return JsonToServer._getPipelineAndLayoutUris(
+			graphStore,
+			pipelineMainURI,
+			function(err, pipelineURI, layoutURI) {
+				if (err)
+					alert('Error: ' + err);
+				else
+					JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineURI, layoutURI, componentsVector);
+			});
+	
 };
 
 
@@ -204,42 +403,46 @@ JsonToServer.qualifyURL = function (url) {
     return url;
 }
 
-JsonToServer._loadNQ = function (graphStore, graphName, callback) {
+JsonToServer._httpGet = function (uri, mimeType, callback) {
+    try{var request = new XMLHttpRequest();}
+    catch(error){var request = null;}
 
-      try{var request = new XMLHttpRequest();}
-      catch(error){var request = null;}
-  
-      if (request == null) {
-//        alert("ERROR! Invalid Request");
-        callback("ERROR! Invalid Request");
-      } else {
-        request.open("GET",	JsonToServer._uriEncode(graphStore, graphName), false);
-//        request.setRequestHeader("Accept","application/n-triples");
-        request.setRequestHeader("Accept","text/turtle");
+    if (request == null) {
+//      alert("ERROR! Invalid Request");
+    	return callback("Invalid Request");
+    } else {
+        request.open("GET",	uri, false);
+        request.setRequestHeader("Accept",mimeType);
         request.send();
         if(request.status == 200 || request.status == 201 || request.status == 204) {
-//          alert("Data received from " + graphName + ": " + request.responseText);
-//          return JsonToServer._fromTurtleToTriples(request.responseText);
-        	return JsonToServer._fromTurtleToTriples(
-        			JsonToServer.qualifyURL(graphStore.substr(0,graphStore.lastIndexOf("/")+1)),
-        			request.responseText,
-        			callback);
+        	return callback(null,request.responseText,request.responseXML);
         }
         if (request.status == 400) {
-//        	alert("Parse error");
         	return callback("Parse error");
         }
         if (request.status == 500) {
-//        	alert("Server error");
         	return callback("Server error");
         } 
         if (request.status == 503) {
-//        	alert("Service not available");
         	return callback("Service not available");
         }
-    	return callback("Unknown HTTP Status: " + request.status);
-      }
+        return callback("Unknown HTTP Status: " + request.status);
+    }
+}
 
+JsonToServer._loadNQ = function (graphStore, graphName, callback) {
+	  JsonToServer._httpGet(
+			  JsonToServer._uriEncode(graphStore, graphName),
+			  "text/turtle",
+			  function(err,result) {
+				  if (err)
+					  return callback(err);
+				  else
+					  return JsonToServer._fromTurtleToTriples(
+			        			JsonToServer.qualifyURL(graphStore.substr(0,graphStore.lastIndexOf("/")+1)),
+			        			result,
+			        			callback);
+			  });
 }
 
 JsonToServer._compact = function(input, pipelineURI, callback) {
@@ -264,7 +467,7 @@ JsonToServer._theFrame = {
   }
 }
 
-JsonToServer._frame = function(input, callback) {
+JsonToServer._frame = function(pipelineURI, input, callback) {
   jsonld.frame(
     input,
     JsonToServer._theFrame,
@@ -346,6 +549,7 @@ JsonToServer.loadPipelineAndLayout = function(graphStore, pipelineURI, layoutURI
     			    						        callback(err, output);
     			    						      else {
     			    						        JsonToServer._frame(
+    			    						          pipelineURI,
     			    						          output,
     			    						          function(err, framed) {
     			    						            if (err)
@@ -360,6 +564,24 @@ JsonToServer.loadPipelineAndLayout = function(graphStore, pipelineURI, layoutURI
     						});
     		});
 	}
+
+JsonToServer.loadPipelineData = function(graphStore, pipelineMainURI, callback) {
+	return JsonToServer._readPipelineAndLayoutUris(
+			graphStore,
+			pipelineMainURI,
+			function(err, pipelineURI, layoutURI) {
+				if (err)
+					return callback(err);
+				else
+					if (pipelineURI)
+						return JsonToServer.loadPipelineAndLayout(
+								graphStore + '?graph=',
+								pipelineURI, layoutURI,
+								callback);
+					else
+						return callback(null, []);
+			});
+}
 
 JsonToServer._conversionContext = "";
 JsonToServer._componentId = "";

@@ -9,8 +9,8 @@
     <script>
     	function createPipeline() {
     		var resource = calli.slugify($('#label').val());
-    		$('#pipelineGraph').val(resource + '/pipeline');
-    		$('#layoutGraph').val(resource + '/pipeline-layout');
+//     		$('#pipelineGraph').val(resource + '/pipeline');
+//     		$('#layoutGraph').val(resource + '/pipeline-layout');
     		return calli.saveResourceAs(event,resource);
     	}
     </script>
@@ -38,8 +38,8 @@
 
 <!--             <a style="display:none" id="pipelineGraph" rel="calli:hasComponent"/> -->
 <!--             <a style="display:none" id="layoutGraph" rel="calli:hasComponent"/> -->
-            <input type="hidden" id="pipelineGraph" rel="calli:hasComponent" value="{calli:hasComponent}"/>
-            <input type="hidden" id="layoutGraph" rel="calli:hasComponent" value="{calli:hasComponent}"/>
+<!--             <input type="hidden" id="pipelineGraph" rel="calli:hasComponent" value="{calli:hasComponent}"/> -->
+<!--             <input type="hidden" id="layoutGraph" rel="calli:hasComponent" value="{calli:hasComponent}"/> -->
      
 <!--             <input type="hidden" id="pipelineGraph" rel="calli:hasComponent"/> -->
 <!--             <input type="hidden" id="layoutGraph" rel="calli:hasComponent"/> -->

@@ -21,24 +21,13 @@
      		var query = getQueryParams(document.location.search);
      		     		
      		GraphURIPrefix = null;
-     		if (query.dfURI)
+     		if (query.dfURI) {
+     			PipelineMainURI = query.dfURI;
 	    		GraphURIPrefix = query.dfURI + "/";
+     		}
      		
      		DataURIPrefix = JsonToServer.qualifyURL("../data/");
      		
-//      		function getGraphURIPrefix(callback) {
-//      			if (!GraphURIPrefix) {
-//      				openSaveAsDialog(
-//      						null, null, null,
-//      						function(ns, local) {
-//      							GraphURIPrefix = ns + local.toLowerCase();
-//      							callback(GraphURIPrefix);
-//      						});
-//      			}
-//     			callback(GraphURIPrefix);
-//      		}
-
-     		// 	    	alert(GraphURIPrefix);
     	</script>
 
 		<link type="text/css" rel="stylesheet" href="CSS/pagestyle.css" />
