@@ -6,7 +6,7 @@
 @prefix msg:<http://www.openrdf.org/rdf/2011/messaging#>.
 @prefix :<#>.
 
-<> a owl:Class, calliTypes:Class , calliTypes:Editable , calliTypes:Creatable ;
+<> a calliTypes:Class , calliTypes:Creatable, owl:Class ;
     rdfs:comment "Pure RDF Pipeline, see swows.org" ;
     rdfs:label "SWOWS Pipeline" ;
     calli:administrator </auth/groups/admin> ;
@@ -19,9 +19,9 @@
     calli:reader </auth/groups/public> , </auth/groups/system> ;
     calli:subscriber </auth/groups/everyone> ;
     calli:view <viewpipeline.xhtml> ;
-    rdfs:subClassOf calliTypes:Composite, calliTypes:Serviceable, calliTypes:Viewable, calliTypes:Editable . #, calliTypes:Folder .
+    rdfs:subClassOf calliTypes:Viewable, calliTypes:Editable, calliTypes:Composite, calliTypes:Serviceable . #, calliTypes:Folder .
 
- ################################
+################################
 # POST file
 ################################
 
