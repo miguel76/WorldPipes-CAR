@@ -28,12 +28,13 @@
 :PostFileSlug rdfs:subClassOf msg:Message;
     rdfs:subClassOf [owl:onProperty msg:target; owl:allValuesFrom <>];
     rdfs:subClassOf [owl:onProperty msg:object; owl:allValuesFrom rdfs:Resource];
-    rdfs:subClassOf [owl:onProperty :fileClass; owl:hasValue <File>];
+    rdfs:subClassOf [owl:onProperty :fileClass; owl:hasValue calliTypes:File];
     calli:method "POST";
     calli:query "contents";
     calli:requires calli:contributor;
     calli:type "message/x-response";
     calli:imports <java:org.callimachusproject.server.exceptions.BadRequest>;
+    calli:imports <java:org.callimachusproject.engine.model.TermFactory>;
     calli:script """
         if (!slug)
             throw new BadRequest("Missing Slug HTTP header");
@@ -49,7 +50,7 @@
             name = name.toLowerCase();
         }
         name = name.replace(/[^\\w\\+\\-\\_\\.\\!\\~\\*\\'\\(\\);\\,\\&\\=\\$\\[\\]]+/g,'_');
-        var uri = TermFactory.newInstance(this.toString()).resolve(reference);
+        var uri = TermFactory.newInstance(this.toString() + "/").resolve(name);
         return this.PostFactoryCreate(content, fileClass, false, con.getObject(uri), contentType);
     """.
 
@@ -72,5 +73,21 @@
 
 :fileClass a owl:FunctionalProperty, owl:ObjectProperty;
     rdfs:domain :PostFileSlug.
+
+ 
+################################
+# Helper Messages
+################################
+
+:FindCreatableVersion rdfs:subClassOf msg:Message;
+    rdfs:subClassOf [owl:onProperty msg:target; owl:allValuesFrom <Composite>];
+    rdfs:subClassOf [owl:onProperty msg:object; owl:allValuesFrom <Creatable>];
+    msg:sparql """
+        PREFIX owl:<http://www.w3.org/2002/07/owl#>
+        SELECT DISTINCT ?creatable {
+            ?creatable owl:equivalentClass* $create .
+            ?creatable a <Creatable>
+        }
+    """.
 
  
