@@ -1,5 +1,5 @@
 @prefix calli: <http://callimachusproject.org/rdf/2009/framework#> .
-@prefix calliTypes: </callimachus/1.0/types/> .
+@prefix calliTypes: </callimachus/1.3/types/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:<http://www.w3.org/2002/07/owl#>.
@@ -20,74 +20,3 @@
     calli:subscriber </auth/groups/everyone> ;
     calli:view <viewpipeline.xhtml> ;
     rdfs:subClassOf calliTypes:Viewable, calliTypes:Editable, calliTypes:Composite, calliTypes:Serviceable . #, calliTypes:Folder .
-
-################################
-# POST file
-################################
-
-:PostFileSlug rdfs:subClassOf msg:Message;
-    rdfs:subClassOf [owl:onProperty msg:target; owl:allValuesFrom <>];
-    rdfs:subClassOf [owl:onProperty msg:object; owl:allValuesFrom rdfs:Resource];
-    rdfs:subClassOf [owl:onProperty :fileClass; owl:hasValue calliTypes:File];
-    calli:method "POST";
-    calli:query "contents";
-    calli:requires calli:contributor;
-    calli:type "message/x-response";
-    calli:imports <java:org.callimachusproject.server.exceptions.BadRequest>;
-    calli:imports <java:org.callimachusproject.engine.model.TermFactory>;
-    calli:script """
-        if (!slug)
-            throw new BadRequest("Missing Slug HTTP header");
-        if (!contentType)
-            throw new BadRequest("Missing Content-Type HTTP header");
-        if (!content)
-            throw new BadRequest("Missing request content");
-        var con = this.objectConnection;
-        var name = decodeURIComponent(slug);
-        name = name.replace(/[-\\s]+/g, '-');
-        name = java.text.Normalizer.normalize(name, java.text.Normalizer.Form.NFD);
-        if (!name.match(/[a-z][A-Z]/)) {
-            name = name.toLowerCase();
-        }
-        name = name.replace(/[^\\w\\+\\-\\_\\.\\!\\~\\*\\'\\(\\);\\,\\&\\=\\$\\[\\]]+/g,'_');
-        var uri = TermFactory.newInstance(this.toString() + "/").resolve(name);
-        return this.PostFactoryCreate(content, fileClass, false, con.getObject(uri), contentType);
-    """.
-
-:slug a owl:FunctionalProperty, owl:DatatypeProperty;
-    rdfs:domain :PostFileSlug;
-    rdfs:range xsd:string;
-    calli:header "Slug";
-    calli:type "text/plain".
-
-:contentType a owl:FunctionalProperty, owl:DatatypeProperty;
-    rdfs:domain :PostFileSlug;
-    rdfs:range xsd:string;
-    calli:header "Content-Type";
-    calli:type "text/plain".
-
-:content a owl:FunctionalProperty, owl:ObjectProperty;
-    rdfs:domain :PostFileSlug;
-    rdfs:range <java:java.io.InputStream>;
-    calli:type "*/*".
-
-:fileClass a owl:FunctionalProperty, owl:ObjectProperty;
-    rdfs:domain :PostFileSlug.
-
- 
-################################
-# Helper Messages
-################################
-
-:FindCreatableVersion rdfs:subClassOf msg:Message;
-    rdfs:subClassOf [owl:onProperty msg:target; owl:allValuesFrom <Composite>];
-    rdfs:subClassOf [owl:onProperty msg:object; owl:allValuesFrom <Creatable>];
-    msg:sparql """
-        PREFIX owl:<http://www.w3.org/2002/07/owl#>
-        SELECT DISTINCT ?creatable {
-            ?creatable owl:equivalentClass* $create .
-            ?creatable a <Creatable>
-        }
-    """.
-
- 

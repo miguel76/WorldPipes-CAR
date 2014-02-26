@@ -18,12 +18,18 @@
 
 var JsonToServer = {};
 
-JsonToServer._pipelineVocabUri = "http://www.swows.org/pipeline#";
+JsonToServer._pipelineVocabUri = "http://www.swows.org/2013/09/pipeline#";
+JsonToServer._hasInnerDataFolder = JsonToServer._pipelineVocabUri + "hasInnerDataFolder";
 JsonToServer._hasPipelineGraph = JsonToServer._pipelineVocabUri + "hasPipelineGraph";
 JsonToServer._hasPipelineLayoutGraph = JsonToServer._pipelineVocabUri + "hasPipelineLayoutGraph";
+JsonToServer._hasDataflowGraph = JsonToServer._pipelineVocabUri + "hasDataflowGraph";
 
 JsonToServer._callVocabUri = "http://callimachusproject.org/rdf/2009/framework#";
 JsonToServer._hasComponent = JsonToServer._callVocabUri + "hasComponent";
+JsonToServer._Folder = JsonToServer._callVocabUri + "Folder";
+
+JsonToServer._rdfsUri = "http://www.w3.org/2000/01/rdf-schema#";
+JsonToServer._rdfsLabel = JsonToServer._rdfsUri + "label";
 
 JsonToServer._componentsBase = "components/";
 
@@ -77,11 +83,17 @@ JsonToServer._combinedContext = {
 
 JsonToServer._readPipelineAndLayoutUris = function(graphStore, pipelineMainURI, callback) {
 	var query =
-		'SELECT ?pipeline ?layout ' +
+		'SELECT ?label ?innerDataFolder ?pipeline ?layout ?dataflow ' +
 		'WHERE { ' +
+				'{ <' + pipelineMainURI + '> <' + JsonToServer._rdfsLabel + '> ?label . } ' +
+			'UNION ' +
+				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasInnerDataFolder + '> ?innerDataFolder . } ' +
+			'UNION ' +
 				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasPipelineGraph + '> ?pipeline . } ' +
 			'UNION ' +
 				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasPipelineLayoutGraph + '> ?layout . } ' +
+			'UNION ' +
+				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasDataflowGraph + '> ?dataflow . } ' +
 		'} ';
 	return JsonToServer._httpGet(
 			graphStore + '?query=' + encodeURIComponent(query),
@@ -93,20 +105,32 @@ JsonToServer._readPipelineAndLayoutUris = function(graphStore, pipelineMainURI, 
 					if (!resultXML)
 						return callback('Server did not reply XML');
 					else {
+						var label = null;
+						var folderUri = null;
 						var pipelineUri = null;
 						var layoutUri = null;
+						var dataflowUri = null;
 						var bindings = resultXML.getElementsByTagNameNS('http://www.w3.org/2005/sparql-results#', 'binding');
 						for (var bindingIndex = 0; bindingIndex < bindings.length; bindingIndex++) {
 							var binding = bindings.item(bindingIndex);
 							var name = binding.getAttribute('name');
-							var uri = binding.getElementsByTagNameNS('http://www.w3.org/2005/sparql-results#', 'uri').item(0).textContent;
-						    if (name == 'pipeline') {
+							var uris = binding.getElementsByTagNameNS('http://www.w3.org/2005/sparql-results#', 'uri');
+							var uri = (uris && uris.item(0)) ? uris.item(0).textContent : null;
+							var literals = binding.getElementsByTagNameNS('http://www.w3.org/2005/sparql-results#', 'literal');
+							var literal = (literals && literals.item(0)) ? literals.item(0).textContent : null;
+						    if (name == 'label') {
+						    	label = literal;
+						    } else if (name == 'innerDataFolder') {
+						    	folderUri = uri;
+						    } else if (name == 'pipeline') {
 						    	pipelineUri = uri;
 						    } else if (name == 'layout') {
 						    	layoutUri = uri;
+						    } else if (name == 'dataflow') {
+						    	dataflowUri = uri;
 						    }
 						}
-						return callback(null, pipelineUri, layoutUri);
+						return callback(null, label, folderUri, pipelineUri, layoutUri, dataflowUri);
 					}
 				}
 			});
@@ -117,16 +141,21 @@ JsonToServer._graphComponentTurtle = function(parentURI, graphURI) {
 //		'<' + graphURI + '> ' +
 //			'a <callimachus/1.0/types/GraphDocument> , <http://www.w3.org/ns/sparql-service-description#NamedGraph> , <http://xmlns.com/foaf/0.1/Document> ; ' +
 //		    'rdfs:label "prova" . ');
-	return (
-		'<' + parentURI + '> <' + JsonToServer._hasComponent + '> <' + graphURI + '> . ' +
-		'<' + graphURI + '> ' +
-			'a <callimachus/1.0/types/GraphDocument> , <http://www.w3.org/ns/sparql-service-description#NamedGraph> , <http://xmlns.com/foaf/0.1/Document> ; ' +
-		    'rdfs:label "prova" . ');
+	return '';//(
+//		'<' + parentURI + '> <' + JsonToServer._hasComponent + '> <' + graphURI + '> . ' +
+//		'<' + graphURI + '> ' +
+//			'a <callimachus/1.0/types/GraphDocument> , <http://www.w3.org/ns/sparql-service-description#NamedGraph> , <http://xmlns.com/foaf/0.1/Document> ; ' +
+//		    'rdfs:label "prova" . ');
 };
 
-JsonToServer._writePipelineAndLayoutUris = function(graphStore, pipelineMainURI, pipelineUri, layoutUri, callback) {
+JsonToServer._writePipelineAndLayoutUris = function(graphStore, pipelineMainURI, folderUri, pipelineUri, layoutUri, dataflowUri, callback) {
 	var update =
 		'INSERT { ' +
+			( folderUri ?
+					(
+						'<' + pipelineMainURI + '> <' + JsonToServer._hasInnerDataFolder + '> <' + folderUri + '> . ' +
+						JsonToServer._graphComponentTurtle(pipelineMainURI, folderUri) ) :
+					'' ) +
 			( pipelineUri ?
 					( 
 						'<' + pipelineMainURI + '> <' + JsonToServer._hasPipelineGraph + '> <' + pipelineUri + '> . ' +
@@ -137,39 +166,83 @@ JsonToServer._writePipelineAndLayoutUris = function(graphStore, pipelineMainURI,
 						'<' + pipelineMainURI + '> <' + JsonToServer._hasPipelineLayoutGraph + '> <' + layoutUri + '> . ' +
 						JsonToServer._graphComponentTurtle(pipelineMainURI, layoutUri) ) :
 					'' ) +
+			( layoutUri ?
+					(
+						'<' + pipelineMainURI + '> <' + JsonToServer._hasDataflowGraph + '> <' + dataflowUri + '> . ' +
+						JsonToServer._graphComponentTurtle(pipelineMainURI, dataflowUri) ) :
+					'' ) +
 		'} '+
 		'WHERE { }; ';
-	return JsonToServer._httpPost(graphStore, 'application/sparql-update', update, callback);
+	return JsonToServer._httpPost(graphStore, 'application/sparql-update', null, update, callback);
 };
+
+JsonToServer._createFolder = function(baseURI, folderName, folderLabel, callback) {
+	var update =
+		'INSERT DATA { ' +
+			'<' + baseURI + folderName + '/> a <' + JsonToServer._Folder + '>, </callimachus/1.3/types/Folder>; ' +
+			'<' + JsonToServer._rdfsLabel + '> "' + folderLabel + '". ' +
+		'} ';
+	return JsonToServer._httpPost(baseURI + '?describe', 'application/sparql-update', null, update, callback);
+//	return callback(null);
+}
 
 JsonToServer._getPipelineAndLayoutUris = function(graphStore, pipelineMainURI, callback) {
 	return JsonToServer._readPipelineAndLayoutUris(
 			graphStore,
 			pipelineMainURI, 
-			function(err, pipelineUri, layoutUri) {
+			function(err, pipelineMainLabel, folderUri, pipelineUri, layoutUri, dataflowUri) {
 				if (err)
 					return callback(err);
 				else {
+					var folderToBeCreated = !folderUri;
 					var pipelineUriToBeWritten = !pipelineUri;
 					var layoutUriToBeWritten = !layoutUri;
-					if (pipelineUriToBeWritten) {
-						pipelineUri = pipelineMainURI + '/pipeline';
+					var dataflowUriToBeWritten = !dataflowUri;
+					var saveLinks = function(folderUri) {
+						if (pipelineUriToBeWritten) {
+							pipelineUri = folderUri + '/pipeline';
+						}
+						if (layoutUriToBeWritten) {
+							layoutUri = folderUri + '/pipeline-layout';
+						}
+						if (dataflowUriToBeWritten) {
+							dataflowUri = folderUri + '/dataflow';
+						}
+						if (folderToBeCreated || pipelineUriToBeWritten || layoutUriToBeWritten || dataflowUriToBeWritten)
+							return JsonToServer._writePipelineAndLayoutUris(
+									graphStore, pipelineMainURI,
+									folderUri, pipelineUri, layoutUri, dataflowUri,
+									function(err) {
+										if (err)
+											return callback(err);
+										else
+											return callback(null, pipelineUri, layoutUri, dataflowUri);
+									});
+						else
+							return callback(null, pipelineUri, layoutUri, dataflowUri);
 					}
-					if (layoutUriToBeWritten) {
-						layoutUri = pipelineMainURI + '/pipeline-layout';
+					if (folderToBeCreated) {
+						return JsonToServer._decomposeURI(
+								pipelineMainURI,
+								function(baseURI, pipelineName) {
+									var folderName = pipelineName + '-Internal-Data';
+									var folderLabel = pipelineMainLabel + ' Internal Data';
+									return JsonToServer._createFolder(
+											baseURI, folderName, folderLabel,
+											function(err) {
+												if (err)
+													return callback(err);
+												else {
+													folderUri = baseURI + folderName;
+													return saveLinks(folderUri);
+												}
+											}
+									);
+								}
+						);
+					} else {
+						return saveLinks(folderUri);
 					}
-					if (pipelineUriToBeWritten || layoutUriToBeWritten)
-						return JsonToServer._writePipelineAndLayoutUris(
-								graphStore, pipelineMainURI,
-								pipelineUri, layoutUri,
-								function(err) {
-									if (err)
-										return callback(err);
-									else
-										return callback(null, pipelineUri, layoutUri);
-								});
-					else
-						return callback(null, pipelineUri, layoutUri);
 				}
 			});
 };
@@ -210,7 +283,7 @@ JsonToServer._jsonConvertValues =
     return JSON.parse( JSON.stringify( obj, convert ) );
   };
 
-JsonToServer._httpPost = function (uri, mimeType, content, callback) {
+JsonToServer._httpPost = function (uri, mimeType, slug, content, callback) {
     try{var request = new XMLHttpRequest();}
     catch(error){var request = null;}
 
@@ -218,7 +291,10 @@ JsonToServer._httpPost = function (uri, mimeType, content, callback) {
       callback("Invalid Request");
     } else {
       request.open("POST", uri, false);
-      request.setRequestHeader("Content-Type",mimeType);
+      if (mimeType)
+    	  request.setRequestHeader("Content-Type",mimeType);
+      if (slug)
+    	  request.setRequestHeader("Slug",slug);
       request.send(content);
       if(request.status == 200 || request.status == 201 || request.status == 204) {
     	  if (callback)
@@ -250,12 +326,33 @@ JsonToServer._httpPut = function (uri, mimeType, content, callback) {
     }
 };
 	
+JsonToServer._decomposeURI =  function (uri, callback) {
+	var baseUriLength = uri.lastIndexOf('/') + 1;
+	var baseUri = uri.substring(0,baseUriLength);
+	var localPart = uri.substring(baseUriLength);
+	return callback(baseUri, localPart);
+}
+
 JsonToServer._saveTurtle =  function (graphStore, graphName, graphTurtle, callback) {
-	return JsonToServer._httpPut(
-			JsonToServer._uriEncode(graphStore, graphName),
-			"text/turtle",
-			graphTurtle,
-			callback);
+	if (graphStore)
+		return JsonToServer._httpPut(
+				JsonToServer._uriEncode(graphStore, graphName),
+				"text/turtle",
+				graphTurtle,
+				callback);
+	else
+		return JsonToServer._decomposeURI(
+				graphName,
+				function(folderUri, fileName) {
+					return JsonToServer._httpPost(
+							folderUri + "?contents",
+							"text/turtle",
+							fileName,
+							graphTurtle,
+							callback);
+				});
+					
+					
 };
 
 
@@ -312,7 +409,7 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
     		  return callback(err);
     	  else
     		  return JsonToServer._saveTurtle(
-    				  graphStore,
+    				  null, //graphStore,
     				  pipelineURI,
     				  result,
     				  function(err, result) {
@@ -331,7 +428,7 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
         		    			    		  return callback(err);
         		    			    	  else
         		    			    		  return JsonToServer._saveTurtle(
-        		    			    				  graphStore,
+        		    			    				  null, //graphStore,
         		    			    				  layoutURI,
         		    			    				  result,
         		    			    				  callback);
@@ -347,7 +444,7 @@ JsonToServer.savePipelineData = function (graphStore, pipelineMainURI, component
 	return JsonToServer._getPipelineAndLayoutUris(
 			graphStore,
 			pipelineMainURI,
-			function(err, pipelineURI, layoutURI) {
+			function(err, pipelineURI, layoutURI, dataflowUri) {
 				if (err)
 					alert('Error: ' + err);
 				else
@@ -569,7 +666,7 @@ JsonToServer.loadPipelineData = function(graphStore, pipelineMainURI, callback) 
 	return JsonToServer._readPipelineAndLayoutUris(
 			graphStore,
 			pipelineMainURI,
-			function(err, pipelineURI, layoutURI) {
+			function(err, pipelineMainLabel, folderURI, pipelineURI, layoutURI, dataflowURI) {
 				if (err)
 					return callback(err);
 				else
