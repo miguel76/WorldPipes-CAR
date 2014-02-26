@@ -102,7 +102,8 @@ var actionListenerImg =
 		if(pulsante.title == "Play & Save"){
 			var sourcecode = Core.getElementsByClass("codeclass")[0];
 			Code.estraiTesto(sourcecode,pulsante.title,GraphURIPrefix);
-			window.open("http://localhost:8080/swows-web/play?df=" + encodeURIComponent(URISystemGraphStore + encodeURIComponent(dataflowURI)),"_blank");
+//			window.open("http://localhost:8080/swows-web/play?df=" + encodeURIComponent(URISystemGraphStore + encodeURIComponent(dataflowURI)),"_blank");
+			window.open("http://localhost:8080/swows-web/play?df=" + encodeURIComponent(dataflowURI),"_blank");
 		}
 		
 		if(pulsante.title == "load"){

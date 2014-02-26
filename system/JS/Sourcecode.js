@@ -396,9 +396,10 @@ Code.estraiTesto = function(code,name){
 
 	var textCode = code.textContent;
 	
-	Code.sendCodeDataflowURI(textCode,name);
+//	Code.sendCodeDataflowURI(textCode,name);
+//	JsonToServer.savePipelineData(URIGraphStore,PipelineMainURI,componentVett);
+	JsonToServer.saveAll(URIGraphStore, PipelineMainURI, textCode, componentVett);
 
-	JsonToServer.savePipelineData(URIGraphStore,PipelineMainURI,componentVett);
 };
 
 Code.sendCodeDataflowURI = function(textCode,name){

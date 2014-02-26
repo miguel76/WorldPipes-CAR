@@ -85,15 +85,15 @@ JsonToServer._readPipelineAndLayoutUris = function(graphStore, pipelineMainURI, 
 	var query =
 		'SELECT ?label ?innerDataFolder ?pipeline ?layout ?dataflow ' +
 		'WHERE { ' +
-				'{ <' + pipelineMainURI + '> <' + JsonToServer._rdfsLabel + '> ?label . } ' +
-			'UNION ' +
-				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasInnerDataFolder + '> ?innerDataFolder . } ' +
-			'UNION ' +
-				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasPipelineGraph + '> ?pipeline . } ' +
-			'UNION ' +
-				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasPipelineLayoutGraph + '> ?layout . } ' +
-			'UNION ' +
-				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasDataflowGraph + '> ?dataflow . } ' +
+			'<' + pipelineMainURI + '> <' + JsonToServer._rdfsLabel + '> ?label . ' +
+			'OPTIONAL ' +
+				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasInnerDataFolder + '> ?innerDataFolder . } . ' +
+			'OPTIONAL ' +
+				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasPipelineGraph + '> ?pipeline . } . ' +
+			'OPTIONAL ' +
+				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasPipelineLayoutGraph + '> ?layout . } . ' +
+			'OPTIONAL ' +
+				'{ <' + pipelineMainURI + '> <' + JsonToServer._hasDataflowGraph + '> ?dataflow . } . ' +
 		'} ';
 	return JsonToServer._httpGet(
 			graphStore + '?query=' + encodeURIComponent(query),
@@ -392,6 +392,8 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
 			  function(err, result) {
 				  if (err)
 					  alert('Error: ' + err);
+//				  else
+//					  alert('Pipeline Saved');
 			  });
 	
   var jsonModified = JsonToServer._jsonConvertValues(componentsVector, JsonToServer._jsonEncode);
@@ -439,6 +441,10 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
 
 };
 
+JsonToServer.saveDataflow = function (dataflowURI, dataflowTurtle, callback) {
+	return JsonToServer._saveTurtle(null, dataflowURI, dataflowTurtle, callback);
+};
+
 JsonToServer.savePipelineData = function (graphStore, pipelineMainURI, componentsVector) {
 
 	return JsonToServer._getPipelineAndLayoutUris(
@@ -453,6 +459,25 @@ JsonToServer.savePipelineData = function (graphStore, pipelineMainURI, component
 	
 };
 
+JsonToServer.saveAll = function (graphStore, pipelineMainURI, dataflowTurtle, componentsVector) {
+	return JsonToServer._getPipelineAndLayoutUris(
+			graphStore,
+			pipelineMainURI,
+			function(err, pipelineURI, layoutURI, dataflowUri) {
+				if (err)
+					alert('Error: ' + err);
+				else
+					JsonToServer.saveDataflow(
+							dataflowUri, dataflowTurtle,
+							function(err) {
+								if (err)
+									alert('Error: ' + err);
+								else
+									JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineURI, layoutURI, componentsVector);
+							}
+					);
+			});
+};
 
 /* From RDF (N-Quads) to js object */
 
