@@ -346,6 +346,30 @@ JsonToServer._decomposeURI =  function (uri, callback) {
 	return callback(baseUri, localPart);
 }
 
+JsonToServer._checkContentInFolder =  function (folderUri, fileUri, callback) {
+	return JsonToServer._httpGet(
+			folderUri + "?contents",
+			'application/atom+xml',
+			function(err,resultText, resultXML) {
+				if (err)
+					return callback(err);
+				else {
+					if (!resultXML)
+						return callback('Server did not reply XML');
+					else {
+						var ids = resultXML.getElementsByTagNameNS('http://www.w3.org/2005/Atom', 'id');
+						for (var idIndex = 0; idIndex < ids.length; idIndex++) {
+							var uri = ids.item(idIndex).textContent;
+//							alert(uri);
+							if (uri == fileUri)
+								return callback(null,true);
+						}
+						return callback(null, false);
+					}
+				}
+			});
+}
+
 JsonToServer._saveTurtle =  function (graphStore, graphName, graphTurtle, callback) {
 	if (graphStore)
 		return JsonToServer._httpPut(
@@ -357,24 +381,30 @@ JsonToServer._saveTurtle =  function (graphStore, graphName, graphTurtle, callba
 		return JsonToServer._decomposeURI(
 				graphName,
 				function(folderUri, fileName) {
-					return JsonToServer._httpPut(
+					return JsonToServer._checkContentInFolder(
+							folderUri,
 							graphName,
-							"text/turtle",
-							graphTurtle,
-							function(err) {
+							function(err, found) {
 								if (err)
-									return JsonToServer._httpPost(
-											folderUri + "?contents",
-											"text/turtle",
-											fileName,
-											graphTurtle,
-											callback);
-								else
-									return callback(null);
-							});
+									return callback(err);
+								else {
+									if (found)
+										return JsonToServer._httpPut(
+												graphName,
+												"text/turtle",
+												graphTurtle,
+												callback);
+									else
+										return JsonToServer._httpPost(
+												folderUri + "?contents",
+												"text/turtle",
+												fileName,
+												graphTurtle,
+												callback);
+								}
+							}
+					);
 				});
-					
-					
 };
 
 
