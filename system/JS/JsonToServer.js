@@ -283,7 +283,7 @@ JsonToServer._jsonEncode =
       return JsonToServer._componentsBase + value;
     }
     if (key === 'Id') {
-      return JsonToServer._conversionContext + value;
+      return JsonToServer._conversionContext + encodeURIComponent(value);
     }
     if (typeof value === 'number') {
       return String(value);
