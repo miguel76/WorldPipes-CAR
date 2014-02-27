@@ -166,7 +166,7 @@ JsonToServer._writePipelineAndLayoutUris = function(graphStore, pipelineMainURI,
 						'<' + pipelineMainURI + '> <' + JsonToServer._hasPipelineLayoutGraph + '> <' + layoutUri + '> . ' +
 						JsonToServer._graphComponentTurtle(pipelineMainURI, layoutUri) ) :
 					'' ) +
-			( layoutUri ?
+			( dataflowUri ?
 					(
 						'<' + pipelineMainURI + '> <' + JsonToServer._hasDataflowGraph + '> <' + dataflowUri + '> . ' +
 						JsonToServer._graphComponentTurtle(pipelineMainURI, dataflowUri) ) :
@@ -185,6 +185,16 @@ JsonToServer._createFolder = function(baseURI, folderName, folderLabel, callback
 	return JsonToServer._httpPost(baseURI + '?describe', 'application/sparql-update', null, update, callback);
 //	return callback(null);
 }
+
+//JsonToServer._resourceExists = function(uri, callback) {
+//	var update =
+//		'INSERT DATA { ' +
+//			'<' + baseURI + folderName + '/> a <' + JsonToServer._Folder + '>, </callimachus/1.3/types/Folder>; ' +
+//			'<' + JsonToServer._rdfsLabel + '> "' + folderLabel + '". ' +
+//		'} ';
+//	return JsonToServer._httpOptions(baseURI + '?describe', 'application/sparql-update', null, update, callback);
+////	return callback(null);
+//}
 
 JsonToServer._getPipelineAndLayoutUris = function(graphStore, pipelineMainURI, callback) {
 	return JsonToServer._readPipelineAndLayoutUris(
@@ -211,7 +221,10 @@ JsonToServer._getPipelineAndLayoutUris = function(graphStore, pipelineMainURI, c
 						if (folderToBeCreated || pipelineUriToBeWritten || layoutUriToBeWritten || dataflowUriToBeWritten)
 							return JsonToServer._writePipelineAndLayoutUris(
 									graphStore, pipelineMainURI,
-									folderUri, pipelineUri, layoutUri, dataflowUri,
+									folderToBeCreated ? folderUri : null,
+									pipelineUriToBeWritten ? pipelineUri : null,
+									layoutUriToBeWritten ? layoutUri : null,
+									dataflowUriToBeWritten ? dataflowUri : null,
 									function(err) {
 										if (err)
 											return callback(err);
@@ -344,12 +357,21 @@ JsonToServer._saveTurtle =  function (graphStore, graphName, graphTurtle, callba
 		return JsonToServer._decomposeURI(
 				graphName,
 				function(folderUri, fileName) {
-					return JsonToServer._httpPost(
-							folderUri + "?contents",
+					return JsonToServer._httpPut(
+							graphName,
 							"text/turtle",
-							fileName,
 							graphTurtle,
-							callback);
+							function(err) {
+								if (err)
+									return JsonToServer._httpPost(
+											folderUri + "?contents",
+											"text/turtle",
+											fileName,
+											graphTurtle,
+											callback);
+								else
+									return callback(null);
+							});
 				});
 					
 					
