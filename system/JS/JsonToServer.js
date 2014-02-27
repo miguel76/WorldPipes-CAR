@@ -444,8 +444,8 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
 			  function(err, result) {
 				  if (err)
 					  alert('Error: ' + err);
-//				  else
-//					  alert('Pipeline Saved');
+				  else
+					  alert('Pipeline Saved');
 			  });
 	
   var jsonModified = JsonToServer._jsonConvertValues(componentsVector, JsonToServer._jsonEncode);
