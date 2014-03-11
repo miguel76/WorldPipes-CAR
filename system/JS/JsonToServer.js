@@ -608,6 +608,7 @@ JsonToServer._loadNQ = function (graphStore, graphName, callback) {
 	  JsonToServer._httpGet(
 			  JsonToServer._uriEncode(graphStore, graphName),
 			  "text/turtle",
+//			  callback);
 			  function(err,result) {
 				  if (err)
 					  return callback(err);
@@ -652,6 +653,10 @@ JsonToServer._frame = function(pipelineURI, input, callback) {
     function(err, framed, ctx) { callback(err,framed["@graph"]) } );
 }
 
+JsonToServer._normalizeLiteral = function(literal) {
+	return literal.replace('\n','\\n').replace('\r','\\r');
+}
+
 JsonToServer._fromTurtleToTriples = function(turtleBase,turtleText,receiveTriples) {
 	var parser = N3.Parser();
 	var triplesText = "";
@@ -662,12 +667,12 @@ JsonToServer._fromTurtleToTriples = function(turtleBase,turtleText,receiveTriple
 					receiveTriples(error,null);
 					return;
 				}
-				if (triple)
+				if (triple) {
 					triplesText +=
 						"<" + triple.subject + "> <" + triple.predicate + "> " +
-						(triple.object.substr(0, 1) == '"' ? triple.object : "<" + triple.object + ">") + ".\n";
+						(triple.object.substr(0, 1) == '"' ? JsonToServer._normalizeLiteral(triple.object) : "<" + triple.object + ">") + ".\n";
+				}
 				else {
-//					alert(triplesText);
 					receiveTriples(null,triplesText);
 				}
 			});
@@ -700,7 +705,8 @@ JsonToServer._fromTurtleToTriples = function(turtleBase,turtleText,receiveTriple
 //}
 
 JsonToServer.loadPipelineAndLayout = function(graphStore, pipelineURI, layoutURI, callback) {
-    JsonToServer._loadNQ(
+	try {
+		return JsonToServer._loadNQ(
     		graphStore,
     		pipelineURI,
     		function(err, pipelineTriples) {
@@ -737,6 +743,9 @@ JsonToServer.loadPipelineAndLayout = function(graphStore, pipelineURI, layoutURI
     			    						    });
     						});
     		});
+		} catch(exception) {
+			return callback(exception);
+		}
 	}
 
 JsonToServer.loadPipelineData = function(graphStore, pipelineMainURI, callback) {
