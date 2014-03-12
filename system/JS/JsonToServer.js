@@ -605,7 +605,14 @@ JsonToServer._httpGet = function (uri, mimeType, callback) {
 }
 
 JsonToServer._loadNQ = function (graphStore, graphName, callback) {
-	  JsonToServer._httpGet(
+	if (graphStore == null) {
+		return JsonToServer._httpGet(
+				  graphName,
+//				  "application/n-triples",
+				  "text/turtle",
+				  callback);
+	}
+	return JsonToServer._httpGet(
 			  JsonToServer._uriEncode(graphStore, graphName),
 			  "text/turtle",
 //			  callback);
@@ -758,7 +765,8 @@ JsonToServer.loadPipelineData = function(graphStore, pipelineMainURI, callback) 
 				else
 					if (pipelineURI)
 						return JsonToServer.loadPipelineAndLayout(
-								graphStore + '?graph=',
+//								graphStore + '?graph=',
+								null,
 								pipelineURI, layoutURI,
 								callback);
 					else
