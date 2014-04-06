@@ -20,8 +20,7 @@ div#editorContainer{
 }
 */
 
-
- /* Creazione layotu per la barra dell'img e per la barra contenente i pulsanti	Nuovo, Salva, Propriet�, Esegui*/
+ /* Layout for commands bar*/
 .barraimg{
 	border: 1px,solid,black;
 	background-color:black;
@@ -33,7 +32,6 @@ div#editorContainer{
 	font-size:20px;
 }
 
-
 button#pulsanti{
 	cursor:pointer;
 	z-index:1;
@@ -44,7 +42,7 @@ button#pulsanti{
 	height:20px;
 }
 
-/*Layout dei pulsanti*/
+/*"Buttons" layout*/
 div#pulsante{
 	display:block;
 	margin-top:15px;
@@ -70,7 +68,7 @@ img.pulsanti{
 	z-index:1;
 }
 
-/*Creazione layout barra Tools*/
+/*Toolbar layout*/
 .barratools{
 	position:absolute;
 	top:45px;
@@ -120,7 +118,7 @@ table {
 	z-index:1;
 }
 
-/* Layout per il tab componenti*/
+/* Components Tab Layout*/
 #tabscomp{
 	border: 1px solid #999999;
 	padding-top:0px;
@@ -163,7 +161,7 @@ table {
 	color:black;*/
 }
 
-/* Layout per i tab dataset e pipeline*/
+/* Layout for dataset tab and pipeline tab*/
 .content{
 	height:auto;
 	background-color:#FFFFFF;
@@ -215,7 +213,7 @@ table {
 	color:black;*/
 }
 
-/*Layout dei grafici*/
+/*"Graph" Layout*/
 #grafici ul{
 	list-style-type:none;
 	margin:2px;
@@ -246,7 +244,7 @@ p#paragrafo{
 	z-index:1;
 }
 
-/*Creazione layout area Editor*/
+/*Editor Area Layout*/
 .areaeditor {
 	overflow:auto;
 	display:block;
@@ -287,7 +285,7 @@ p#paragrafo{
 	opacity:0.5;
 }
 
-/*Creazione layout area helper*/
+/*Helper Area Layout*/
 .areahelper{
 	position:absolute;
 	top:390px;
@@ -302,7 +300,7 @@ p#paragrafo{
 	z-index:1;
 }
 
-/*Creazione layout SourceCode*/
+/*SourceCode Area layout*/
 .sourcecode{
 	display:none;
 }

@@ -60,7 +60,7 @@ Code.scriviCodice = function(code){
 		indef.setAttribute("id",code);
 		
 		indef.innerHTML += '<#defaultInput> a df:SelectGraph ;</br>';
-		indef.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
+//		indef.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		indef.innerHTML += '<dd>df:input swi:InputDataset .</dd>';
 		
 		codein.appendChild(indef);
@@ -73,7 +73,7 @@ Code.scriviCodice = function(code){
 	
 		pin.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:SelectGraph ;";
 		pin.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
-		pin.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
+//		pin.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		pin.innerHTML += '<dd>df:id &lt;' + Component.getURI(code) + '&gt; ;</dd>';
 		pin.innerHTML += '<dd>df:input swi:InputDataset .</dd>';
 		
@@ -86,8 +86,8 @@ Code.scriviCodice = function(code){
 		var outdef = document.createElement("p");
 		outdef.setAttribute("id",code);
 		
-		outdef.innerHTML += "swi:OutputDataset a df:InlineDataset ;";
-		outdef.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] .</dd>';
+		outdef.innerHTML += "swi:OutputDataset a df:InlineDataset .";
+//		outdef.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] .</dd>';
 		
 		codeout.appendChild(outdef);
 		p.appendChild(codeout);	
@@ -101,8 +101,8 @@ Code.scriviCodice = function(code){
 		pout.innerHTML += "swi:OutputDataset a df:InlineDataset ;";
 		pout.innerHTML += "<dd>df:namedInput[ a df:NamedGraph ;</dd>";
 		pout.innerHTML += "<dd>df:id &lt;" + Component.getURI(code) + "&gt; ;</dd>";
-		pout.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
-		pout.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ] .</dd>';			
+		pout.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" .</dd>';
+//		pout.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ] .</dd>';			
 		
 		codeout.appendChild(pout);
 		p.appendChild(codeout);	
@@ -114,7 +114,7 @@ Code.scriviCodice = function(code){
 		pdataset.setAttribute("id",code);
 		
 		pdataset.innerHTML += '&lt;#' + encodeURIComponent(Component.getURI(code)) + '&gt; a df:IncludedGraph ;</br>';
-		pdataset.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
+//		pdataset.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		pdataset.innerHTML += '<dd>df:url &lt;' + Component.getURI(code) + '&gt; ;</dd>';
 		pdataset.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" .</dd>';	
 		
@@ -128,8 +128,8 @@ Code.scriviCodice = function(code){
 		punion.setAttribute("id",code);
 		
 		punion.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:UnionGraph ; </br>";
-		punion.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
-		punion.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] .</dd>';
+		punion.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" .</dd>';
+//		punion.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] .</dd>';
 		
 		codeunion.appendChild(punion);
 		p.appendChild(codeunion);
@@ -141,7 +141,7 @@ Code.scriviCodice = function(code){
 		
 		pconstr.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:ConstructGraph ;";
 		pconstr.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
-		pconstr.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
+//		pconstr.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		pconstr.innerHTML += "<dd>df:configTxt '''" + Component.getQuery(code) + "''' .</dd>";
 				
 		codeconstr.appendChild(pconstr);
@@ -154,7 +154,7 @@ Code.scriviCodice = function(code){
 		
 		pupdat.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:UpdatableGraph ;";
 		pupdat.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
-		pupdat.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
+//		pupdat.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		pupdat.innerHTML += "<dd>df:configTxt '''" + Component.getQuery(code) + "''' .</dd>";
 		
 		codeupdat.appendChild(pupdat);
@@ -175,13 +175,13 @@ Code.modificaCodice = function(code){
 		punion.setAttribute("id",code);
 		
 		punion.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:UnionGraph ; </br>";
-		punion.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';		
 	
 		var inputUnion = Component.getVett(code);
 	
 		if(inputUnion.length != 0){for(var i=0; i< inputUnion.length;i++){	punion.innerHTML += '<dd>df:input &lt;#' + encodeURIComponent(inputUnion[i].Id) + '&gt; ;</dd>';}}
+		punion.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" .</dd>';		
 		
-		punion.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] .</dd>';
+//		punion.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] .</dd>';
 		codeunion.appendChild(punion);
 		p.appendChild(codeunion);
 		
@@ -194,14 +194,15 @@ Code.modificaCodice = function(code){
 		var outdef = document.createElement("p");
 		outdef.setAttribute("id",1);
 		
-		outdef.innerHTML += "swi:OutputDataset a df:InlineDataset ;";
+		outdef.innerHTML += "swi:OutputDataset a df:InlineDataset ";
 		
 		var inputDef = Component.getVett(1);
 		if(inputDef.length != 0){
-			for(i=0;i<inputDef.length;i++){	outdef.innerHTML += '<dd>df:input &lt;#' + encodeURIComponent(inputDef[i].Id) + '&gt; ;</dd>';}
+			for(i=0;i<inputDef.length;i++){	outdef.innerHTML += '; <dd>df:input &lt;#' + encodeURIComponent(inputDef[i].Id) + '&gt; </dd>';}
 		}
-		outdef.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(1) + '\"^^xsd:integer; df:positionY \"' + Component.getY(1) + '\"^^xsd:integer ] .</dd>';
-		
+//		outdef.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(1) + '\"^^xsd:integer; df:positionY \"' + Component.getY(1) + '\"^^xsd:integer ] .</dd>';
+		outdef.innerHTML += ' . '; 
+			
 		codeout.appendChild(outdef);
 		p.appendChild(codeout);
 		
@@ -222,8 +223,8 @@ Code.modificaCodice = function(code){
 			for(var i=0;i<inputOut.length;i++){pout.innerHTML += '<dd>df:input &lt;#' + encodeURIComponent(inputOut[i].Id) +'&gt; ;</dd>';}
 		}
 		pout.innerHTML += "<dd>df:id &lt;" + Component.getURI(code) + "&gt; ;</dd>";
-		pout.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
-		pout.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ] .</dd>';
+		pout.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" .</dd>';
+//		pout.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ] .</dd>';
 				
 		codeout.appendChild(pout);	
 		p.appendChild(codeout);
@@ -239,7 +240,7 @@ Code.modificaCodice = function(code){
 		
 		pconstr.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:ConstructGraph ;";
 		pconstr.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
-		pconstr.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
+//		pconstr.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		
 		var inputConstr = Component.getVett(code);
 		var id = "";
@@ -270,7 +271,7 @@ Code.modificaCodice = function(code){
 		
 		pupdat.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:UpdatableGraph ;";
 		pupdat.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
-		pupdat.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
+//		pupdat.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		
 		var inputUpdat = Component.getVett(code);
 		var id;
@@ -301,7 +302,7 @@ Code.modificaCodice = function(code){
 		pdataset.setAttribute("id",code);
 		
 		pdataset.innerHTML += '&lt;#' + encodeURIComponent(Component.getURI(code)) + '&gt; a df:IncludedGraph ;</br>';
-		pdataset.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
+//		pdataset.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		pdataset.innerHTML += '<dd>df:url &lt;' + Component.getURI(code) + '&gt; ;</dd>';
 		pdataset.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" .</dd>';	
 		
@@ -318,7 +319,7 @@ Code.modificaCodice = function(code){
 		indef.setAttribute("id",code);
 		
 		indef.innerHTML += '<#defaultInput> a df:SelectGraph ;</br>';
-		indef.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
+//		indef.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		indef.innerHTML += '<dd>df:input swi:InputDataset .</dd>';
 		
 		codein.appendChild(indef);
@@ -334,7 +335,7 @@ Code.modificaCodice = function(code){
 	
 		pin.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:SelectGraph ;";
 		pin.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
-		pin.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
+//		pin.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		pin.innerHTML += '<dd>df:id &lt;' + Component.getURI(code) + '&gt; ;</dd>';
 		pin.innerHTML += '<dd>df:input swi:InputDataset .</dd>';
 		
@@ -395,6 +396,8 @@ Code.estraiTesto = function(code,name){
 //	var layoutURI = graphURIPrefix + "pipeline/layout";
 
 	var textCode = code.textContent;
+	var editor = Core.getElementsByClass("areaeditor")[0];
+    Component.updatePositions(editor, componentVett);
 	
 //	Code.sendCodeDataflowURI(textCode,name);
 //	JsonToServer.savePipelineData(URIGraphStore,PipelineMainURI,componentVett);

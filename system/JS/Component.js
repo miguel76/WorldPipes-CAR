@@ -217,6 +217,38 @@ Component.scorriVettore = function(editor,componentVett){
 	Component.createConnection(editor);
 };
 
+Component._onlyValue = function(valueWithPx){
+	var floatingValue = (valueWithPx.substr(valueWithPx.length-2) == "px")
+							? valueWithPx.substr(0,valueWithPx.length-2)
+							: valueWithPx;
+	var pointIndex = floatingValue.search("\\.");
+	alert(	"fv: '" + floatingValue +
+			"', pi: " + pointIndex +
+			", substr: '" +
+				( (pointIndex != -1)
+					? floatingValue.substr(0,pointIndex)
+					: floatingValue ) + "'");
+	alert(parseInt((pointIndex != -1)
+			? floatingValue.substr(0,pointIndex)
+					: floatingValue));
+	return parseInt((pointIndex != -1)
+				? floatingValue.substr(0,pointIndex)
+				: floatingValue);
+}
+
+/*Update the current components positions in the component vector*/
+Component.updatePositions = function(editor,componentVett){
+	for(var i=0;i<componentVett.length;i++){
+//		var compDiv = editor.getElementById("comp-" + i);
+//		alert("comp-" + componentVett[i].Code);
+		var compDiv = document.getElementById("comp-" + componentVett[i].Code);
+//		componentVett[i].X = Component._onlyValue(compDiv.style.left);
+//		componentVett[i].Y = Component._onlyValue(compDiv.style.top);
+		componentVett[i].X = compDiv.offsetLeft;
+		componentVett[i].Y = compDiv.offsetTop;
+	}
+};
+
 /*Ricarica la pipeline creata*/
 Component.loadPipeline = function(editor,code,component,id,uri,name,query,inputlist,x,y){
 	//alert(code + component + id + uri + name + query + inputlist + x + y);

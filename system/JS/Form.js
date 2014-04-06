@@ -6,7 +6,7 @@ Form.createForm = function(parent,cnt){
 	var componente = Component.getComponent(cnt);
 	
 	form = document.createElement("form");
-	form.name = "Propriet�";
+	form.name = "Properties";
 	form.setAttribute("method","POST");
 //	form.setAttribute("action","WorldPipesNew.html");
 			

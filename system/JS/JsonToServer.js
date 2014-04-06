@@ -61,10 +61,12 @@ JsonToServer._layoutContext = {
     "X" : {
       "@id": "pipe:X",
       "@type" : "xsd:integer"
+//      "@type" : "xsd:float"
     },
     "Y" : {
-      "@id": "pipe:Y",
-      "@type" : "xsd:integer"
+    "@id": "pipe:Y",
+    "@type" : "xsd:integer"
+//      "@type" : "xsd:float"
     }
   }
 };
