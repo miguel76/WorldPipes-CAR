@@ -421,6 +421,7 @@ JsonToServer._generateSaveNQ =
   
       if (request == null) {
         alert("ERROR! Invalid Request");
+        updateStatus('Error Saving Pipeline');
       } else {
         request.open("PUT", JsonToServer._uriEncode(graphStore, graphName), false);
 //        request.setRequestHeader("Content-Type","application/n-quads");
@@ -444,10 +445,12 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
 	  return JsonToServer.savePipelineAndLayout(
 			  graphStore, pipelineURI, layoutURI, componentsVector,
 			  function(err, result) {
-				  if (err)
+				  if (err) {
 					  alert('Error: ' + err);
-				  else
-					  alert('Pipeline Saved');
+					  updateStatus('Error Saving Pipeline');
+				  } else {
+					  updateStatus('Pipeline Saved!');
+				  }
 			  });
 	
   var jsonModified = JsonToServer._jsonConvertValues(componentsVector, JsonToServer._jsonEncode);
@@ -505,32 +508,40 @@ JsonToServer.savePipelineData = function (graphStore, pipelineMainURI, component
 			graphStore,
 			pipelineMainURI,
 			function(err, pipelineURI, layoutURI, dataflowUri) {
-				if (err)
+				if (err) {
 					alert('Error: ' + err);
-				else
+					updateStatus('Error Saving Pipeline');
+				} else
 					JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineURI, layoutURI, componentsVector);
 			});
 	
 };
 
 JsonToServer.saveAll = function (graphStore, pipelineMainURI, dataflowTurtle, componentsVector) {
-	return JsonToServer._getPipelineAndLayoutUris(
-			graphStore,
-			pipelineMainURI,
-			function(err, pipelineURI, layoutURI, dataflowUri) {
-				if (err)
-					alert('Error: ' + err);
-				else
-					JsonToServer.saveDataflow(
-							dataflowUri, dataflowTurtle,
-							function(err) {
-								if (err)
-									alert('Error: ' + err);
-								else
-									JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineURI, layoutURI, componentsVector);
+	updateStatus(
+			'Saving Pipeline...',
+			function() {
+				return JsonToServer._getPipelineAndLayoutUris(
+						graphStore,
+						pipelineMainURI,
+						function(err, pipelineURI, layoutURI, dataflowUri) {
+							if (err) {
+								alert('Error: ' + err);
+								updateStatus('Error Saving Pipeline');
 							}
-					);
-			});
+							else
+								JsonToServer.saveDataflow(
+										dataflowUri, dataflowTurtle,
+										function(err) {
+											if (err) {
+												alert('Error: ' + err);
+												updateStatus('Error Saving Pipeline');
+											} else
+												JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineURI, layoutURI, componentsVector);
+										}
+								);
+						});
+			} );
 };
 
 /* From RDF (N-Quads) to js object */

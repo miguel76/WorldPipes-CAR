@@ -64,6 +64,15 @@
 		<script type="text/javascript" src="JS/actionListenerResizeY.js"></script>
 		<script type="text/javascript" src="JS/actionListenerImg.js"></script>
 
+		<script type="text/javascript">
+			function updateStatus(newText,cont) {
+				var statusBarElement = document.getElementById("statusBar");
+				statusBarElement.textContent = newText;
+				if (cont)
+					return cont();
+			}
+		</script>
+
 <!-- 		
 		<script type="text/javascript" src="JS/jquery.rdfquery.core-1.0.js"></script>
 		<script type="text/javascript" src="JS/jquery.rdfquery.rdfa-1.0.js"></script>
@@ -77,8 +86,12 @@
 		<!-- 
 		<div class="barraimg"> World pipes </div>
 		 -->
+
+		<!-- Status Bar -->
+    	<div id="statusBar">&nbsp;</div>
+		
 		<!-- Barra pulsanti -->
-		<div class="barrapulsanti">
+<!-- 		<div class="barrapulsanti"> -->
 			<div id="pulsante">
 				<ul title="pulsanti">
 <!-- 					<li><img class="pulsanti" src="IMG/new.gif" title="New" draggable="false"/></li> -->
@@ -89,7 +102,7 @@
 					<li><img class="pulsanti" src="IMG/publish.gif" title="publish" draggable="false"/></li>
 				</ul>
 			</div>
-		</div>
+<!-- 		</div> -->
 		
 		<!-- Barra Tools -->
 		<div class="barratools">

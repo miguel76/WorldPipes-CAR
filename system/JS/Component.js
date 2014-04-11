@@ -337,21 +337,28 @@ Component.createConnection = function(editor){
 
 Component.jsonLoad = function(){
 	var editor = Core.getElementsByClass("areaeditor")[0];
-	JsonToServer.loadPipelineData(URIGraphStore,PipelineMainURI,
-		function(err,result){
-			if(err != null){alert("Error!" + err);}
-			else{
-				if (result && result.length > 0) {
-//					alert(JSON.stringify(result));
-					Component.refreshEditor(editor);	
-					componentVett = result;					
-					Component.scorriVettore(editor,componentVett);
-					for(var i=0;i<componentVett.length;i++){
-						if(componentVett[i].Code + 1 > cnt){
-							cnt = componentVett[i].Code + 1;
+	updateStatus(
+			"Loading Pipeline...",
+			function() {
+				JsonToServer.loadPipelineData(URIGraphStore,PipelineMainURI,
+						function(err,result){
+					if(err != null){
+						alert("Error!" + err);
+						updateStatus("Error Loading Pipeline");
+					} else {
+						if (result && result.length > 0) {
+//						alert(JSON.stringify(result));
+							Component.refreshEditor(editor);	
+							componentVett = result;					
+							Component.scorriVettore(editor,componentVett);
+							for(var i=0;i<componentVett.length;i++){
+								if(componentVett[i].Code + 1 > cnt){
+									cnt = componentVett[i].Code + 1;
+								}
+							}
 						}
 					}
-				}
-			}
-		});
+					updateStatus("Pipeline Loaded!");
+				});
+			});
 };

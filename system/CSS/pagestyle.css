@@ -40,12 +40,33 @@ button#pulsanti{
 
 .barrapulsanti{
 	height:20px;
+	width: 100px;
+}
+
+div#statusBar {
+	position: absolute;
+	leftt: 10px;
+	height: 20px;
+	width: 800px;
+	display:block;
+/*	margin-top:15px; */
+	margin-left:5px;
+	margin-right:3px;
+	margin-bottom:3px;
+	text-align:left;
+	font-weight: bold;
+    font-size: small;
+    padding: 3px 8px 1px 8px;
 }
 
 /*"Buttons" layout*/
 div#pulsante{
+	position: absolute;
+	right: 10px;
+	height: 20px;
+	width: 100px;
 	display:block;
-	margin-top:15px;
+/*	margin-top:15px; */
 	margin-right:3px;
 	margin-bottom:3px;
 	text-align:right;
@@ -71,7 +92,7 @@ img.pulsanti{
 /*Toolbar layout*/
 .barratools{
 	position:absolute;
-	top:45px;
+	top:35px;
 	left:5px;
 	right:auto;
 	bottom:auto;
@@ -249,7 +270,7 @@ p#paragrafo{
 	overflow:auto;
 	display:block;
 	position:absolute;
-	top:45px;
+	top:35px;
 	left:165px;
 	right:5px;
 	bottom:5px;

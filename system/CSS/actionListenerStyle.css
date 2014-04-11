@@ -20,7 +20,7 @@
 /*Layout per collassare verticalmente*/
 .verticalresize{
 	position:absolute;
-	top:45px;
+	top:35px;
 	left:158px;
 	bottom:5px;
 	border:1px solid #FFFFFF;
@@ -43,7 +43,7 @@
 
 .verticalanimationresize{
 	position:absolute;
-	top:45px;
+	top:35px;
 	left:158px;
 	bottom:5px;
 	border:1px solid #89A;
