@@ -409,6 +409,43 @@ JsonToServer._saveTurtle =  function (graphStore, graphName, graphTurtle, callba
 				});
 };
 
+JsonToServer._saveJsonLd =  function (graphStore, graphName, graphJsonLd, callback) {
+	if (graphStore)
+		return JsonToServer._httpPut(
+				JsonToServer._uriEncode(graphStore, graphName),
+				"application/ld+json",
+				graphJsonLd,
+				callback);
+	else
+		return JsonToServer._decomposeURI(
+				graphName,
+				function(folderUri, fileName) {
+					return JsonToServer._checkContentInFolder(
+							folderUri,
+							graphName,
+							function(err, found) {
+								if (err)
+									return callback(err);
+								else {
+									if (found)
+										return JsonToServer._httpPut(
+												graphName,
+												"application/ld+json",
+												graphJsonLd,
+												callback);
+									else
+										return JsonToServer._httpPost(
+												folderUri + "?contents",
+												"application/ld+json",
+												fileName,
+												graphJsonLd,
+												callback);
+								}
+							}
+					);
+				});
+};
+
 
 JsonToServer._generateSaveNQ =
   function (graphStore, graphName) {
@@ -456,18 +493,24 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
   var jsonModified = JsonToServer._jsonConvertValues(componentsVector, JsonToServer._jsonEncode);
 //  alert(JSON.stringify(jsonModified));
   
-  return jsonld.toRDF(
-      jsonModified,
-      { "base" : pipelineURI, 
-        "expandContext" : JsonToServer._pipelineContext,
-        "format" : "application/nquads"
-//        "format" : "application/n-triples"
-      },
+//  return jsonld.toRDF(
+//      jsonModified,
+//      { "base" : pipelineURI, 
+//        "expandContext" : JsonToServer._pipelineContext,
+//        "format" : "application/nquads"
+////        "format" : "application/n-triples"
+//      },
+  return jsonld.expand(
+	      jsonModified,
+	      { "base" : null, 
+	        "expandContext" : JsonToServer._pipelineContext
+	      },
       function(err, result) {
     	  if (err)
     		  return callback(err);
     	  else
-    		  return JsonToServer._saveTurtle(
+//    		  return JsonToServer._saveTurtle(
+    		  return JsonToServer._saveJsonLd(
     				  null, //graphStore,
     				  pipelineURI,
     				  result,
@@ -475,18 +518,24 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
     			    	  if (err)
     			    		  return callback(err);
     			    	  else
-    			    		  return jsonld.toRDF(
-    			    				  jsonModified,
-    			    				  { "base" : pipelineURI, 
-    			    					  "expandContext" : JsonToServer._layoutContext,
-    			    					  "format" : "application/nquads"
-//    						        	"format" : "application/n-triples"
-    			    				  },
+//    			    		  return jsonld.toRDF(
+//    			    				  jsonModified,
+//    			    				  { "base" : pipelineURI, 
+//    			    					  "expandContext" : JsonToServer._layoutContext,
+//    			    					  "format" : "application/nquads"
+////    						        	"format" : "application/n-triples"
+//    			    				  },
+    			    		  return jsonld.expand(
+    			    			      jsonModified,
+    			    			      { "base" : null, 
+    			    			        "expandContext" : JsonToServer._layoutContext
+    			    			      },
     			    				  function(err, result) {
         		    			    	  if (err)
         		    			    		  return callback(err);
         		    			    	  else
-        		    			    		  return JsonToServer._saveTurtle(
+        		    			    		  return JsonToServer._saveJsonLd(
+//        		    			    		  return JsonToServer._saveTurtle(
         		    			    				  null, //graphStore,
         		    			    				  layoutURI,
         		    			    				  result,
@@ -628,6 +677,29 @@ JsonToServer._loadNQ = function (graphStore, graphName, callback) {
 	return JsonToServer._httpGet(
 			  JsonToServer._uriEncode(graphStore, graphName),
 			  "text/turtle",
+//			  callback);
+			  function(err,result) {
+				  if (err)
+					  return callback(err);
+				  else
+					  return JsonToServer._fromTurtleToTriples(
+			        			JsonToServer.qualifyURL(graphStore.substr(0,graphStore.lastIndexOf("/")+1)),
+			        			result,
+			        			callback);
+			  });
+}
+
+JsonToServer._loadJsonLd = function (graphStore, graphName, callback) {
+	if (graphStore == null) {
+		return JsonToServer._httpGet(
+				  graphName,
+//				  "application/n-triples",
+				  "application/ld+json",
+				  callback);
+	}
+	return JsonToServer._httpGet(
+			  JsonToServer._uriEncode(graphStore, graphName),
+			  "application/ld+json",
 //			  callback);
 			  function(err,result) {
 				  if (err)
