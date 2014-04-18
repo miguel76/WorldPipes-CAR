@@ -259,7 +259,7 @@ Component.loadPipeline = function(editor,code,component,id,uri,name,query,inputl
 	div.title = code;
 	
 	var img = document.createElement("img");
-	img.setAttribute("id","activeimg");
+	img.setAttribute("class","activeimg");
 	
 	if(component == "inputdefault" || component == "input"){img.src = "IMG/Input.gif";}
 	if(component == "outputdefault" || component == "output"){img.src = "IMG/Output.gif";}

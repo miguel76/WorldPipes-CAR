@@ -36,9 +36,10 @@ var actionListenerImg =
 		var indef = document.createElement("div");
 		indef.setAttribute("class","activegraph");
 		indef.title = "Default Input";
+		indef.id = "comp-" + componentVett.length;
 			
 		var img = document.createElement("img");
-		img.setAttribute("id","activeimg");
+		img.setAttribute("class","activeimg");
 		img.src = "IMG/Input.gif";
 		indef.appendChild(img);
 			
@@ -63,9 +64,10 @@ var actionListenerImg =
 		var outdef = document.createElement("div");
 		outdef.setAttribute("class","activegraph");
 		outdef.title = "Default Output";
+		outdef.id = "comp-" + componentVett.length;
 			
 		var img = document.createElement("img");
-		img.setAttribute("id","activeimg");
+		img.setAttribute("class","activeimg");
 		img.src = "IMG/Output.gif";
 		outdef.appendChild(img);
 			
@@ -168,7 +170,7 @@ var actionListenerImg =
 			div.title = "Input";
 			
 			var img = document.createElement("img");
-			img.setAttribute("id","activeimg");
+			img.setAttribute("class","activeimg");
 			img.src = "IMG/Input.gif";
 			div.appendChild(img);
 			
@@ -230,7 +232,7 @@ var actionListenerImg =
 			div.title = "Output";
 			
 			var img = document.createElement("img");
-			img.setAttribute("id","activeimg");
+			img.setAttribute("class","activeimg");
 			img.src = "IMG/Output.gif";
 			div.appendChild(img);
 			
@@ -292,7 +294,7 @@ var actionListenerImg =
 			div.title = "Union";
 			
 			var img = document.createElement("img");
-			img.setAttribute("id","activeimg");
+			img.setAttribute("class","activeimg");
 			img.src = "IMG/Union.gif";
 			div.appendChild(img);
 			
@@ -354,7 +356,7 @@ var actionListenerImg =
 			div.title = "Construct";
 			
 			var img = document.createElement("img");
-			img.setAttribute("id","activeimg");
+			img.setAttribute("class","activeimg");
 			img.src = "IMG/Construct.gif";
 			div.appendChild(img);
 			
@@ -417,7 +419,7 @@ var actionListenerImg =
 			div.title = "Updatable";
 			
 			var img = document.createElement("img");
-			img.setAttribute("id","activeimg");
+			img.setAttribute("class","activeimg");
 			img.src = "IMG/Updatable.gif";
 			div.appendChild(img);
 			
@@ -479,7 +481,7 @@ var actionListenerImg =
 			div.title = "Dataset";
 			
 			var img = document.createElement("img");
-			img.setAttribute("id","activeimg");
+			img.setAttribute("class","activeimg");
 			img.src = "IMG/Dataset.gif";
 			div.appendChild(img);
 
@@ -539,7 +541,7 @@ var actionListenerImg =
 			div.title = "Pipeline";
 			
 			var img = document.createElement("img");
-			img.setAttribute("id","activeimg");
+			img.setAttribute("class","activeimg");
 			img.src = "IMG/pipes.gif";
 			div.appendChild(img);
 

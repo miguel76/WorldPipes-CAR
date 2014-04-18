@@ -34,6 +34,14 @@
 	left:1px;
 }
 
+img.activeimg{
+	display:inline-block;
+	position:relative;
+	width:30px;
+	top:4px;
+	left:1px;
+}
+
 .bottongraph{
 	display:inline-block;
 	position:relative;
