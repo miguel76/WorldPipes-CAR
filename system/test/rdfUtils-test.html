@@ -1,0 +1,42 @@
+<!-- Applicazione WORLD PIPES -->
+
+<html>
+	<head>
+		<title>rdfUtils Test</title>
+		<script type="text/javascript" src="../JS/rdfUtils.js"></script>	
+		
+		<!-- Controllo del Browser utente -->
+		<script type="text/javascript">
+			<!--[if IE]>
+			if ((navigator.userAgent.indexOf("Microsoft")!=-1) ||(navigator.userAgent.indexOf("Windows")!=-1)) {
+					alert("Il programma non è supportato da Interner Explorer!")
+					window.close();
+					window.open("http://www.google.it");
+			}
+			<![endif]-->
+
+		</script>
+	
+		<script type="text/javascript">
+
+                  function convert() {
+                	  document.getElementById("TriG").value = nQuadsToTriG.convert(document.getElementById("nQuads").value,{ base: "http://example.org/"});
+                  }
+
+		</script>
+	
+	
+	</head>
+	<body>
+		<form id="testForm">
+			<textarea id="nQuads" rows="20" cols="150">
+<http://one.example/subject1> <http://one.example/predicate1> <http://one.example/object1> <http://example.org/graph3> . # comments here
+# or on a line by themselves
+_:subject1 <http://an.example/predicate1> "object1" <http://example.org/graph1> .
+_:subject2 <http://an.example/predicate2> "object2" <http://example.org/graph5> .
+            </textarea>
+			<textarea id="TriG" rows="20" cols="150"></textarea>
+			<input type="button" name="Go" onclick="convert()">Go</input>
+		</form>
+	</body>
+</html>

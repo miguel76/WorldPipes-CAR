@@ -413,7 +413,7 @@ JsonToServer._saveJsonLd =  function (graphStore, graphName, graphJsonLd, callba
 	if (graphStore)
 		return JsonToServer._httpPut(
 				JsonToServer._uriEncode(graphStore, graphName),
-				"application/ld+json",
+				"application/json",
 				graphJsonLd,
 				callback);
 	else
@@ -430,13 +430,13 @@ JsonToServer._saveJsonLd =  function (graphStore, graphName, graphJsonLd, callba
 									if (found)
 										return JsonToServer._httpPut(
 												graphName,
-												"application/ld+json",
+												"application/json",
 												graphJsonLd,
 												callback);
 									else
 										return JsonToServer._httpPost(
 												folderUri + "?contents",
-												"application/ld+json",
+												"application/json",
 												fileName,
 												graphJsonLd,
 												callback);
