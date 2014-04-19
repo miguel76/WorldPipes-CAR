@@ -29,7 +29,6 @@ nQuadsToTriG._statement =
 nQuadsToTriG.compactTerm = function(term, turtleStruct) {
 	if (term && term.match(nQuadsToTriG._IRIREF)) {
 		var iri = term.substr(1,term.length-2);
-		console.log(iri);
 		if (turtleStruct.base && iri.substr(0,turtleStruct.base.length) == turtleStruct.base)
 			return "<" + iri.substr(turtleStruct.base.length) + ">";
 	}
@@ -37,9 +36,9 @@ nQuadsToTriG.compactTerm = function(term, turtleStruct) {
 }
 
 nQuadsToTriG.digestStament = function(stmt, turtleStruct) {
-	console.log(stmt);
+//	console.log(stmt);
 	var stmtArray = stmt.match(nQuadsToTriG._statement);
-	console.log(stmtArray);
+//	console.log(stmtArray);
 	var subject = nQuadsToTriG.compactTerm(stmtArray[1], turtleStruct);
 	var predicate = nQuadsToTriG.compactTerm(stmtArray[2], turtleStruct);
 	var object = nQuadsToTriG.compactTerm(stmtArray[3], turtleStruct);
@@ -108,11 +107,32 @@ nQuadsToTriG.digest = function(nQuads, turtleStruct) {
 		.forEach(
 				function(stmt) { nQuadsToTriG.digestStament(stmt, this); },
 				turtleStruct );
-	console.log(JSON.stringify(turtleStruct));
+//	console.log(JSON.stringify(turtleStruct));
 }
 
 nQuadsToTriG.convert = function(nQuads, turtleStruct) {
 	nQuadsToTriG.digest(nQuads, turtleStruct);
-	return nQuadsToTriG.serialize(turtleStruct);
+	return turtleStruct.content ? nQuadsToTriG.serialize(turtleStruct) : "";
 }
 
+nQuadsToTriG.convertFromBase = function(nQuads, baseIRI) {
+	return nQuadsToTriG.convert(nQuads, { base: baseIRI });
+}
+
+var jsonLdToTriG = {};
+
+jsonLdToTriG.convert = function(json, base, expandContext, callback) {
+	return jsonld.toRDF(
+	      json,
+	      { "base": base, "expandContext": expandContext, format: "application/nquads"},
+	      function(err, result) {
+	    	  if (err)
+	    		  callback(err);
+	    	  else
+	    		  callback(
+	    				  err,
+	    				  nQuadsToTriG.convertFromBase(
+	    						  result,
+	    						  base.substr(0,base.lastIndexOf("/")+1) ) );
+	      });
+}

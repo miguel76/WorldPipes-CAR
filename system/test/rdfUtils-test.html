@@ -20,7 +20,8 @@
 		<script type="text/javascript">
 
                   function convert() {
-                	  document.getElementById("TriG").value = nQuadsToTriG.convert(document.getElementById("nQuads").value,{ base: "http://example.org/"});
+//                 	  document.getElementById("TriG").value = nQuadsToTriG.convert(document.getElementById("nQuads").value,{ base: "http://example.org/"});
+                	  document.getElementById("TriG").value = nQuadsToTriG.convertFromBase(document.getElementById("nQuads").value,"http://example.org/");
                   }
 
 		</script>

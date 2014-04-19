@@ -475,12 +475,11 @@ JsonToServer._generateSaveNQ =
     };
 };
 
-
-JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutURI, componentsVector, callback) {
+JsonToServer.savePipelineAndLayout = function (graphStore, mainURI, pipelineURI, layoutURI, componentsVector, callback) {
 	
   if (!callback)
 	  return JsonToServer.savePipelineAndLayout(
-			  graphStore, pipelineURI, layoutURI, componentsVector,
+			  graphStore, mainURI, pipelineURI, layoutURI, componentsVector,
 			  function(err, result) {
 				  if (err) {
 					  alert('Error: ' + err);
@@ -500,20 +499,22 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
 //        "format" : "application/nquads"
 ////        "format" : "application/n-triples"
 //      },
-  return jsonld.expand(
-	      jsonModified,
-	      { "base" : null, 
-	        "expandContext" : JsonToServer._pipelineContext
-	      },
+  return jsonLdToTriG.convert(
+		  jsonModified, pipelineURI, JsonToServer._pipelineContext,
+//  return jsonld.expand(
+//	      jsonModified,
+//	      { "base" : null, 
+//	        "expandContext" : JsonToServer._pipelineContext
+//	      },
       function(err, result) {
     	  if (err)
     		  return callback(err);
     	  else
-//    		  return JsonToServer._saveTurtle(
-    		  return JsonToServer._saveJsonLd(
+    		  return JsonToServer._saveTurtle(
+//    		  return JsonToServer._saveJsonLd(
     				  null, //graphStore,
     				  pipelineURI,
-    				  result,
+    				  /*"@base <../> .\n\n" + */result,
     				  function(err, result) {
     			    	  if (err)
     			    		  return callback(err);
@@ -525,20 +526,22 @@ JsonToServer.savePipelineAndLayout = function (graphStore, pipelineURI, layoutUR
 //    			    					  "format" : "application/nquads"
 ////    						        	"format" : "application/n-triples"
 //    			    				  },
-    			    		  return jsonld.expand(
-    			    			      jsonModified,
-    			    			      { "base" : null, 
-    			    			        "expandContext" : JsonToServer._layoutContext
-    			    			      },
+    			    		  return jsonLdToTriG.convert(
+    			    				  jsonModified, layoutURI, JsonToServer._layoutContext,
+//    			    		  return jsonld.expand(
+//    			    			      jsonModified,
+//    			    			      { "base" : null, 
+//    			    			        "expandContext" : JsonToServer._layoutContext
+//    			    			      },
     			    				  function(err, result) {
         		    			    	  if (err)
         		    			    		  return callback(err);
         		    			    	  else
-        		    			    		  return JsonToServer._saveJsonLd(
-//        		    			    		  return JsonToServer._saveTurtle(
+//        		    			    		  return JsonToServer._saveJsonLd(
+        		    			    		  return JsonToServer._saveTurtle(
         		    			    				  null, //graphStore,
         		    			    				  layoutURI,
-        		    			    				  result,
+        		    			    				  /*"@base <../> .\n\n" + */result,
         		    			    				  callback);
     			    				  });
     				  });
@@ -561,7 +564,7 @@ JsonToServer.savePipelineData = function (graphStore, pipelineMainURI, component
 					alert('Error: ' + err);
 					updateStatus('Error Saving Pipeline');
 				} else
-					JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineURI, layoutURI, componentsVector);
+					JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineMainURI, pipelineURI, layoutURI, componentsVector);
 			});
 	
 };
@@ -586,7 +589,7 @@ JsonToServer.saveAll = function (graphStore, pipelineMainURI, dataflowTurtle, co
 												alert('Error: ' + err);
 												updateStatus('Error Saving Pipeline');
 											} else
-												JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineURI, layoutURI, componentsVector);
+												JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineMainURI, pipelineURI, layoutURI, componentsVector);
 										}
 								);
 						});
@@ -672,7 +675,16 @@ JsonToServer._loadNQ = function (graphStore, graphName, callback) {
 				  graphName,
 //				  "application/n-triples",
 				  "text/turtle",
-				  callback);
+//				  callback);
+				  function(err,result) {
+					  if (err)
+						  return callback(err);
+					  else
+						  return JsonToServer._fromTurtleToTriples(
+				        			JsonToServer.qualifyURL(graphName),
+				        			result,
+				        			callback);
+				  });
 	}
 	return JsonToServer._httpGet(
 			  JsonToServer._uriEncode(graphStore, graphName),
@@ -796,7 +808,7 @@ JsonToServer._fromTurtleToTriples = function(turtleBase,turtleText,receiveTriple
 //  );
 //}
 
-JsonToServer.loadPipelineAndLayout = function(graphStore, pipelineURI, layoutURI, callback) {
+JsonToServer.loadPipelineAndLayout = function(graphStore, mainURI, pipelineURI, layoutURI, callback) {
 	try {
 		return JsonToServer._loadNQ(
     		graphStore,
@@ -852,6 +864,7 @@ JsonToServer.loadPipelineData = function(graphStore, pipelineMainURI, callback) 
 						return JsonToServer.loadPipelineAndLayout(
 //								graphStore + '?graph=',
 								null,
+								pipelineMainURI,
 								pipelineURI, layoutURI,
 								callback);
 					else
