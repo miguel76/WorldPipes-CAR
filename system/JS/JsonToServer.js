@@ -638,7 +638,9 @@ JsonToServer.qualifyURL = function (url) {
     var img = document.createElement('img');
     img.src = url; // set string url
     url = img.src; // get qualified/absolute url
-    img.src = null; // no server request
+    //img.src = null; // no server request
+    delete img.src;
+    delete img;
     return url;
 }
 
@@ -758,7 +760,10 @@ JsonToServer._frame = function(pipelineURI, input, callback) {
 }
 
 JsonToServer._normalizeLiteral = function(literal) {
-	return literal.replace('\n','\\n').replace('\r','\\r');
+//	console.log("literal before: '" + literal + "'");
+//	console.log("literal after: '" + literal.replace(/\n/g,'\\n').replace(/\r/g,'\\r') + "'");
+	var endQuoteIndex = literal.lastIndexOf('"');
+	return '"' + literal.substr(1,endQuoteIndex-1).replace(/\n/g,'\\n').replace(/\r/g,'\\r').replace(/"/g,'\\"') + literal.substr(endQuoteIndex);
 }
 
 JsonToServer._fromTurtleToTriples = function(turtleBase,turtleText,receiveTriples) {
@@ -777,6 +782,7 @@ JsonToServer._fromTurtleToTriples = function(turtleBase,turtleText,receiveTriple
 						(triple.object.substr(0, 1) == '"' ? JsonToServer._normalizeLiteral(triple.object) : "<" + triple.object + ">") + ".\n";
 				}
 				else {
+//					console.log(triplesText);
 					receiveTriples(null,triplesText);
 				}
 			});
