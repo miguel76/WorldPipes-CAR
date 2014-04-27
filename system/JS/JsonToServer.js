@@ -482,13 +482,14 @@ JsonToServer.savePipelineAndLayout = function (graphStore, mainURI, pipelineURI,
 			  graphStore, mainURI, pipelineURI, layoutURI, componentsVector,
 			  function(err, result) {
 				  if (err) {
-					  alert('Error: ' + err);
+					  alert('Error: ' + JSON.stringify(err));
 					  updateStatus('Error Saving Pipeline');
 				  } else {
 					  updateStatus('Pipeline Saved!');
 				  }
 			  });
 	
+//  alert(JSON.stringify(componentsVector));
   var jsonModified = JsonToServer._jsonConvertValues(componentsVector, JsonToServer._jsonEncode);
 //  alert(JSON.stringify(jsonModified));
   

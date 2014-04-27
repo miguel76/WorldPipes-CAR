@@ -117,7 +117,7 @@ Component.modifica = function(code,ID,URI,NAME,QUERY,inputVett,X,Y){
 				if(componentVett[i].InputList.length != 0){
 					/*Scorre in vettore degli input di componentVett*/
 					for(var j=0;j<componentVett[i].InputList.length;j++){
-						componentVett[i].InputList[j].Code = inputVett[j].ConnectedComponentCode;
+						componentVett[i].InputList[j].ConnectedComponentCode = inputVett[j].ConnectedComponentCode;
 						componentVett[i].InputList[j].Id = inputVett[j].Id;
 						componentVett[i].InputList[j].Name = inputVett[j].Name;
 						componentVett[i].InputList[j].Shape = inputVett[j].Shape;

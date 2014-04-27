@@ -122,12 +122,15 @@ nQuadsToTriG.convertFromBase = function(nQuads, baseIRI) {
 var jsonLdToTriG = {};
 
 jsonLdToTriG.convert = function(json, base, expandContext, callback) {
+//	alert(json);
 	return jsonld.toRDF(
 	      json,
-	      { "base": base, "expandContext": expandContext, format: "application/nquads"},
+	      { "base": base, "expandContext": expandContext, "format": "application/nquads"},
 	      function(err, result) {
-	    	  if (err)
+	    	  if (err) {
+	    		  err["JSON"] = json;
 	    		  callback(err);
+	    	  }
 	    	  else
 	    		  callback(
 	    				  err,
