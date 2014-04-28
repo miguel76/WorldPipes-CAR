@@ -142,7 +142,7 @@ Code.scriviCodice = function(code){
 		pconstr.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:ConstructGraph ;";
 		pconstr.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
 //		pconstr.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
-		pconstr.innerHTML += "<dd>df:configTxt '''" + Component.getQuery(code) + "''' .</dd>";
+		pconstr.innerHTML += "<dd>df:configTxt '''" + Code.escapeQuery(Component.getQuery(code)) + "''' .</dd>";
 				
 		codeconstr.appendChild(pconstr);
 		p.appendChild(codeconstr);
@@ -155,12 +155,16 @@ Code.scriviCodice = function(code){
 		pupdat.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:UpdatableGraph ;";
 		pupdat.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
 //		pupdat.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
-		pupdat.innerHTML += "<dd>df:configTxt '''" + Component.getQuery(code) + "''' .</dd>";
+		pupdat.innerHTML += "<dd>df:configTxt '''" + Code.escapeQuery(Component.getQuery(code)) + "''' .</dd>";
 		
 		codeupdat.appendChild(pupdat);
 		p.appendChild(codeupdat);
 	}
 };
+
+Code.escapeQuery = function(query) {
+	return query.replace('\\','\\\\').replace("'''","\'\'\'");
+}
 
 /*Modifica il codice del componente passato come parametro in base all'operazione su di esso effettuata*/
 Code.modificaCodice = function(code){
@@ -256,7 +260,7 @@ Code.modificaCodice = function(code){
 		}	
 	
 		pconstr.innerHTML += "<dd></dd>";
-		pconstr.lastChild.textContent = "df:configTxt '''" + Component.getQuery(code) + "''' .";
+		pconstr.lastChild.textContent = "df:configTxt '''" + Code.escapeQuery(Component.getQuery(code)) + "''' .";
 		codeconstr.appendChild(pconstr);
 		p.appendChild(codeconstr);
 		
@@ -286,7 +290,7 @@ Code.modificaCodice = function(code){
 			pupdat.innerHTML += "<dd>];</dd>";
 		}
 		pupdat.innerHTML += "<dd></dd>";
-		pupdat.lastChild.textContent = "df:configTxt '''" + Component.getQuery(code) + "''' .";
+		pupdat.lastChild.textContent = "df:configTxt '''" + Code.escapeQuery(Component.getQuery(code)) + "''' .";
 		
 		codeupdat.appendChild(pupdat);
 		p.appendChild(codeupdat);
