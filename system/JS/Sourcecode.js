@@ -50,6 +50,12 @@ var pubDataflowURI = GraphURIPrefix + "dataflow/public";
 //		});
 
 /*Scrive il codice corrispondente ad ogni componente inserito nell'area edito non ancora connesso*/
+
+Code.encodeID = function(id) {
+	return id;
+//	return encodeURIComponent(id);
+}
+
 Code.scriviCodice = function(code){
 	var component = Component.getComponent(code);
 	var p = Core.getElementsByClass("codeclass")[0];
@@ -71,7 +77,7 @@ Code.scriviCodice = function(code){
 		var pin = document.createElement("p");
 		pin.setAttribute("id",code);
 	
-		pin.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:SelectGraph ;";
+		pin.innerHTML += "&lt;#" + Code.encodeID(Component.getID(code)) + "&gt; a df:SelectGraph ;";
 		pin.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
 //		pin.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		pin.innerHTML += '<dd>df:id &lt;' + Component.getURI(code) + '&gt; ;</dd>';
@@ -127,7 +133,7 @@ Code.scriviCodice = function(code){
 		var punion = document.createElement("p");
 		punion.setAttribute("id",code);
 		
-		punion.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:UnionGraph ; </br>";
+		punion.innerHTML += "&lt;#" + Code.encodeID(Component.getID(code)) + "&gt; a df:UnionGraph ; </br>";
 		punion.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" .</dd>';
 //		punion.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] .</dd>';
 		
@@ -139,7 +145,7 @@ Code.scriviCodice = function(code){
 		var pconstr = document.createElement("p");
 		pconstr.setAttribute("id",code);
 		
-		pconstr.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:ConstructGraph ;";
+		pconstr.innerHTML += "&lt;#" + Code.encodeID(Component.getID(code)) + "&gt; a df:ConstructGraph ;";
 		pconstr.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
 //		pconstr.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		pconstr.innerHTML += "<dd>df:configTxt '''" + Code.escapeQuery(Component.getQuery(code)) + "''' .</dd>";
@@ -152,7 +158,7 @@ Code.scriviCodice = function(code){
 		var pupdat = document.createElement("p");
 		pupdat.setAttribute("id",code);
 		
-		pupdat.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:UpdatableGraph ;";
+		pupdat.innerHTML += "&lt;#" + Code.encodeID(Component.getID(code)) + "&gt; a df:UpdatableGraph ;";
 		pupdat.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
 //		pupdat.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		pupdat.innerHTML += "<dd>df:configTxt '''" + Code.escapeQuery(Component.getQuery(code)) + "''' .</dd>";
@@ -163,7 +169,7 @@ Code.scriviCodice = function(code){
 };
 
 Code.escapeQuery = function(query) {
-	return query.replace('\\','\\\\').replace("'''","\'\'\'");
+	return query.replace(/\\/g,'\\\\').replace(/'''/g,"\'\'\'");
 }
 
 /*Modifica il codice del componente passato come parametro in base all'operazione su di esso effettuata*/
@@ -178,11 +184,11 @@ Code.modificaCodice = function(code){
 		var punion = document.createElement("p");
 		punion.setAttribute("id",code);
 		
-		punion.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:UnionGraph ; </br>";
+		punion.innerHTML += "&lt;#" + Code.encodeID(Component.getID(code)) + "&gt; a df:UnionGraph ; </br>";
 	
 		var inputUnion = Component.getVett(code);
 	
-		if(inputUnion.length != 0){for(var i=0; i< inputUnion.length;i++){	punion.innerHTML += '<dd>df:input &lt;#' + encodeURIComponent(inputUnion[i].Id) + '&gt; ;</dd>';}}
+		if(inputUnion.length != 0){for(var i=0; i< inputUnion.length;i++){	punion.innerHTML += '<dd>df:input &lt;#' + Code.encodeID(inputUnion[i].Id) + '&gt; ;</dd>';}}
 		punion.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" .</dd>';		
 		
 //		punion.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] .</dd>';
@@ -202,7 +208,7 @@ Code.modificaCodice = function(code){
 		
 		var inputDef = Component.getVett(1);
 		if(inputDef.length != 0){
-			for(i=0;i<inputDef.length;i++){	outdef.innerHTML += '; <dd>df:input &lt;#' + encodeURIComponent(inputDef[i].Id) + '&gt; </dd>';}
+			for(i=0;i<inputDef.length;i++){	outdef.innerHTML += '; <dd>df:input &lt;#' + Code.encodeID(inputDef[i].Id) + '&gt; </dd>';}
 		}
 //		outdef.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(1) + '\"^^xsd:integer; df:positionY \"' + Component.getY(1) + '\"^^xsd:integer ] .</dd>';
 		outdef.innerHTML += ' . '; 
@@ -224,7 +230,7 @@ Code.modificaCodice = function(code){
 		
 		var inputOut = Component.getVett(code);
 		if(inputOut.length != 0){
-			for(var i=0;i<inputOut.length;i++){pout.innerHTML += '<dd>df:input &lt;#' + encodeURIComponent(inputOut[i].Id) +'&gt; ;</dd>';}
+			for(var i=0;i<inputOut.length;i++){pout.innerHTML += '<dd>df:input &lt;#' + Code.encodeID(inputOut[i].Id) +'&gt; ;</dd>';}
 		}
 		pout.innerHTML += "<dd>df:id &lt;" + Component.getURI(code) + "&gt; ;</dd>";
 		pout.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" .</dd>';
@@ -242,7 +248,7 @@ Code.modificaCodice = function(code){
 		var pconstr = document.createElement("p");
 		pconstr.setAttribute("id",code);
 		
-		pconstr.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:ConstructGraph ;";
+		pconstr.innerHTML += "&lt;#" + Code.encodeID(Component.getID(code)) + "&gt; a df:ConstructGraph ;";
 		pconstr.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
 //		pconstr.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		
@@ -254,7 +260,7 @@ Code.modificaCodice = function(code){
 				if(Component.getID(inputConstr[i].ConnectedComponentCode) != null){id = Component.getID(inputConstr[i].ConnectedComponentCode);}
 				else{id = Component.getURI(inputConstr[i].ConnectedComponentCode);}
 				if(id == null){id = "";}
-				pconstr.innerHTML += '<dd>df:namedInput [a df:NamedGraph ; df:name \"' + inputConstr[i].Name + '\" ; df:input &lt;#' + encodeURIComponent(id) + '&gt; ; df:id &lt;#' + encodeURIComponent(inputConstr[i].Id) + '&gt; ];</dd>';
+				pconstr.innerHTML += '<dd>df:namedInput [a df:NamedGraph ; df:name \"' + inputConstr[i].Name + '\" ; df:input &lt;#' + Code.encodeID(id) + '&gt; ; df:id &lt;#' + encodeURIComponent(inputConstr[i].Id) + '&gt; ];</dd>';
 			}
 			pconstr.innerHTML += "<dd>];</dd>";
 		}	
@@ -273,7 +279,7 @@ Code.modificaCodice = function(code){
 		var pupdat = document.createElement("p");
 		pupdat.setAttribute("id",code);
 		
-		pupdat.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:UpdatableGraph ;";
+		pupdat.innerHTML += "&lt;#" + Code.encodeID(Component.getID(code)) + "&gt; a df:UpdatableGraph ;";
 		pupdat.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
 //		pupdat.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		
@@ -285,7 +291,7 @@ Code.modificaCodice = function(code){
 				if(Component.getID(inputUpdat[i].ConnectedComponentCode) != null){id = Component.getID(inputUpdat[i].ConnectedComponentCode);}
 				else{id = Component.getURI(inputUpdat[i].ConnectedComponentCode);}
 				if(id == null){id = "";}
-				pupdat.innerHTML += '<dd>df:namedInput [a df:NamedGraph ; df:name \"' + inputUpdat[i].Name + '\" ; df:input &lt;#' + encodeURIComponent(id) + '&gt; ; df:id &lt;#' + encodeURIComponent(inputUpdat[i].Id) + '&gt; ];</dd>';
+				pupdat.innerHTML += '<dd>df:namedInput [a df:NamedGraph ; df:name \"' + inputUpdat[i].Name + '\" ; df:input &lt;#' + Code.encodeID(id) + '&gt; ; df:id &lt;#' + encodeURIComponent(inputUpdat[i].Id) + '&gt; ];</dd>';
 			}
 			pupdat.innerHTML += "<dd>];</dd>";
 		}
@@ -337,7 +343,7 @@ Code.modificaCodice = function(code){
 		var pin = document.createElement("p");
 		pin.setAttribute("id",code);
 	
-		pin.innerHTML += "&lt;#" + encodeURIComponent(Component.getID(code)) + "&gt; a df:SelectGraph ;";
+		pin.innerHTML += "&lt;#" + Code.encodeID(Component.getID(code)) + "&gt; a df:SelectGraph ;";
 		pin.innerHTML += '<dd>df:name \"' + Component.getName(code) + '\" ;</dd>';
 //		pin.innerHTML += '<dd>df:uiData[ df:positionX \"' + Component.getX(code) + '\"^^xsd:integer; df:positionY \"' + Component.getY(code) + '\"^^xsd:integer ] ;</dd>';
 		pin.innerHTML += '<dd>df:id &lt;' + Component.getURI(code) + '&gt; ;</dd>';
