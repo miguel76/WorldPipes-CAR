@@ -21,41 +21,41 @@ Endpoint.createEndpoint = function(div,code,info){
 			maxConnections:100,
 			isSource:true,
 			connectorOverlays:[
-				"Arrow",
-				[ "Label", { cssClass:"label", label:"",location:0.3, id:"lbl", events:{
-					"click":function(label,event) { 
-						Core.preventDefault(event);
-					
-						var parameter = label.component.getParameters();
-						jsPlumb.detach(label.component);
-						
-						/*Taglio connessioni quando i componenti sono target*/
-						if(Component.getComponent(parameter.codeTarget) == "output"){
-							var inputOut = Component.getVett(parameter.codeTarget);
-							InputType.eliminaInput(inputOut,parameter.codeSource);
-							Code.modificaCodice(parameter.codeTarget);
-						}
-						if(Component.getComponent(parameter.codeTarget) == "outputdefault"){
-							var inputDef = Component.getVett(parameter.codeTarget);
-							InputType.eliminaInput(inputDef,parameter.codeSource);
-							Code.modificaCodice(1);
-						}
-						if(Component.getComponent(parameter.codeTarget) == "construct"){
-							var inputConstr = Component.getVett(parameter.codeTarget);
-							InputType.eliminaCode(inputConstr,parameter.codeSource);
-							Code.modificaCodice(parameter.codeTarget);
-						}
-						if(Component.getComponent(parameter.codeTarget) == "updatable"){
-							var inputUpdat = Component.getVett(parameter.codeTarget);
-							InputType.eliminaCode(inputUpdat,parameter.codeSource);
-							Code.modificaCodice(parameter.codeTarget);
-						}
-						if(Component.getComponent(parameter.codeTarget) == "union"){
-							var inputUnion = Component.getVett(parameter.codeTarget);
-							InputType.eliminaInput(inputUnion,parameter.codeSource);
-							Code.modificaCodice(parameter.codeTarget);
-						}		
-					}}}]
+				"Arrow"
+//				[ "Label", { cssClass:"label", label:"",location:0.3, id:"lbl", events:{
+//					"click":function(label,event) { 
+//						Core.preventDefault(event);
+//					
+//						var parameter = label.component.getParameters();
+//						jsPlumb.detach(label.component);
+//						
+//						/*Taglio connessioni quando i componenti sono target*/
+//						if(Component.getComponent(parameter.codeTarget) == "output"){
+//							var inputOut = Component.getVett(parameter.codeTarget);
+//							InputType.eliminaInput(inputOut,parameter.codeSource);
+//							Code.modificaCodice(parameter.codeTarget);
+//						}
+//						if(Component.getComponent(parameter.codeTarget) == "outputdefault"){
+//							var inputDef = Component.getVett(parameter.codeTarget);
+//							InputType.eliminaInput(inputDef,parameter.codeSource);
+//							Code.modificaCodice(1);
+//						}
+//						if(Component.getComponent(parameter.codeTarget) == "construct"){
+//							var inputConstr = Component.getVett(parameter.codeTarget);
+//							InputType.eliminaCode(inputConstr,parameter.codeSource);
+//							Code.modificaCodice(parameter.codeTarget);
+//						}
+//						if(Component.getComponent(parameter.codeTarget) == "updatable"){
+//							var inputUpdat = Component.getVett(parameter.codeTarget);
+//							InputType.eliminaCode(inputUpdat,parameter.codeSource);
+//							Code.modificaCodice(parameter.codeTarget);
+//						}
+//						if(Component.getComponent(parameter.codeTarget) == "union"){
+//							var inputUnion = Component.getVett(parameter.codeTarget);
+//							InputType.eliminaInput(inputUnion,parameter.codeSource);
+//							Code.modificaCodice(parameter.codeTarget);
+//						}		
+//					}}}]
 				],
 				parameters:{
 					"source":Component.getComponent(code),
@@ -80,7 +80,8 @@ Endpoint.createEndpoint = function(div,code,info){
 			jsPlumb.Defaults.HoverPaintStyle = { strokeStyle: "#FF3300" };
 			
 			if(component == "input" || component == "dataset" || component == "inputdefault"){
-				jsPlumb.addEndpoint(div, { anchor:"BottomCenter"}, sourceEndpoint);
+				jsPlumb.addEndpoint(div, { anchor:"BottomCenter" }, sourceEndpoint);
+//				jsPlumb.addEndpoint(div, { anchor:[ 0.5, 1, 0, -1 ]}, sourceEndpoint);
 			}
 			
 			if(component == "output" || component == "outputdefault" ){
@@ -204,7 +205,7 @@ Endpoint.createEndpoint = function(div,code,info){
 				
 				var connections = jsPlumb.getConnections(div);	
 			});
-			
+			jsPlumb.repaint(div);
 			jsPlumb.draggable(div);
 };
 

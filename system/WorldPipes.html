@@ -36,9 +36,16 @@
 		<link type="text/css" rel="stylesheet" href="CSS/drag%26dropstyle.css" />
 		<link type="text/css" rel="stylesheet" href="CSS/tablestyle.css" />
 
+		<link type="text/css" rel="stylesheet" href="http://jsplumbtoolkit.com/css/jsplumb.css" />
+		<link type="text/css" rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" />
+		
 		<script type="text/javascript" src="JS/jquery.min.js"></script>
 		<script type="text/javascript" src="JS/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="JS/jquery.jsPlumb-1.5.2.js"></script>
+<!-- 		<script type="text/javascript" src="JS/jquery.jsPlumb-1.5.2.js"></script> -->
+
+		<script type="text/javascript" src="http://jsplumbtoolkit.com/js/dom.jsPlumb-1.6.1-min.js"></script>
+		<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+
 		<script type="text/javascript" src="JS/jsonld.js"></script>	
 		<script type="text/javascript" src="JS/core.js"></script>	
 		<script type="text/javascript" src="JS/Sourcecode.js"></script>	
@@ -66,6 +73,11 @@
 		<script type="text/javascript" src="JS/actionListenerImg.js"></script>
 
 		<script type="text/javascript">
+			function onLoad() {
+				jsPlumb.Defaults.Container = document.getElementById("areaeditor");
+				Component.jsonLoad();
+			}
+
 			function updateStatus(newText,cont) {
 				var statusBarElement = document.getElementById("statusBar");
 				statusBarElement.textContent = newText;
@@ -81,7 +93,7 @@
  -->
  	
 	</head>
-	<body onload="Component.jsonLoad()">	
+	<body onload="onLoad()">	
 	  <div id="editorContainer">	
 		<!-- Barra immagine -->
 		<!-- 
@@ -123,17 +135,17 @@
 <!-- 						<li><img class="graph" id="grafo" src="IMG/Union.gif" title="union graph"/><br/>union</li> -->
 <!-- 						<li><img class="graph" id="grafo" src="IMG/Updatable.gif" title="updatable graph"/><br/>updatable</li> -->
 <!-- 					</ul> -->
-					<table title="componentImg">
+					<table id="componentImg">
 						<tr>
-							<td><img class="graph" id="grafo" src="IMG/Input.gif" title="input graph"/><br/>Input</td>
-							<td><img class="graph" id="grafo" src="IMG/Output.gif" title="output graph"/><br/>Output</td>
+							<td><img class="graph" id="inputComp" src="IMG/Input.gif" title="Input Graph"/><br/>Input</td>
+							<td><img class="graph" id="outputComp" src="IMG/Output.gif" title="Output Graph"/><br/>Output</td>
 						</tr>
 						<tr>
-							<td><img class="graph" id="grafo" src="IMG/Construct.gif" title="construct graph"/><br/>Construct</td>
-							<td><img class="graph" id="grafo" src="IMG/Union.gif" title="union graph"/><br/>Union</td>
+							<td><img class="graph" id="constructComp" src="IMG/Construct.gif" title="Construct Graph"/><br/>Construct</td>
+							<td><img class="graph" id="unionComp" src="IMG/Union.gif" title="Union Graph"/><br/>Union</td>
 						</tr>
 						<tr>
-							<td><img class="graph" id="grafo" src="IMG/Updatable.gif" title="updatable graph"/><br/>Updatable</td>
+							<td><img class="graph" id="updatableComp" src="IMG/Updatable.gif" title="Updatable Graph"/><br/>Updatable</td>
 						</tr>
 					</table>
 				</div>
@@ -149,8 +161,8 @@
 			-->
 				<div name="contentdataset" class="content" id="dataset">		
 					<div id="grafici">
-						<ul title="new data source">
-							<li><img class="graph" id="grafo" src="IMG/Dataset.gif" title="New Dataset"/><br/>New Dataset</li>
+						<ul>
+							<li><img class="graph" id="datasetComp" src="IMG/Dataset.gif" title="New Dataset"/><br/>New Dataset</li>
 						</ul>
 					</div>
 				</div>
@@ -178,7 +190,7 @@
 		</div>
 					
 		<!-- Area Editor -->
-		<div class="areaeditor">
+		<div id="areaeditor" class="areaeditor">
 			<div id="edit">
 				<div class="dropareainvite">
 					<div class="droptext">drag modules here</div>

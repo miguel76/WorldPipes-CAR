@@ -136,7 +136,7 @@ var actionListenerImg =
 	/* ***************************************** Drag & drop ***************************************** */
 	
 	DragStart: function(event){
-		event.dataTransfer.setData("image/gif",this.title);
+		event.dataTransfer.setData("compId",this.id);
 	},
 	
 	DragEnter: function(event){
@@ -158,16 +158,16 @@ var actionListenerImg =
 		Core.preventDefault(event); 
 		//Core.removeClass(this,"attivo");
 		
-		var title = event.dataTransfer.getData("image/gif");
+		var id = event.dataTransfer.getData("compId");
 			
-		if(title == "input graph"){		
+		if(id == "inputComp"){		
 			cnt++;
 			var code = cnt;
 			
 			var div = document.createElement("div");
 			div.setAttribute("class","activegraph");
 			div.setAttribute("id","comp-" + code);
-			div.title = "Input";
+			//div.title = "Input";
 			
 			var img = document.createElement("img");
 			img.setAttribute("class","activeimg");
@@ -180,13 +180,15 @@ var actionListenerImg =
 			var proprieta = document.createElement("img");
 			proprieta.setAttribute("class","bottongraph");
 			proprieta.src = "IMG/pulsanteproprieta.gif";
-			proprieta.title = "property";
+			proprieta.title = "Component Properties";
+			proprieta.class = "compProperties";
 			div.appendChild(proprieta);
 					
 			var elimina = document.createElement("img");
 			elimina.setAttribute("class","bottongraph");
 			elimina.src = "IMG/iconaX.gif";
-			elimina.title = "delete";
+			elimina.title = "Delete Component";
+			proprieta.class = "compDelete";
 			div.appendChild(elimina);
 			
 			var x = div.style.left = event.clientX - this.offsetLeft;// + "px";
@@ -214,7 +216,7 @@ var actionListenerImg =
 				}
 			});
 			
-			var name = div.title + " " + cntIn;
+			var name = "Input " + cntIn;
 			componentVett[componentVett.length] = new ComponentClass(code,"input",name,"",name,null,null,x,y);
 			Endpoint.createEndpoint(div,code,null);
 			Code.scriviCodice(code);
@@ -222,14 +224,14 @@ var actionListenerImg =
 			//Component.cercaElem();
 		}
 		
-		if(title == "output graph"){			
+		if(id == "outputComp"){			
 			cnt++;
 			var code = cnt;
 			
 			var div = document.createElement("div");
 			div.setAttribute("class","activegraph");
 			div.setAttribute("id","comp-" + code);
-			div.title = "Output";
+//			div.title = "Output";
 			
 			var img = document.createElement("img");
 			img.setAttribute("class","activeimg");
@@ -242,13 +244,15 @@ var actionListenerImg =
 			var proprieta = document.createElement("img");
 			proprieta.setAttribute("class","bottongraph");
 			proprieta.src = "IMG/pulsanteproprieta.gif";
-			proprieta.title = "property";
+			proprieta.title = "Component Properties";
+			proprieta.class = "compProperties";
 			div.appendChild(proprieta);
 					
 			var elimina = document.createElement("img");
 			elimina.setAttribute("class","bottongraph");
 			elimina.src = "IMG/iconaX.gif";
-			elimina.title = "delete";
+			elimina.title = "Delete Component";
+			proprieta.class = "compDelete";
 			div.appendChild(elimina);
 			
 			var x = div.style.left = event.clientX - this.offsetLeft;// + "px";
@@ -276,7 +280,7 @@ var actionListenerImg =
 			});
 			
 			var inputOut = [];
-			var name = div.title + " " + cntOut;
+			var name = "Output " + cntOut;
 			componentVett[componentVett.length] = new ComponentClass(code,"output","","",name,null,inputOut,x,y);			
 			Endpoint.createEndpoint(div,code,null);
 			Code.scriviCodice(code);
@@ -284,7 +288,7 @@ var actionListenerImg =
 			//Component.cercaElem();
 		}
 		
-		if(title == "union graph"){
+		if(id == "unionComp"){
 			cnt++;
 			var code = cnt;
 			
@@ -304,13 +308,15 @@ var actionListenerImg =
 			var proprieta = document.createElement("img");
 			proprieta.setAttribute("class","bottongraph");
 			proprieta.src = "IMG/pulsanteproprieta.gif";
-			proprieta.title = "property";
+			proprieta.title = "Component Properties";
+			proprieta.class = "compProperties";
 			div.appendChild(proprieta);
 					
 			var elimina = document.createElement("img");
 			elimina.setAttribute("class","bottongraph");
 			elimina.src = "IMG/iconaX.gif";
-			elimina.title = "delete";
+			elimina.title = "Delete Component";
+			proprieta.class = "compDelete";
 			div.appendChild(elimina);
 			
 			var x = div.style.left = event.clientX - this.offsetLeft;// + "px";
@@ -338,7 +344,7 @@ var actionListenerImg =
 			});
 			
 			var inputUnion = [];
-			var name = div.title + " " + cntUnion;
+			var name = "Union " + cntUnion;
 			componentVett[componentVett.length] = new ComponentClass(code,"union",name,null,name,null,inputUnion,x,y);
 			Endpoint.createEndpoint(div,code,null);
 			Code.scriviCodice(code);
@@ -346,14 +352,14 @@ var actionListenerImg =
 			//Component.cercaElem();
 		}
 		
-		if(title == "construct graph"){
+		if(id == "constructGraph"){
 			cnt++;
 			var code = cnt;
 			
 			var div = document.createElement("div");
 			div.setAttribute("class","activegraph");
 			div.setAttribute("id","comp-" + code);
-			div.title = "Construct";
+//			div.title = "Construct";
 			
 			var img = document.createElement("img");
 			img.setAttribute("class","activeimg");
@@ -366,13 +372,15 @@ var actionListenerImg =
 			var proprieta = document.createElement("img");
 			proprieta.setAttribute("class","bottongraph");
 			proprieta.src = "IMG/pulsanteproprieta.gif";
-			proprieta.title = "property";
+			proprieta.title = "Component Properties";
+			proprieta.class = "compProperties";
 			div.appendChild(proprieta);
 					
 			var elimina = document.createElement("img");
 			elimina.setAttribute("class","bottongraph");
 			elimina.src = "IMG/iconaX.gif";
-			elimina.title = "delete";
+			elimina.title = "Delete Component";
+			proprieta.class = "compDelete";
 			div.appendChild(elimina);
 			
 			var x = div.style.left = event.clientX - this.offsetLeft;// + "px";
@@ -400,7 +408,7 @@ var actionListenerImg =
 			});
 			
 			var inputConstr = [];
-			var name = div.title + " " + cntConstr;
+			var name = "Construct " + cntConstr;
 			var query = "CONSTRUCT{?s ?p ?o}\nWHERE{?s ?p ?o}";
 			componentVett[componentVett.length] = new ComponentClass(code,"construct",name,null,name,query,inputConstr,x,y);
 			Endpoint.createEndpoint(div,code,null);			
@@ -409,14 +417,14 @@ var actionListenerImg =
 			//Component.cercaElem();
 		}
 		
-		if(title == "updatable graph"){
+		if(id == "updatableComp"){
 			cnt++;
 			var code = cnt;
 			alert(cnt);
 			var div = document.createElement("div");
 			div.setAttribute("class","activegraph");
 			div.setAttribute("id","comp-" + code);
-			div.title = "Updatable";
+//			div.title = "Updatable";
 			
 			var img = document.createElement("img");
 			img.setAttribute("class","activeimg");
@@ -429,13 +437,15 @@ var actionListenerImg =
 			var proprieta = document.createElement("img");
 			proprieta.setAttribute("class","bottongraph");
 			proprieta.src = "IMG/pulsanteproprieta.gif";
-			proprieta.title = "property";
+			proprieta.title = "Component Properties";
+			proprieta.class = "compProperties";
 			div.appendChild(proprieta);
 					
 			var elimina = document.createElement("img");
 			elimina.setAttribute("class","bottongraph");
 			elimina.src = "IMG/iconaX.gif";
-			elimina.title = "delete";
+			elimina.title = "Delete Component";
+			proprieta.class = "compDelete";
 			div.appendChild(elimina);
 			
 			var x = div.style.left = event.clientX - this.offsetLeft;// + "px";
@@ -463,7 +473,7 @@ var actionListenerImg =
 			});
 			
 			var inputUpdat = [];
-			var name = div.title + " " + cntUpdat;
+			var name = "Updatable " + cntUpdat;
 			componentVett[componentVett.length] = new ComponentClass(code,"updatable",name,null,name,"",inputUpdat,x,y);
 			Endpoint.createEndpoint(div,code,null);
 			Code.scriviCodice(code);
@@ -471,14 +481,14 @@ var actionListenerImg =
 			//Component.cercaElem();
 		}
 		
-		if(title == "new dataset"){
+		if(id == "datasetComp"){
 			cnt++;
 			var code = cnt;
 			
 			var div = document.createElement("div");
 			div.setAttribute("class","activegraph");
 			div.setAttribute("id","comp-" + code);
-			div.title = "Dataset";
+//			div.title = "Dataset";
 			
 			var img = document.createElement("img");
 			img.setAttribute("class","activeimg");
@@ -491,13 +501,15 @@ var actionListenerImg =
 			var proprieta = document.createElement("img");
 			proprieta.setAttribute("class","bottongraph");
 			proprieta.src = "IMG/pulsanteproprieta.gif";
-			proprieta.title = "property";
+			proprieta.title = "Component Properties";
+			proprieta.class = "compProperties";
 			div.appendChild(proprieta);
 					
 			var elimina = document.createElement("img");
 			elimina.setAttribute("class","bottongraph");
 			elimina.src = "IMG/iconaX.gif";
-			elimina.title = "delete";
+			elimina.title = "Delete Component";
+			proprieta.class = "compDelete";
 			div.appendChild(elimina);
 			
 			var x = div.style.left = event.clientX - this.offsetLeft;// + "px";
@@ -524,21 +536,21 @@ var actionListenerImg =
 				}
 			});
 				
-			var name = div.title + " " + cntDataset;
+			var name = "Dataset " + cntDataset;
 			componentVett[componentVett.length] = new ComponentClass(code,"dataset","","",name,null,null,x,y);
 			Endpoint.createEndpoint(div,code,null);
 			Code.scriviCodice(code);
 			cntDataset++;
 			//Component.cercaElem();
 		}
-		if(title == "pipes"){
+		if(id == "pipesComp"){
 			cnt++;
 			var code = cnt;
 			
 			var div = document.createElement("div");
 			div.setAttribute("class","activegraph");
 			div.setAttribute("id","comp-" + code);
-			div.title = "Pipeline";
+//			div.title = "Pipeline";
 			
 			var img = document.createElement("img");
 			img.setAttribute("class","activeimg");
@@ -551,13 +563,15 @@ var actionListenerImg =
 			var proprieta = document.createElement("img");
 			proprieta.setAttribute("class","bottongraph");
 			proprieta.src = "IMG/pulsanteproprieta.gif";
-			proprieta.title = "property";
+			proprieta.title = "Component Properties";
+			proprieta.class = "compProperties";
 			div.appendChild(proprieta);
 					
 			var elimina = document.createElement("img");
 			elimina.setAttribute("class","bottongraph");
 			elimina.src = "IMG/iconaX.gif";
-			elimina.title = "delete";
+			elimina.title = "Delete Component";
+			proprieta.class = "compDelete";
 			div.appendChild(elimina);
 			
 			var x = div.style.left = event.clientX - this.offsetLeft;// + "px";
@@ -584,7 +598,7 @@ var actionListenerImg =
 				}
 			});
 				
-			var name = div.title + " " + cntPipes;
+			var name = "Pipeline " + cntPipes;
 			var inputPipes = [];
 			componentVett[componentVett.length] = new ComponentClass(code,name,null,name,null,inputPipes);
 			Endpoint.createEndpoint(div,code,null);
