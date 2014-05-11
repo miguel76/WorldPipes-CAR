@@ -352,7 +352,7 @@ var actionListenerImg =
 			//Component.cercaElem();
 		}
 		
-		if(id == "constructGraph"){
+		if(id == "constructComp"){
 			cnt++;
 			var code = cnt;
 			
