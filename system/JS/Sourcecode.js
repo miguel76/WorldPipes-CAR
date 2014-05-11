@@ -169,7 +169,9 @@ Code.scriviCodice = function(code){
 };
 
 Code.escapeQuery = function(query) {
-	return query.replace(/\\/g,'\\\\').replace(/'''/g,"\'\'\'");
+	if (query)
+		return query.replace(/\\/g,'\\\\').replace(/'''/g,"\'\'\'");
+	else return "";
 }
 
 /*Modifica il codice del componente passato come parametro in base all'operazione su di esso effettuata*/
