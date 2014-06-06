@@ -12,7 +12,7 @@
 	border: 1px solid #666666;
 	border-radius: 0.5em 0.5em 0.5em 0.5em;
 	width:13em;
-	height:70px;
+	height:44px;
 	position: absolute;
 	color: gray;
 	font-family: serif;
@@ -26,6 +26,15 @@
 	z-index:20;
 }
 
+.compLabel{	
+	color: gray;
+	font-family: serif;
+	font-style: italic;
+	font-size: 0.9em;
+	text-align: center;
+	color: #040303;
+}
+
 #activeimg{
 	display:inline-block;
 	position:relative;
@@ -37,15 +46,19 @@
 img.activeimg{
 	display:inline-block;
 	position:relative;
-	width:30px;
+	height:35px;
 	top:4px;
 	left:1px;
+}
+
+td.compImage {
+	padding-right:10px;
 }
 
 .bottongraph{
 	display:inline-block;
 	position:relative;
-	width:25px;
+	height:18px;
 	background-repeat:no-repeat;
 	z-index:30;
 	cursor:pointer;

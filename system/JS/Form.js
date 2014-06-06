@@ -2,8 +2,8 @@
 var Form = {};
 
 /*Crea il form corrispondente al componente passato in input*/
-Form.createForm = function(parent,cnt){
-	var componente = Component.getComponent(cnt);
+Form.createForm = function(parent,componentObject){
+	var componente = componentObject.Component;
 	
 	form = document.createElement("form");
 	form.name = "Properties";
@@ -13,54 +13,20 @@ Form.createForm = function(parent,cnt){
 	var fieldset = document.createElement("fieldset");
 	fieldset.setAttribute("id","form");
 	
-	fieldset.innerHTML += "<input type='hidden' name='code' value='" + cnt + "'>"
+	fieldset.innerHTML += "<input type='hidden' name='code' value='" + componentObject.code + "'>"
 	
-	if(componente == "output"){
-		fieldset.innerHTML += "<label id='label'> URI</br> <input id='input' name='URI' type='text' size = '35' value='"+ Component.getURI(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ Component.getName(cnt) +"'></br></br> </label>";
+	if (componente == "output" || componente == "dataset" || componente == "input"){
+		fieldset.innerHTML += "<label id='label'> URI</br> <input id='input' name='URI' type='text' size = '35' value='"+ componentObject.URI + "'></br> </label>";
 	}
-			
-	if(componente == "dataset"){
-		fieldset.innerHTML += "<label id='label'> URI</br> <input id='input' name='URI' type='text' size = '35' value='"+ Component.getURI(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ Component.getName(cnt) +"'></br></br> </label>";
-	}
-			
-	if(componente == "input"){
-//		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'> URI</br> <input id='input' name='URI' type='text' size = '35' value='"+ Component.getURI(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ Component.getName(cnt) +"'></br></br> </label>";
-	}
+
+	fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ componentObject.Name +"'></br></br> </label>";
 	
-	if(componente == "union"){
-//		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ Component.getName(cnt) + "'></br> </label>";
-	}
-	
-	if(componente == "construct"){
-		var inputConstr = Component.getVett(cnt);
-		
-//		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ Component.getName(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'> Query</br> <textarea name='Query' rows='10' cols='30' id='input'>" + Component.getQuery(cnt) + "</textarea></br></br> </label>";
-		
-		Form.createAddTable(fieldset,inputConstr);
+	if(componente == "construct" || componente == "updatable"){
+		fieldset.innerHTML += "<label id='label'> Query</br> <textarea name='Query' rows='10' cols='30' id='input'>" + componentObject.Query + "</textarea></br></br> </label>";
+		Form.createAddTable(fieldset,componentObject.InputList);
 	}		
-	if(componente == "updatable"){
-		var inputUpdat = Component.getVett(cnt);
-		
-//		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='" + Component.getName(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'> Query</br> <textarea name='Query' rows='10' cols='30' id='input'>" + Component.getQuery(cnt) + "</textarea></br></br> </label>";
-		
-		Form.createAddTable(fieldset,inputUpdat);
-	}
 	if(componente == "pipeline"){
-//		fieldset.innerHTML += "<label id='label'> ID</br> <input id='input' name='ID' type='text' size = '35' value='" + Component.getID(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ Component.getName(cnt) + "'></br> </label>";
-		fieldset.innerHTML += "<label id='label'><b>Input table</b></label></br>";
-		fieldset.innerHTML += "<table id='tableInput'><thead><tr><th id='label'>ID</th> <th id='label'>Type</th></tr></thead>";
-		fieldset.innerHTML += "<tbody>";			
-		fieldset.innerHTML += "</tbody></table></br></br>";
+// TODO
 	}
 	fieldset.innerHTML += "<button type='submit' name='submit'>Save</button> <button type='reset' name='reset'>Cancel</button>";
 	form.appendChild(fieldset);
@@ -75,7 +41,7 @@ Form.createForm = function(parent,cnt){
 				var id = table.rows[i].cells[1].firstChild.value;
 				
 				
-				InputType.eliminaInputTable(Component.getVett(cnt),name,id);
+				InputType.eliminaInputTable(Component.InputList,name,id);
 				Endpoint.eliminaEndpointTable(parent,name);
 				
 				table.deleteRow(i);
@@ -155,7 +121,7 @@ Form.createForm = function(parent,cnt){
 							var name = table.rows[i].cells[0].firstChild.value;
 							var id = table.rows[i].cells[1].firstChild.value;
 							
-							InputType.eliminaInputTable(Component.getVett(cnt),name,id);
+							InputType.eliminaInputTable(Component.InputList,name,id);
 							Endpoint.eliminaEndpointTable(parent,name);
 					
 							table.deleteRow(i);
@@ -182,11 +148,12 @@ Form.createForm = function(parent,cnt){
 		var y = parent.offsetTop;
 	
 		if(inputVett != null && inputVett.length != 0){
-			Component.modifica(cnt,(Form.getID() != null) ? Form.getID() : Form.getURI(),Form.getURI(),Form.getName(),Form.getQuery(),inputVett,x,y);
+			Component.modifica(componentObject.Code,(Form.getID() != null) ? Form.getID() : Form.getURI(),Form.getURI(),Form.getName(),Form.getQuery(),inputVett,x,y);
 		}
-		else{Component.modifica(cnt,(Form.getID() != null) ? Form.getID() : Form.getURI(),Form.getURI(),Form.getName(),Form.getQuery(),null,x,y);}
+		else{Component.modifica(componentObject.Code,(Form.getID() != null) ? Form.getID() : Form.getURI(),Form.getURI(),Form.getName(),Form.getQuery(),null,x,y);}
 		
-		Code.modificaCodice(cnt);
+//		Code.modificaCodice(cnt);
+		Code.updateCodeFromComponent(componentObject);
 		
 		var sourcecode = Core.getElementsByClass("codeclass")[0];
 		Code.estraiTesto(sourcecode,"formSave",GraphURIPrefix);
