@@ -163,6 +163,7 @@ var actionListenerImg =
 		//Core.removeClass(this,"attivo");
 		
 		var id = event.dataTransfer.getData("compId");
+		var dropeditor = Core.getElementsByClass("areaeditor");
 		Component.createFromTypeId(id, dropeditor[0]);
 	},
 };

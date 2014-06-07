@@ -1,7 +1,7 @@
 /*Ogni componente trascianto nella'erea editor è contenuto nel vettore dei Componenti.
 Tale vettore è un array di classi.
 In questo script si gestiscono tutti i metodi get e set per poter lavorare sul vettore dei Componenti*/
-var Component = {};
+Component = {};
 
 componentVett = []; 
 
@@ -18,7 +18,7 @@ var ComponentClass = function(CODE,COMPONENT,ID,URI,NAME,QUERY,INPUT,X,Y){
 	this.Y = Y;
 };
 
-Component.componentTypeNameFromId(componentTypeId) {
+Component.componentTypeNameFromId = function(componentTypeId) {
 	switch (componentTypeId) {
 	case "inputComp": return "input";
 	case "outputComp": return "output";
@@ -29,53 +29,50 @@ Component.componentTypeNameFromId(componentTypeId) {
 	case "pipesComp": return "pipes";
 	return null;
 	}
-}
+};
 
-Component.isComponentPermanent(componentTypeName) {
-	switch (componentTypeName) {
+Component.isComponentPermanent = function(componentTypeName) {
 	return false;
-	}
-}
+};
 
-//Component.numOfComponents = 0;
-
-Component.getNewComponentName(componentTypeName) {
+Component.getNewComponentName = function(componentTypeName) {
 	if (Component.isComponentPermanent(componentTypeName))
 		return componentTypeName;
 	switch (componentTypeName) {
-	case "input": return "Input " + cntIn++;
-	case "output": return "Output " + cntOut++;
-	case "union": return "Union " + cntUnion++;
-	case "construct": return "Construct " + cntConstr++;
-	case "updatable": return "Updatable " + cntUpdat++;
-	case "dataset": return "Dataset " + cntDataset++;
-	case "pipes": return "Pipeline " + cntPipes++;
-	return "???";
+		case "input": return "Input " + cntIn++;
+		case "output": return "Output " + cntOut++;
+		case "union": return "Union " + cntUnion++;
+		case "construct": return "Construct " + cntConstr++;
+		case "updatable": return "Updatable " + cntUpdat++;
+		case "dataset": return "Dataset " + cntDataset++;
+		case "pipes": return "Pipeline " + cntPipes++;
+		default: return "???";
 	}
-}
+};
 
 Component.createComponentObject = function(code, componentTypeName, name, x, y) {
 	switch (componentTypeName) {
-	case "input":
-		return new ComponentClass(code,componentTypeName,name,"",name,null,null,x,y);
-	case "output":
-		return new ComponentClass(code,componentTypeName,"","",name,null,[],x,y);
-	case "union":
-		return new ComponentClass(code,componentTypeName,name,null,name,null,[],x,y);
-	case "construct":
-		return new ComponentClass(code,componentTypeName,name,null,name,"CONSTRUCT{?s ?p ?o}\nWHERE{?s ?p ?o}",[],x,y);
-	case "updatable":
-		return new ComponentClass(code,componentTypeName,name,null,name,"",[],x,y);
-	case "dataset":
-		return new ComponentClass(code,componentTypeName,"","",name,null,null,x,y);
-	case "pipes":
-		return new ComponentClass(code,name,null,name,null,[]);
-	return null;
+		case "input":
+			return new ComponentClass(code,componentTypeName,name,"",name,null,null,x,y);
+		case "output":
+			return new ComponentClass(code,componentTypeName,"","",name,null,[],x,y);
+		case "union":
+			return new ComponentClass(code,componentTypeName,name,null,name,null,[],x,y);
+		case "construct":
+			return new ComponentClass(code,componentTypeName,name,null,name,"CONSTRUCT{?s ?p ?o}\nWHERE{?s ?p ?o}",[],x,y);
+		case "updatable":
+			return new ComponentClass(code,componentTypeName,name,null,name,"",[],x,y);
+		case "dataset":
+			return new ComponentClass(code,componentTypeName,"","",name,null,null,x,y);
+		case "pipes":
+			return new ComponentClass(code,name,null,name,null,[]);
+		default:
+			return null;
 	}
-}
+};
 
 Component.createGraphics = function(componentObject, editor) {
-	Component.loadPipeline(
+	Component._loadPipeline(
 			editor,
 			componentObject.Code,
 			componentObject.Component,
@@ -83,11 +80,11 @@ Component.createGraphics = function(componentObject, editor) {
 			componentObject.URI,
 			componentObject.Name,
 			componentObject.Query,
-			componentObject.Inputlist,
+			componentObject.InputList,
 			componentObject.X,
 			componentObject.Y);
-	Code.updateCodeFromComponent(componentObject);
-}
+//	alert("Component " + componentObject.Code + " created");
+};
 
 Component.createFromTypeId = function(componentTypeId, editor) {
 	cnt++;
@@ -159,7 +156,8 @@ Component.createFromTypeId = function(componentTypeId, editor) {
 	Code.writeCodeFromComponent(newComponent);
 	//Component.cercaElem();
 	Component.createGraphics(newComponent, editor);
-}
+	Code.updateCodeFromComponent(newComponent);
+};
 
 /*Restituisce il codice del componente*/
 Component.getCode = function(code){
@@ -355,7 +353,8 @@ Component.refreshEditor = function(editor){
 Component.scorriVettore = function(editor,componentVett){
 	for(var i=0;i<componentVett.length;i++){
 		//alert("Code -  " + componentVett[i].Code + " Component -  " + componentVett[i].Component + " ID -  " +  componentVett[i].ID + " URI -  " + componentVett[i].URI + " Name -  " + componentVett[i].Name + " Query -  " + componentVett[i].Query + " InputList -  " + componentVett[i].InputList.length + " X -  " + componentVett[i].X + " Y -  " + componentVett[i].Y);
-		Component.loadPipeline(editor,componentVett[i].Code,componentVett[i].Component,componentVett[i].ID,componentVett[i].URI,componentVett[i].Name,componentVett[i].Query,componentVett[i].InputList,componentVett[i].X,componentVett[i].Y);
+//		Component.loadPipeline(editor,componentVett[i].Code,componentVett[i].Component,componentVett[i].ID,componentVett[i].URI,componentVett[i].Name,componentVett[i].Query,componentVett[i].InputList,componentVett[i].X,componentVett[i].Y);
+		Component.createGraphics(componentVett[i], editor);
 	}
 	Component.createConnection(editor);
 };

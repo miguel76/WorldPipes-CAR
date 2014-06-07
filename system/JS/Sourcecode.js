@@ -466,13 +466,13 @@ Code.scriviCodice = function(code){
 		p.appendChild(codeupdat);
 	}
 };
+*/
 
 Code.escapeQuery = function(query) {
 	if (query)
 		return query.replace(/\\/g,'\\\\').replace(/'''/g,"\'\'\'");
 	else return "";
 }
-*/
 
 /*Modifica il codice del componente passato come parametro in base all'operazione su di esso effettuata*/
 Code.modificaCodice = function(code){
@@ -666,9 +666,14 @@ Code.modificaCodice = function(code){
 //		Code.cercaTarget(code);
 //	}
 //};
-//
-///*Cancella il codice corrispondente al componente passato come parametro*/
-//Code.cancellaCodice = function(code){
+
+/*Cancella il codice corrispondente al componente passato come parametro*/
+Code.cancellaCodice = function(code){
+	if (!code || code == "")
+		return;
+	var elem = document.getElementyId("sourcecodeArea").getElementById(code);
+	if (elem)
+		elem.parentNode.removeChild(elem);
 //	var elem = document.getElementsByTagName("p");
 //	for(var i=0;i<elem.length;i++){
 //		if(elem[i].id == code && elem[i].id != ""){
@@ -677,7 +682,7 @@ Code.modificaCodice = function(code){
 //			return;
 //		}
 //	}
-//};
+};
 
 /*Elimina l'input disconnesso dal componente dall'array*/
 Code.eliminaInput = function(inputVett,source){

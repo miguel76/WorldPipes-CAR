@@ -296,6 +296,8 @@ Endpoint.connectEndpoint = function(dest,inputVett){
 			return elementOfArray.isSource; 
 		});
 		
+//		console.log("Connecting endpoint " + outputAr[0] + " of " + div + " ("+ inputVett[i] + ") to endpoint " + inputAr[i] + " of " + dest);
+		
 		jsPlumb.connect({
 			source:outputAr[0],
 			target:inputAr[i],
