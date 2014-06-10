@@ -14,10 +14,10 @@
 	width:13em;
 	height:44px;
 	position: absolute;
-	color: gray;
-	font-family: serif;
-	font-style: italic;
-	font-size: 0.9em;
+/* 	color: gray; */
+/* 	font-family: serif; */
+/* 	font-style: italic; */
+/* 	font-size: 0.9em; */
 	text-align: center;
 	background-color: #FDEEF4;
 	box-shadow: 0px 0px 5px #044;
@@ -27,10 +27,10 @@
 }
 
 .compLabel{	
-	color: gray;
-	font-family: serif;
-	font-style: italic;
-	font-size: 0.9em;
+/* 	color: gray; */
+/* 	font-family: serif; */
+/* 	font-style: italic; */
+/* 	font-size: 0.9em; */
 	text-align: center;
 	color: #040303;
 }

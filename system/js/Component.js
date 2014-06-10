@@ -86,13 +86,14 @@ Component.createGraphics = function(componentObject, editor) {
 //	alert("Component " + componentObject.Code + " created");
 };
 
-Component.createFromTypeId = function(componentTypeId, editor) {
+Component.createFromTypeId = function(componentTypeId, editor, clientX, clientY) {
 	cnt++;
 	var code = cnt;
 	
 	var componentTypeName = Component.componentTypeNameFromId(componentTypeId);
-	var x = event.clientX - this.offsetLeft;// + "px";
-	var y = event.clientY - this.offsetTop;// + "px";
+	console.log("clientX:" + clientX + " clientY:" + clientY + " editor.offsetLeft:" + editor.offsetLeft + " editor.offsetTop:" + editor.offsetTop)
+	var x = clientX - editor.offsetLeft;// + "px";
+	var y = clientY - editor.offsetTop;// + "px";
 	
 //	var div = document.createElement("div");
 //	div.setAttribute("class","activegraph");

@@ -164,7 +164,7 @@ var actionListenerImg =
 		
 		var id = event.dataTransfer.getData("compId");
 		var dropeditor = Core.getElementsByClass("areaeditor");
-		Component.createFromTypeId(id, dropeditor[0]);
+		Component.createFromTypeId(id, dropeditor[0], event.clientX, event.clientY);
 	},
 };
 
