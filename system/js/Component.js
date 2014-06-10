@@ -441,12 +441,15 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	td_1_1.appendChild(img);
 	tr_1.appendChild(td_1_1);
 	
-	var td_1_2 = document.createElement("td");
-	td_1_2.setAttribute("colspan","3");
-	td_1_2.appendChild(label);
-	tr_1.appendChild(td_1_2);
+	var tr_2 = document.createElement("tr");
+
+	var td_2_2 = document.createElement("td");
+	td_2_2.setAttribute("colspan","3");
+	td_2_2.appendChild(label);
+	tr_2.appendChild(td_2_2);
 
 	table.appendChild(tr_1);
+	table.appendChild(tr_2);
 	
 //	var tr_2 = document.createElement("tr");
 //	var td_2_1 = document.createElement("td");
@@ -457,19 +460,28 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	
 	if(component == "input" || component == "output" || component == "union" || component == "construct" || component == "updatable" || component == "dataset"){
 
-		var tr_2 = document.createElement("tr");
-		var td_2_1 = document.createElement("td");
-		td_2_1.appendChild(document.createTextNode(" "));
-		tr_2.appendChild(td_2_1);
-
 		var proprieta = document.createElement("img");
 		proprieta.setAttribute("class","bottongraph");
 		proprieta.src = "IMG/properties.png";
 		proprieta.title = "property";
 
-		var td_2_2 = document.createElement("td");
-		td_2_2.appendChild(proprieta);
-		tr_2.appendChild(td_2_2);
+		var td_1_2 = document.createElement("td");
+//		td_1_3.appendChild(elimina);
+		td_1_2.style.width = "100%";
+		tr_1.appendChild(td_1_2);
+
+		var td_1_3 = document.createElement("td");
+		td_1_3.appendChild(proprieta);
+		tr_1.appendChild(td_1_3);
+
+		var elimina = document.createElement("img");
+		elimina.setAttribute("class","bottongraph");
+		elimina.src = "IMG/delete.png";
+		elimina.title = "delete";
+		
+		var td_1_4 = document.createElement("td");
+		td_1_4.appendChild(elimina);
+		tr_1.appendChild(td_1_4);
 		
 		Core.addEventListener(proprieta,"click",function(){
 			var body = document.createElement("div");
@@ -479,16 +491,6 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 			document.getElementsByTagName("body")[0].appendChild(body);
 		});
 					
-		var elimina = document.createElement("img");
-		elimina.setAttribute("class","bottongraph");
-		elimina.src = "IMG/delete.png";
-		elimina.title = "delete";
-		div.appendChild(elimina);
-		
-		var td_2_3 = document.createElement("td");
-		td_2_3.appendChild(elimina);
-		tr_2.appendChild(td_2_3);
-
 		Core.addEventListener(elimina,"click",function(){
 			temp = elimina.parentNode.parentNode;
 			jsPlumb.removeAllEndpoints(elimina.parentNode);
@@ -498,7 +500,7 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 			Code.cancellaCodice(code);	
 		});
 		
-		table.appendChild(tr_2);
+//		table.appendChild(tr_2);
 
 	}
 	
