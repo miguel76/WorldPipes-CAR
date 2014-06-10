@@ -58,7 +58,7 @@ td.compImage {
 .bottongraph{
 	display:inline-block;
 	position:relative;
-	height:18px;
+/* 	height:18px; */
 	background-repeat:no-repeat;
 	z-index:30;
 	cursor:pointer;
