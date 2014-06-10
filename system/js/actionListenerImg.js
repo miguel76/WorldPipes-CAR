@@ -54,9 +54,9 @@ var actionListenerImg =
 		editor.appendChild(indef);
 		
 		var name = indef.title;
-		componentVett[componentVett.length] = new ComponentClass(cntInDef,"inputdefault","defaultInput",null,name,null,null,x,y);		
+		var newComponent = componentVett[componentVett.length] = new ComponentClass(cntInDef,"inputdefault","defaultInput",null,name,null,null,x,y);		
 		Endpoint.createEndpoint(indef,cntInDef,null);
-		Code.scriviCodice(cntInDef);
+		Code.writeCodeFromComponent(newComponent);
 	},
 	
 	/*Crea l'output di default*/
@@ -85,9 +85,9 @@ var actionListenerImg =
 		
 		var inputOutDef = [];
 		var name = outdef.title;
-		componentVett[componentVett.length] = new ComponentClass(cntOutDef,"outputdefault","","",name,null,inputOutDef,x,y);
+		var newComponent = componentVett[componentVett.length] = new ComponentClass(cntOutDef,"outputdefault","","",name,null,inputOutDef,x,y);
 		Endpoint.createEndpoint(outdef,cntOutDef,null);
-		Code.scriviCodice(cntOutDef);
+		Code.writeCodeFromComponent(newComponent);
 	},
 	
 	/*Gestisce l'evento click*/

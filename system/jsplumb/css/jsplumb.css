@@ -15,7 +15,7 @@
   font-weight: 400;
  	src:local('Open Sans'), 
  		local('OpenSans'),
- 		url("OpenSans-Regular.ttf") format('truetype'),
+/*  		url("OpenSans-Regular.ttf") format('truetype'), */
  		url("OpenSans.woff") format('woff');
 }
 

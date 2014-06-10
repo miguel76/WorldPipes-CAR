@@ -671,7 +671,8 @@ Code.modificaCodice = function(code){
 Code.cancellaCodice = function(code){
 	if (!code || code == "")
 		return;
-	var elem = document.getElementyId("sourcecodeArea").getElementById(code);
+//	var elem = document.getElementById("sourcecodeArea").getElementById(code);
+	var elem = document.getElementById(code);
 	if (elem)
 		elem.parentNode.removeChild(elem);
 //	var elem = document.getElementsByTagName("p");
