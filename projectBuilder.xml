@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="WorldPipes-CAR.makeCAR" default="makeCAR" basedir=".">
-  <target name ="makeCAR" description="Create the CAR file">
-    <zip destfile="${basedir}/bin/WorldPipes.car">
-      <zipfileset dir="." excludes="bin/WorldPipes.car,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>
-    </zip>
-    <zip destfile="${basedir}/bin/WorldPipes-system.car">
-      <zipfileset dir="system"/>
-<!--        <zipfileset dir="system" excludes="bin/WorldPipes.car,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>-->
-    </zip>
-    <zip destfile="${basedir}/bin/WorldPipes-data.car">
-      <zipfileset dir="data"/>
-    </zip>
-  </target>
-	  <target name ="upload-all" description="Create the CAR file">
+<project name="WorldPipes-CAR.makeCAR" default="upload-updates" basedir=".">
+	
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+	  <classpath>
+	    <pathelement location="${basedir}/ant-lib/ant-contrib-1.0b3.jar"/>
+	  </classpath>
+	</taskdef>
+
+	  <target name ="makeCAR" description="Create the CAR file">
+	    <zip destfile="${basedir}/bin/WorldPipes.car">
+	      <zipfileset dir="." excludes="bin/WorldPipes.car,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,ant-lib/**,**/.*,**/.*/**"/>
+	    </zip>
+	    <zip destfile="${basedir}/bin/WorldPipes-system.car">
+	      <zipfileset dir="system"/>
+	<!--        <zipfileset dir="system" excludes="bin/WorldPipes.car,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,**/.*,**/.*/**"/>-->
+	    </zip>
+	    <zip destfile="${basedir}/bin/WorldPipes-data.car">
+	      <zipfileset dir="data"/>
+	    </zip>
+	  </target>
+
+	<target name ="upload-all" description="Upload the CAR file">
 	    <property file="${basedir}/callimachus.properties"/>
 	  	<input
 		    message="Please enter callimachus username:"
@@ -29,21 +37,63 @@
 	 	  <arg value="http://localhost:4040/SWOWS/?archive"/>
 	 	</exec>
 	  </target>
-  <target name ="upload-system" description="Create the CAR file">
-    <property file="${basedir}/callimachus.properties"/>
-  	<input
-	    message="Please enter callimachus username:"
-  	    addproperty="callimachus.user"
- 	  />
-  	<input
-  	    message="Please enter callimachus password:"
-  	    addproperty="callimachus.pwd">
-    </input>
-	<exec executable="curl">
- 	  <arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
- 	  <arg value="--digest"/>
- 	  <arg line="--upload-file ${basedir}/bin/WorldPipes-system.car"/>
- 	  <arg value="http://localhost:4040/SWOWS/system/?archive"/>
- 	</exec>
-  </target>
+
+	<target name="upload-updates" description="Upload just the updated files">
+	    <property file="${basedir}/callimachus.properties"/>
+	  	<input
+		    message="Please enter callimachus username:"
+	  	    addproperty="callimachus.user"
+	 	  />
+	  	<input
+	  	    message="Please enter callimachus password:"
+	  	    addproperty="callimachus.pwd">
+	    </input>
+		<pathconvert property="fileList" pathsep=",">
+		  	<path>
+	  			<fileset dir="." excludes="bin/WorldPipes.car,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,ant-lib/**,**/.*,**/.*/**">
+	  				<modified/>
+	  			</fileset>
+			</path>
+			<mapper>
+				<!--<identitymapper/>-->
+				<globmapper from="${basedir}/*" to="*" handledirsep="yes"/>
+			</mapper>
+		</pathconvert>
+<!--		<echo>fileList is ${fileList}</echo> -->
+		<foreach list="${fileList}" param="theFile" target="fileUpload" inheritall="true"/>	  	
+	  </target>
+	
+	<target name="fileUpload" description="Upload a file">
+		<propertyregex property="thePath"
+		              input="${theFile}"
+		              regexp="(.*)/\.*"
+		              select="\1"
+		              casesensitive="false" />
+		<echo>uploading file ${theFile}...</echo>
+	  	<exec executable="curl">
+	  	 	<arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
+	  		<arg line="--digest"/>
+	  	 	<arg line="--upload-file ${basedir}/${theFile}"/>
+	  	 	<arg line="http://localhost:4040/SWOWS/${thePath}/"/>
+	  	</exec>
+	</target>
+
+	<target name ="upload-system" description="Create the CAR file">
+	    <property file="${basedir}/callimachus.properties"/>
+	  	<input
+		    message="Please enter callimachus username:"
+	  	    addproperty="callimachus.user"
+	 	  />
+	  	<input
+	  	    message="Please enter callimachus password:"
+	  	    addproperty="callimachus.pwd">
+	    </input>
+		<exec executable="curl">
+	 	  <arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
+	 	  <arg value="--digest"/>
+	 	  <arg line="--upload-file ${basedir}/bin/WorldPipes-system.car"/>
+	 	  <arg value="http://localhost:4040/SWOWS/system/?archive"/>
+	 	</exec>
+	  </target>
+
 </project>
