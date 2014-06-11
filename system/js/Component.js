@@ -39,13 +39,13 @@ Component.getNewComponentName = function(componentTypeName) {
 	if (Component.isComponentPermanent(componentTypeName))
 		return componentTypeName;
 	switch (componentTypeName) {
-		case "input": return "Input " + cntIn++;
-		case "output": return "Output " + cntOut++;
-		case "union": return "Union " + cntUnion++;
-		case "construct": return "Construct " + cntConstr++;
-		case "updatable": return "Updatable " + cntUpdat++;
-		case "dataset": return "Dataset " + cntDataset++;
-		case "pipes": return "Pipeline " + cntPipes++;
+		case "input": return "Input" + cntIn++;
+		case "output": return "Output" + cntOut++;
+		case "union": return "Union" + cntUnion++;
+		case "construct": return "Construct" + cntConstr++;
+		case "updatable": return "Updatable" + cntUpdat++;
+		case "dataset": return "Dataset" + cntDataset++;
+		case "pipes": return "Pipeline" + cntPipes++;
 		default: return "???";
 	}
 };
@@ -432,6 +432,7 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	label.appendChild(text);
 	
 	var table = document.createElement("table");
+	table.setAttribute("class","compTable");
 	
 	var tr_1 = document.createElement("tr");
 	
@@ -462,7 +463,7 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 
 		var proprieta = document.createElement("img");
 		proprieta.setAttribute("class","bottongraph");
-		proprieta.src = "IMG/properties.png";
+		proprieta.src = "IMG/Settings.png";
 		proprieta.title = "property";
 
 		var td_1_2 = document.createElement("td");
@@ -476,7 +477,7 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 
 		var elimina = document.createElement("img");
 		elimina.setAttribute("class","bottongraph");
-		elimina.src = "IMG/delete.png";
+		elimina.src = "IMG/Trash.png";
 		elimina.title = "delete";
 		
 		var td_1_4 = document.createElement("td");
@@ -492,10 +493,9 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 		});
 					
 		Core.addEventListener(elimina,"click",function(){
-			temp = elimina.parentNode.parentNode;
-			jsPlumb.removeAllEndpoints(elimina.parentNode);
-			jsPlumb.detachAllConnections(elimina.parentNode);
-			temp.removeChild(elimina.parentNode);
+			jsPlumb.removeAllEndpoints(div);
+			jsPlumb.detachAllConnections(div);
+			div.parentNode.removeChild(div);
 			Component.elimina(componentVett,code);
 			Code.cancellaCodice(code);	
 		});

@@ -31,8 +31,12 @@
 /* 	font-family: serif; */
 /* 	font-style: italic; */
 /* 	font-size: 0.9em; */
+	font-size: 14px;
+	font-weight: normal;
+	margin: 0 0 0 0;
 	text-align: center;
 	color: #040303;
+	padding-top: 3px;
 }
 
 #activeimg{
@@ -52,7 +56,14 @@ img.activeimg{
 }
 
 td.compImage {
-	padding-right:10px;
+	padding-left:3px;
+	padding-right:3px;
+}
+
+table.compTable {
+	border-spacing:0px;
+	padding-left:3px;
+	padding-right:3px;
 }
 
 .bottongraph{

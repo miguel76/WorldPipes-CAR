@@ -30,7 +30,7 @@
 	  	    message="Please enter callimachus password:"
 	  	    addproperty="callimachus.pwd">
 	    </input>
-		<exec executable="curl">
+		<exec executable="curl" failonerror="true">
 	 	  <arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
 	 	  <arg value="--digest"/>
 	 	  <arg line="--upload-file ${basedir}/bin/WorldPipes.car"/>
@@ -70,7 +70,7 @@
 		              select="\1"
 		              casesensitive="false" />
 		<echo>uploading file ${theFile}...</echo>
-	  	<exec executable="curl">
+	  	<exec executable="curl" failonerror="true">
 	  	 	<arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
 	  		<arg line="--digest"/>
 	  	 	<arg line="--upload-file ${basedir}/${theFile}"/>
