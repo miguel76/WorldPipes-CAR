@@ -14,6 +14,7 @@
 	width:140px;
 	height:47px;
 	position: absolute;
+	padding: 3px 3px 3px 3px;
 /* 	color: gray; */
 /* 	font-family: serif; */
 /* 	font-style: italic; */
@@ -49,7 +50,7 @@
 
 img.activeimg{
 	display:inline-block;
-	position:relative;
+/* 	position:relative; */
 	height:35px;
 	top:4px;
 	left:1px;
@@ -58,12 +59,20 @@ img.activeimg{
 td.compImage {
 	padding-left:3px;
 	padding-right:3px;
+	width:35px;
+}
+
+td.compButton {
+	width:14px;
 }
 
 table.compTable {
 	border-spacing:0px;
-	padding-left:3px;
-	padding-right:3px;
+/* 	padding-left:3px; */
+/* 	padding-right:3px; */
+/* 	padding: 3px 3px 3px 3px; */
+	width: 100%;
+	height: 100%;
 }
 
 .bottongraph{

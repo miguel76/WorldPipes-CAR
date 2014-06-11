@@ -468,10 +468,11 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 
 		var td_1_2 = document.createElement("td");
 //		td_1_3.appendChild(elimina);
-		td_1_2.style.width = "100%";
+//		td_1_2.style.width = "100%";
 		tr_1.appendChild(td_1_2);
 
 		var td_1_3 = document.createElement("td");
+		td_1_3.setAttribute("class","compButton");
 		td_1_3.appendChild(proprieta);
 		tr_1.appendChild(td_1_3);
 
@@ -481,6 +482,7 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 		elimina.title = "delete";
 		
 		var td_1_4 = document.createElement("td");
+		td_1_4.setAttribute("class","compButton");
 		td_1_4.appendChild(elimina);
 		tr_1.appendChild(td_1_4);
 		
