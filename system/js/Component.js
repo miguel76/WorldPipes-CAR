@@ -400,9 +400,9 @@ Component.getImageURI = function(component) {
 	if (component == "union")
 		return "IMG/compLogos-union.svg";
 	if (component == "construct")
-		return "IMG/compLogos-transform.svg";
+		return "IMG/transformT_35.png";
 	if (component == "updatable")
-		return "IMG/compLogos-state.svg";
+		return "IMG/stateS_35.png";
 	if (component == "dataset")
 		return "IMG/compLogos-fileSource.svg";
 	return null;
@@ -417,12 +417,8 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	div.setAttribute("id","comp-" + code);
 	div.title = code;
 	
-	var img = document.createElement("img");
-	img.setAttribute("class","activeimg");
-	
-	var imgURI = Component.getImageURI(component);
-	if (imgURI != null)
-		img.src = imgURI;
+//	var img = document.createElement("img");
+//	img.setAttribute("class","activeimg");
 	
 //	div.appendChild(img);
 		
@@ -433,14 +429,18 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	
 	var table = document.createElement("table");
 	table.setAttribute("class","compTable");
+
+	var imgURI = Component.getImageURI(component);
+	if (imgURI != null)
+		table.style.backgroundImage = "url('" + imgURI + "')";
 	
 	var tr_1 = document.createElement("tr");
 	
-	var td_1_1 = document.createElement("td");
-	td_1_1.setAttribute("class","compImage");
-	td_1_1.setAttribute("rowspan","2");
-	td_1_1.appendChild(img);
-	tr_1.appendChild(td_1_1);
+//	var td_1_1 = document.createElement("td");
+//	td_1_1.setAttribute("class","compImage");
+//	td_1_1.setAttribute("rowspan","2");
+//	td_1_1.appendChild(img);
+//	tr_1.appendChild(td_1_1);
 	
 	var tr_2 = document.createElement("tr");
 
