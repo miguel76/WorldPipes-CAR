@@ -13,8 +13,8 @@ var actionListenerImg =
 		var img = document.getElementsByTagName("img");
 		var dropeditor = Core.getElementsByClass("areaeditor");
 		
-		actionListenerImg.creaInDefault(dropeditor[0]);
-		actionListenerImg.creaOutDefault(dropeditor[0]);
+//		actionListenerImg.creaInDefault(dropeditor[0]);
+//		actionListenerImg.creaOutDefault(dropeditor[0]);
 		
 		for(i=0;i<img.length;i++){
 			//Core.addEventListener(img[i],"mouseover",actionListenerImg.MouseOver);

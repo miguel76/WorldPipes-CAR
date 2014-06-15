@@ -15,7 +15,7 @@ Endpoint.createEndpoint = function(div,code,info){
 	if(info == null){ 
 		//Setting up a Source endPoint
 		var sourceEndpoint = {
-			endpoint:["Dot", { radius:10 }],
+			endpoint:["Dot", { radius:7 }],
 			paintStyle:{strokeStyle:"black",fillStyle:"#CCCCCC"},
 			connectorStyle:{ strokeStyle:"#CCCCCC", lineWidth:4 },
 			maxConnections:100,
@@ -65,10 +65,10 @@ Endpoint.createEndpoint = function(div,code,info){
 			
 			//Setting up a Target endPoint
 			var targetEndpoint = {
-				endpoint:["Dot", { radius:10 }],
+				endpoint:["Dot", { radius:7 }],
 				paintStyle:{ strokeStyle:"black",fillStyle:"#CCCCCC"},
 				connectorStyle:{ strokeStyle:"#CCCCCC", lineWidth:4 },
-				maxConnections:1,
+				maxConnections:100,
 				isTarget:true,
 				dropOptions:targetDropOptions,
 				parameters:{
@@ -80,12 +80,12 @@ Endpoint.createEndpoint = function(div,code,info){
 			jsPlumb.Defaults.HoverPaintStyle = { strokeStyle: "#FF3300" };
 			
 			if(component == "input" || component == "dataset" || component == "inputdefault"){
-				jsPlumb.addEndpoint(div, { anchor:"BottomCenter" }, sourceEndpoint);
+				jsPlumb.addEndpoint(div, { anchor:"BottomCenter"}, sourceEndpoint);
 //				jsPlumb.addEndpoint(div, { anchor:[ 0.5, 1, 0, -1 ]}, sourceEndpoint);
 			}
 			
 			if(component == "output" || component == "outputdefault" ){
-				jsPlumb.addEndpoint(div,{ anchor:"TopCenter"},targetEndpoint);
+				jsPlumb.addEndpoint(div,{ anchor:"TopCenter" },targetEndpoint);
 			}
 				
 			if(component == "union"){
@@ -94,7 +94,8 @@ Endpoint.createEndpoint = function(div,code,info){
 				jsPlumb.addEndpoint(div, { anchor:[0.55, 0, 0, -1] }, targetEndpoint);
 				jsPlumb.addEndpoint(div, { anchor:[0.45, 0, 0, -1] }, targetEndpoint);
 				jsPlumb.addEndpoint(div, { anchor:[0.35, 0, 0, -1] }, targetEndpoint);
-				jsPlumb.addEndpoint(div, { anchor:[0.25, 0, 0, -1] }, targetEndpoint);						
+				jsPlumb.addEndpoint(div, { anchor:[0.25, 0, 0, -1] }, targetEndpoint);	
+				
 				jsPlumb.addEndpoint(div, { anchor:"BottomCenter" }, sourceEndpoint);
 			}
 		

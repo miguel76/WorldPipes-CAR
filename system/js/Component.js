@@ -392,28 +392,28 @@ Component.updatePositions = function(editor,componentVett){
 	}
 };
 
-Component.getImageURI = function(component) {
-	if (component == "inputdefault" || component == "input")
-		return "IMG/compLogos-input.svg";
-	if (component == "outputdefault" || component == "output")
-		return "IMG/compLogos-output.svg";
-	if (component == "union")
-		return "IMG/compLogos-union.svg";
-	if (component == "construct")
-		return "IMG/transformT_35.png";
-	if (component == "updatable")
-		return "IMG/stateS_35.png";
-	if (component == "dataset")
-		return "IMG/compLogos-fileSource.svg";
-	return null;
-}
+//Component.getImageURI = function(component) {
+//	if (component == "inputdefault" || component == "input")
+//		return "IMG/components/Input_Comp.png";
+//	if (component == "outputdefault" || component == "output")
+//		return "IMG/components/Output_Comp.png";
+//	if (component == "union")
+//		return "IMG/compLogos-union.svg";
+//	if (component == "construct")
+//		return "IMG/components/Trapeze_Comp.png";
+//	if (component == "updatable")
+//		return "IMG/components/Database_Comp.png";
+//	if (component == "dataset")
+//		return "IMG/compLogos-fileSource.svg";
+//	return null;
+//}
 
 /*Ricarica la pipeline creata*/
 Component._loadPipeline = function(editor,code,component,id,uri,name,query,inputlist,x,y){
 	//alert(code + component + id + uri + name + query + inputlist + x + y);
 	
 	var div = document.createElement("div");
-	div.setAttribute("class","activegraph");
+	div.setAttribute("class","activegraph component component_" + component);
 	div.setAttribute("id","comp-" + code);
 	div.title = code;
 	
@@ -423,34 +423,11 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 //	div.appendChild(img);
 		
 	var label = document.createElement("label"); 
-	label.setAttribute("class","compLabel activeimg");
+	label.setAttribute("class","compLabel activeimg compLabel_" + component);
 	var text = document.createTextNode(name);
 	label.appendChild(text);
 	
-	var table = document.createElement("table");
-	table.setAttribute("class","compTable");
-
-	var imgURI = Component.getImageURI(component);
-	if (imgURI != null)
-		table.style.backgroundImage = "url('" + imgURI + "')";
-	
-	var tr_1 = document.createElement("tr");
-	
-//	var td_1_1 = document.createElement("td");
-//	td_1_1.setAttribute("class","compImage");
-//	td_1_1.setAttribute("rowspan","2");
-//	td_1_1.appendChild(img);
-//	tr_1.appendChild(td_1_1);
-	
-	var tr_2 = document.createElement("tr");
-
-	var td_2_2 = document.createElement("td");
-	td_2_2.setAttribute("colspan","3");
-	td_2_2.appendChild(label);
-	tr_2.appendChild(td_2_2);
-
-	table.appendChild(tr_1);
-	table.appendChild(tr_2);
+	div.appendChild(label);
 	
 //	var tr_2 = document.createElement("tr");
 //	var td_2_1 = document.createElement("td");
@@ -461,30 +438,22 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	
 	if(component == "input" || component == "output" || component == "union" || component == "construct" || component == "updatable" || component == "dataset"){
 
+		var buttonSet = document.createElement("div");
+		buttonSet.setAttribute("class","compButtonSet compButtonSet_" + component);
+
 		var proprieta = document.createElement("img");
-		proprieta.setAttribute("class","bottongraph");
+		proprieta.setAttribute("class","bottongraph compButton compSettings compSettings_" + component);
 		proprieta.src = "IMG/Settings.png";
 		proprieta.title = "property";
-
-		var td_1_2 = document.createElement("td");
-//		td_1_3.appendChild(elimina);
-//		td_1_2.style.width = "100%";
-		tr_1.appendChild(td_1_2);
-
-		var td_1_3 = document.createElement("td");
-		td_1_3.setAttribute("class","compButton");
-		td_1_3.appendChild(proprieta);
-		tr_1.appendChild(td_1_3);
+		buttonSet.appendChild(proprieta);
 
 		var elimina = document.createElement("img");
-		elimina.setAttribute("class","bottongraph");
+		elimina.setAttribute("class","bottongraph compButton compDelete compDelete_" + component);
 		elimina.src = "IMG/Trash.png";
 		elimina.title = "delete";
+		buttonSet.appendChild(elimina);
 		
-		var td_1_4 = document.createElement("td");
-		td_1_4.setAttribute("class","compButton");
-		td_1_4.appendChild(elimina);
-		tr_1.appendChild(td_1_4);
+		div.appendChild(buttonSet);
 		
 		Core.addEventListener(proprieta,"click",function(){
 			var body = document.createElement("div");
@@ -495,11 +464,13 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 		});
 					
 		Core.addEventListener(elimina,"click",function(){
-			jsPlumb.removeAllEndpoints(div);
-			jsPlumb.detachAllConnections(div);
-			div.parentNode.removeChild(div);
-			Component.elimina(componentVett,code);
-			Code.cancellaCodice(code);	
+			if (confirm("Should I really delete this component?")) {
+				jsPlumb.removeAllEndpoints(div);
+				jsPlumb.detachAllConnections(div);
+				div.parentNode.removeChild(div);
+				Component.elimina(componentVett,code);
+				Code.cancellaCodice(code);
+			}
 		});
 		
 //		table.appendChild(tr_2);
@@ -509,7 +480,6 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	var x = div.style.left = x;
 	var y = div.style.top = y;
 	
-	div.appendChild(table);
 	editor.appendChild(div);	
 	
 	Endpoint.createEndpoint(div,code,null);	
