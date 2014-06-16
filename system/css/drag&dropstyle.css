@@ -53,15 +53,15 @@
 }
 
 .component_dataset {	
-	width:140px;
-	height:50px;
-	background-image:url('../IMG/components/Database_Comp.png');
+	width:152px;
+	height:42px;
+	background-image:url('../IMG/components/Document_Comp.png');
 }
 
 .component_union {	
-	width:140px;
-	height:50px;
-	background-image:url('../IMG/components/Database_Comp.png');
+	width:182px;
+	height:32px;
+	background-image:url('../IMG/components/Union_Comp.png');
 }
 
 
@@ -79,21 +79,21 @@
 .compLabel_inputdefault { top:6px; left:6px; }
 .compLabel_output {	top:6px; left:6px; }
 .compLabel_outputdefault { top:6px; left:6px; }
-.compLabel_union { top:10px; left:20px; }
 .compLabel_construct { top:6px; left:26px; }
+.compLabel_union { display:none; top:6px; left:26px; }
 .compLabel_updatable {	top:17px; left:2px; }
-.compLabel_dataset { top:10px; left:20px; }
+.compLabel_dataset { top:11px; left:11px; }
 
 div.compButtonSet {	position:relative; }
 
-div.compButtonSet_input { left:162px; top:-31px; }
-div.compButtonSet_inputdefault { left:162px; top:-31px; }
-div.compButtonSet_output { left:162px; top:-31px; }
-div.compButtonSet_outputdefault { left:162px; top:-31px; }
-div.compButtonSet_union { left:162px; top:-31px; }
-div.compButtonSet_construct { left:162px; top:-31px; }
-div.compButtonSet_updatable { left:162px; top:-31px; }
-div.compButtonSet_dataset { left:162px; top:-31px; }
+div.compButtonSet_input { left:144px; top:-31px; }
+div.compButtonSet_inputdefault { left:144px; top:-31px; }
+div.compButtonSet_output { left:144px; top:-31px; }
+div.compButtonSet_outputdefault { left:144px; top:-31px; }
+div.compButtonSet_construct { left:184px; top:-31px; }
+div.compButtonSet_union { left:184px; top:-11px; }
+div.compButtonSet_updatable { left:136px; top:-25px; }
+div.compButtonSet_dataset { left:154px; top:-26px; }
 
 img.compButton {
 	position:relative;

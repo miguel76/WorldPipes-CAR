@@ -89,12 +89,15 @@ Endpoint.createEndpoint = function(div,code,info){
 			}
 				
 			if(component == "union"){
-				jsPlumb.addEndpoint(div, { anchor:[0.75, 0, 0, -1] }, targetEndpoint);
-				jsPlumb.addEndpoint(div, { anchor:[0.65, 0, 0, -1] }, targetEndpoint);
-				jsPlumb.addEndpoint(div, { anchor:[0.55, 0, 0, -1] }, targetEndpoint);
-				jsPlumb.addEndpoint(div, { anchor:[0.45, 0, 0, -1] }, targetEndpoint);
-				jsPlumb.addEndpoint(div, { anchor:[0.35, 0, 0, -1] }, targetEndpoint);
-				jsPlumb.addEndpoint(div, { anchor:[0.25, 0, 0, -1] }, targetEndpoint);	
+//				jsPlumb.addEndpoint(div, { anchor:[0.75, 0, 0, -1] }, targetEndpoint);
+//				jsPlumb.addEndpoint(div, { anchor:[0.65, 0, 0, -1] }, targetEndpoint);
+//				jsPlumb.addEndpoint(div, { anchor:[0.55, 0, 0, -1] }, targetEndpoint);
+//				jsPlumb.addEndpoint(div, { anchor:[0.45, 0, 0, -1] }, targetEndpoint);
+//				jsPlumb.addEndpoint(div, { anchor:[0.35, 0, 0, -1] }, targetEndpoint);
+//				jsPlumb.addEndpoint(div, { anchor:[0.25, 0, 0, -1] }, targetEndpoint);	
+				for (var i = 0; i < 6; i++) {
+					jsPlumb.addEndpoint(div, { anchor:["Continuous", { faces:["top"] } ] }, targetEndpoint);
+				}
 				
 				jsPlumb.addEndpoint(div, { anchor:"BottomCenter" }, sourceEndpoint);
 			}
