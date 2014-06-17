@@ -21,7 +21,7 @@
 .verticalresize{
 	position:absolute;
 	top:35px;
-	left:158px;
+	left:225px;
 	bottom:5px;
 	border:1px solid #FFFFFF;
 	width:4px;
@@ -44,7 +44,7 @@
 .verticalanimationresize{
 	position:absolute;
 	top:35px;
-	left:158px;
+	left:225px;
 	bottom:5px;
 	border:1px solid #89A;
 	width:4px;

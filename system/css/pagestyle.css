@@ -95,10 +95,10 @@ img.pulsanti{
 	top:35px;
 	left:5px;
 	right:auto;
-	bottom:auto;
-	border: 1px solid #999999;
-	width:150px;
-	height:336px;
+	bottom:5px;
+/* 	border: 1px solid #999999; */
+	width:220px;
+/* 	height:360px; */
 	overflow:auto;
 	display:block;
 	text-align:center;
@@ -107,10 +107,10 @@ img.pulsanti{
 
 .componenti{
 	position:absolute;
-	top:5px;
-	left:5px;
+	top:0px;
+	left:0px;
 	right:5px;
-	height:240px;
+	height:300px;
 	border: 1px solid #999999;
 	overflow:auto;
 	display:block;
@@ -248,11 +248,12 @@ table {
 	text-align:center;
 	cursor:pointer;
 }
-img.graph{
-	height:50px;
-}
 
-img#grafo{
+/* .graph{ */
+/* 	height:50px; */
+/* } */
+
+.componentPrototype {
 	cursor:move;
 	z-index:1;
 } 
@@ -271,7 +272,7 @@ p#paragrafo{
 	display:block;
 	position:absolute;
 	top:35px;
-	left:165px;
+	left:235px;
 	right:5px;
 	bottom:5px;
 	border:1px solid #999999;
@@ -309,12 +310,12 @@ p#paragrafo{
 /*Helper Area Layout*/
 .areahelper{
 	position:absolute;
-	top:390px;
+	top:340px;
 	left:5px;
 	right:5px;
 	bottom:5px;
 	border:1px solid #999999;
-	width:150px;
+	width:215px;
 	/*height:200px;*/
 	overflow:scroll;
 	display:block;

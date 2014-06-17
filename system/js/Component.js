@@ -42,9 +42,24 @@ Component.getNewComponentName = function(componentTypeName) {
 		case "input": return "Input" + cntIn++;
 		case "output": return "Output" + cntOut++;
 		case "union": return "Union" + cntUnion++;
-		case "construct": return "Construct" + cntConstr++;
-		case "updatable": return "Updatable" + cntUpdat++;
-		case "dataset": return "Dataset" + cntDataset++;
+		case "construct": return "Transform" + cntConstr++;
+		case "updatable": return "Store" + cntUpdat++;
+		case "dataset": return "File" + cntDataset++;
+		case "pipes": return "Pipeline" + cntPipes++;
+		default: return "???";
+	}
+};
+
+Component.getPrototypeName = function(componentTypeName) {
+	if (Component.isComponentPermanent(componentTypeName))
+		return componentTypeName;
+	switch (componentTypeName) {
+		case "input": return "Input";
+		case "output": return "Output";
+		case "union": return "Union";
+		case "construct": return "Transform";
+		case "updatable": return "Store";
+		case "dataset": return "File";
 		case "pipes": return "Pipeline" + cntPipes++;
 		default: return "???";
 	}
@@ -95,60 +110,6 @@ Component.createFromTypeId = function(componentTypeId, editor, clientX, clientY)
 	var x = clientX - editor.offsetLeft;// + "px";
 	var y = clientY - editor.offsetTop;// + "px";
 	
-//	var div = document.createElement("div");
-//	div.setAttribute("class","activegraph");
-//	div.setAttribute("id","comp-" + code);
-//	//div.title = "Input";
-//	
-//	var img = document.createElement("img");
-//	img.setAttribute("class","activeimg");
-//	var imgURI = Component.getImageURI(componentTypeName);
-//	if (imgURI != null)
-//		img.src = imgURI;
-//	div.appendChild(img);
-//	
-//	var label = Component.scriviNome(div,code,cntIn);
-//	div.appendChild(label);
-//	
-//	var proprieta = document.createElement("img");
-//	proprieta.setAttribute("class","bottongraph");
-//	proprieta.src = "IMG/pulsanteproprieta.gif";
-//	proprieta.title = "Component Properties";
-//	proprieta.class = "compProperties";
-//	div.appendChild(proprieta);
-//			
-//	var elimina = document.createElement("img");
-//	elimina.setAttribute("class","bottongraph");
-//	elimina.src = "IMG/iconaX.gif";
-//	elimina.title = "Delete Component";
-//	proprieta.class = "compDelete";
-//	div.appendChild(elimina);
-//	
-//	var x = div.style.left = event.clientX - this.offsetLeft;// + "px";
-//	var y = div.style.top = event.clientY - this.offsetTop;// + "px";
-//	
-//	this.appendChild(div);
-//	
-//	Core.addEventListener(proprieta,"click",function(){
-//		var body = document.createElement("div");
-//		body.setAttribute("class","body");
-//		formIN = Form.createForm(div,code);
-//		document.getElementsByTagName("body")[0].appendChild(formIN);
-//		document.getElementsByTagName("body")[0].appendChild(body);
-//	});
-//	
-//	
-//	Core.addEventListener(elimina,"click",function(){
-//		if(confirm("Are you sure you want to delete this component?")){
-//			temp = elimina.parentNode.parentNode;
-//			jsPlumb.removeAllEndpoints(elimina.parentNode);
-//			jsPlumb.detachAllConnections(elimina.parentNode);
-//			temp.removeChild(elimina.parentNode);
-//			Component.elimina(componentVett,code);
-//			Code.cancellaCodice(code);	
-//		}
-//	});
-	
 	var name = Component.getNewComponentName(componentTypeName);
 	var newComponent = Component.createComponentObject(code, componentTypeName, name, x, y);
 	componentVett[componentVett.length] = newComponent;
@@ -158,6 +119,13 @@ Component.createFromTypeId = function(componentTypeId, editor, clientX, clientY)
 	//Component.cercaElem();
 	Component.createGraphics(newComponent, editor);
 	Code.updateCodeFromComponent(newComponent);
+};
+
+Component.prototypeFromTypeId = function(componentTypeId, parentElement, posX, posY) {
+	var componentTypeName = Component.componentTypeNameFromId(componentTypeId);
+	var name = Component.getPrototypeName(componentTypeName);
+	var newComponent = Component.createComponentObject(0, componentTypeName, name, posX, posY);
+	Component.createGraphics(newComponent, parentElement);
 };
 
 /*Restituisce il codice del componente*/

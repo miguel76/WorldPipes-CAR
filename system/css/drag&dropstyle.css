@@ -64,6 +64,60 @@
 	background-image:url('../IMG/components/Union_Comp.png');
 }
 
+.componentPrototype {
+	background-repeat: no-repeat;
+	background-position: center;
+	width: inherit;
+}
+
+/* .componentPrototype_input {	 */
+/* 	width:142px; */
+/* 	height:32px; */
+/* 	background-image:url('../IMG/components/Input_Comp.png'); */
+/* } */
+
+/* .componentPrototype_inputdefault {	 */
+/* 	width:142px; */
+/* 	height:32px; */
+/* 	background-image:url('../IMG/components/Input_Comp.png'); */
+/* } */
+
+/* .componentPrototype_output {	 */
+/* 	width:142px; */
+/* 	height:32px; */
+/* 	background-image:url('../IMG/components/Output_Comp.png'); */
+/* } */
+
+/* .componentPrototype_outputdefault {	 */
+/* 	width:142px; */
+/* 	height:32px; */
+/* 	background-image:url('../IMG/components/Output_Comp.png'); */
+/* } */
+
+/* .componentPrototype_construct {	 */
+/* 	width:182px; */
+/* 	height:32px; */
+/* 	background-image:url('../IMG/components/Trapeze_Comp.png'); */
+/* } */
+
+/* .componentPrototype_updatable {	 */
+/* 	width:134px; */
+/* 	height:45px; */
+/* 	background-image:url('../IMG/components/Database_Comp.png'); */
+/* } */
+
+/* .componentPrototype_dataset {	 */
+/* 	width:152px; */
+/* 	height:42px; */
+/* 	background-image:url('../IMG/components/Document_Comp.png'); */
+/* } */
+
+/* .componentPrototype_union {	 */
+/* 	width:182px; */
+/* 	height:32px; */
+/* 	background-image:url('../IMG/components/Union_Comp.png'); */
+/* } */
+
 
 .compLabel {	
 	font-size: 14px;
@@ -106,6 +160,23 @@ img.compSettings {
 	top:28px;
 }
 
+/* div.component_prototype {	 */
+/* 	position: relative; */
+/* 	color: #040303; */
+/* 	cursor:pointer; */
+/* 	z-index:20; */
+/* 	background-repeat: no-repeat; */
+/* } */
+
+/* div.component_prototype_input { left:5px; top:3px; } */
+/* div.component_prototype_inputdefault { left:5px; top:37px; } */
+/* div.component_prototype_output { left:5px; top:71px; } */
+/* div.component_prototype_outputdefault { left:5px; top:105px; } */
+/* div.component_prototype_construct { left:5px; top:139px; } */
+/* div.component_prototype_union { left:5px; top:140px; } */
+/* div.component_prototype_updatable { left:5px; top:160px; } */
+/* div.component_prototype_dataset { left:5px; top:170px; } */
+
 #activeimg{
 	display:inline-block;
 	position:relative;
@@ -132,7 +203,8 @@ td.compButton {
 	width:14px;
 }
 
-table.compTable {
+table.inComponentTable {
+	padding:4px;
 	border-spacing:0px;
 /* 	padding-left:3px; */
 /* 	padding-right:3px; */
@@ -141,6 +213,18 @@ table.compTable {
 	height: 100%;
 /* 	background-repeat: no-repeat; */
 }
+
+td.inComponentTable {
+	padding:4px;
+}
+
+tr.inComponentTable {
+/* 	padding:5px; */
+}
+
+.compLabelPrototype {
+	left: 0px;
+} 
 
 .bottongraph{
 	display:inline-block;

@@ -137,19 +137,27 @@
 <!-- 						<li><img class="graph" id="grafo" src="IMG/Union.gif" title="union graph"/><br/>union</li> -->
 <!-- 						<li><img class="graph" id="grafo" src="IMG/Updatable.gif" title="updatable graph"/><br/>updatable</li> -->
 <!-- 					</ul> -->
-					<table id="componentImg">
-						<tr>
-							<td><img class="graph" id="inputComp" src="IMG/compLogos-input.svg" title="Input"/></td>
-							<td><img class="graph" id="outputComp" src="IMG/compLogos-output.svg" title="Output"/></td>
-						</tr>
-						<tr>
-							<td><img class="graph" id="constructComp" src="IMG/compLogos-transform.svg" title="Transform"/></td>
-							<td><img class="graph" id="unionComp" src="IMG/compLogos-union.svg" title="Union"/></td>
-						</tr>
-						<tr>
-							<td><img class="graph" id="updatableComp" src="IMG/compLogos-state.svg" title="Stateful"/></td>
-							<td><img class="graph" id="datasetComp" src="IMG/compLogos-fileSource.svg" title="File Source"/></td>
-						</tr>
+<!-- 					<table id="componentImg"> -->
+<!-- 						<tr> -->
+<!-- 							<td><img class="graph" id="inputComp" src="IMG/compLogos-input.svg" title="Input"/></td> -->
+<!-- 							<td><img class="graph" id="outputComp" src="IMG/compLogos-output.svg" title="Output"/></td> -->
+<!-- 						</tr> -->
+<!-- 						<tr> -->
+<!-- 							<td><img class="graph" id="constructComp" src="IMG/compLogos-transform.svg" title="Transform"/></td> -->
+<!-- 							<td><img class="graph" id="unionComp" src="IMG/compLogos-union.svg" title="Union"/></td> -->
+<!-- 						</tr> -->
+<!-- 						<tr> -->
+<!-- 							<td><img class="graph" id="updatableComp" src="IMG/compLogos-state.svg" title="Stateful"/></td> -->
+<!-- 							<td><img class="graph" id="datasetComp" src="IMG/compLogos-fileSource.svg" title="File Source"/></td> -->
+<!-- 						</tr> -->
+<!-- 					</table> -->
+ 					<table id="componentTable" class="inComponentTable">
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="inputComp" class="componentPrototype componentPrototype_input component_input"><label class="compLabelPrototype compLabel compLabel_input">Input</label></div></td></tr>
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="outputComp" class="componentPrototype componentPrototype_output component_output"><label class="compLabelPrototype compLabel compLabel_output">Output</label></div></td></tr>
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="datasetComp" class="componentPrototype componentPrototype_dataset component_dataset"><label class="compLabelPrototype compLabel compLabel_dataset">File</label></div></td></tr>
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="unionComp" class="componentPrototype componentPrototype_union component_union"><label class="compLabelPrototype compLabel compLabel_union">Union</label></div></td></tr>
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="constructComp" class="componentPrototype componentPrototype_construct component_construct"><label class="compLabelPrototype compLabel compLabel_construct">Transform</label></div></td></tr>
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="updatableComp" class="componentPrototype componentPrototype_updatable component_updatable"><label class="compLabelPrototype compLabel compLabel_updatable">Store</label></div></td></tr>
 					</table>
 				</div>
 			</div>
