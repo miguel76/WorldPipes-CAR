@@ -131,7 +131,7 @@ Endpoint.createEndpoint = function(div,code,info){
 					var targetEndpoint = {
 						endpoint:[shape, { radius:7, width:14, height:14 }],
 						paintStyle:{ strokeStyle:"black",fillStyle:color},
-						maxConnections:1,
+						maxConnections:100,
 						isTarget:true,				
 						dropOptions:targetDropOptions,
 						anchor:["Continuous", { faces:["top"] } ],
