@@ -108,7 +108,6 @@ Component.createFromTypeId = function(componentTypeId, editor, clientX, clientY)
 	var componentTypeName = Component.componentTypeNameFromId(componentTypeId);
 	var posX = clientX - editor.offsetLeft;// + "px";
 	var posY = clientY - editor.offsetTop;// + "px";
-	console.log("posX:" + posX + " posY:" + posY);
 	
 	var name = Component.getNewComponentName(componentTypeName);
 	var newComponent = Component.createComponentObject(code, componentTypeName, name, posX, posY);

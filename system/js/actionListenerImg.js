@@ -17,7 +17,6 @@ var actionListenerImg =
 //		actionListenerImg.creaOutDefault(dropeditor[0]);
 		
 		for(var i=0;i<componentPrototypes.length;i++){
-			console.log("Adding dragstart listener to " + componentPrototypes[i].id);
 			componentPrototypes[i].setAttribute("draggable",true);
 			componentPrototypes[i].addEventListener("dragstart",actionListenerImg.DragStart);
 //			componentPrototypes[i].addEventListener("drag",actionListenerImg.Drag);
@@ -110,22 +109,9 @@ var actionListenerImg =
 	/* ***************************************** Drag & drop ***************************************** */
 	
 	DragStart: function(event){
-		console.log("drag start");
-		console.log("x: " + event.x + ", y: " + event.y);
-		console.log("clientX: " + event.clientX + ", clientY: " + event.clientY);
-		console.log("offsetX: " + event.offsetX + ", offsetY: " + event.offsetY);
-		console.log("layerX: " + event.layerX + ", layerY: " + event.layerY);
 		event.dataTransfer.setData("compId",this.id);
 		event.dataTransfer.setData("offsetX",event.offsetX);
 		event.dataTransfer.setData("offsetY",event.offsetY);
-	},
-	
-	Drag: function(event){
-		console.log("drag");
-		console.log("x: " + event.x + ", y: " + event.y);
-		console.log("clientX: " + event.clientX + ", clientY: " + event.clientY);
-		console.log("offsetX: " + event.offsetX + ", offsetY: " + event.offsetY);
-		console.log("layerX: " + event.layerX + ", layerY: " + event.layerY);
 	},
 	
 	DragEnter: function(event){
@@ -144,12 +130,6 @@ var actionListenerImg =
 	},
 	/*Gestisce l'evento drop del mouse, quando un componente viene rilasciato nell'area editor questo vine creato e inseriro nel vettore dei Componneti*/
 	Drop: function(event){
-		console.log("drop");
-		console.log("x: " + event.x + ", y: " + event.y);
-		console.log("clientX: " + event.clientX + ", clientY: " + event.clientY);
-		console.log("offsetX: " + event.offsetX + ", offsetY: " + event.offsetY);
-		console.log("layerX: " + event.layerX + ", layerY: " + event.layerY);
-		
 		Core.preventDefault(event); 
 		//Core.removeClass(this,"attivo");
 		
