@@ -129,12 +129,12 @@ Endpoint.createEndpoint = function(div,code,info){
 					var name = inputVett[i].Name;
 				
 					var targetEndpoint = {
-						endpoint:[shape, { radius:10 }],
+						endpoint:[shape, { radius:7, width:14, height:14 }],
 						paintStyle:{ strokeStyle:"black",fillStyle:color},
 						maxConnections:1,
 						isTarget:true,				
 						dropOptions:targetDropOptions,
-						anchor:[0.25, 0, 0, -1],
+						anchor:["Continuous", { faces:["top"] } ],
 						overlays:[
 							["Label",{cssClass:"tooltip", label:name, id:"lab"}]
 						],
