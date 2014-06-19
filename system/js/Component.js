@@ -106,12 +106,12 @@ Component.createFromTypeId = function(componentTypeId, editor, clientX, clientY)
 	var code = cnt;
 	
 	var componentTypeName = Component.componentTypeNameFromId(componentTypeId);
-	console.log("clientX:" + clientX + " clientY:" + clientY + " editor.offsetLeft:" + editor.offsetLeft + " editor.offsetTop:" + editor.offsetTop)
-	var x = clientX - editor.offsetLeft;// + "px";
-	var y = clientY - editor.offsetTop;// + "px";
+	var posX = clientX - editor.offsetLeft;// + "px";
+	var posY = clientY - editor.offsetTop;// + "px";
+	console.log("posX:" + posX + " posY:" + posY);
 	
 	var name = Component.getNewComponentName(componentTypeName);
-	var newComponent = Component.createComponentObject(code, componentTypeName, name, x, y);
+	var newComponent = Component.createComponentObject(code, componentTypeName, name, posX, posY);
 	componentVett[componentVett.length] = newComponent;
 	
 //	Endpoint.createEndpoint(div,code,null);

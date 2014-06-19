@@ -10,23 +10,25 @@ var actionListenerImg =
 		cntIn = 1; cntOut = 1; cntUnion = 1; cntConstr = 1; cntUpdat = 1; cntDataset = 1; cntPipes = 1;
 		cntInDef = 0; cntOutDef = 1;
 		
-		var img = document.getElementsByTagName("img");
-		var dropeditor = Core.getElementsByClass("areaeditor");
+		var componentPrototypes = document.getElementsByClassName("componentPrototype");
+		
 		
 //		actionListenerImg.creaInDefault(dropeditor[0]);
 //		actionListenerImg.creaOutDefault(dropeditor[0]);
 		
-		for(i=0;i<img.length;i++){
-			//Core.addEventListener(img[i],"mouseover",actionListenerImg.MouseOver);
-			//Core.addEventListener(img[i],"mouseout",actionListenerImg.MouseOut);
-			Core.addEventListener(img[i],"click",actionListenerImg.MouseClick);
-			Core.addEventListener(img[i],"dragstart",actionListenerImg.DragStart);
-			
-			Core.addEventListener(dropeditor[0],"dragenter",actionListenerImg.DragEnter);
-			Core.addEventListener(dropeditor[0],"dragleave",actionListenerImg.DragLeave);
-			Core.addEventListener(dropeditor[0],"dragover",actionListenerImg.DragOver);
-			Core.addEventListener(dropeditor[0],"drop",actionListenerImg.DropStart);
+		for(var i=0;i<componentPrototypes.length;i++){
+			console.log("Adding dragstart listener to " + componentPrototypes[i].id);
+			componentPrototypes[i].setAttribute("draggable",true);
+			componentPrototypes[i].addEventListener("dragstart",actionListenerImg.DragStart);
+//			componentPrototypes[i].addEventListener("drag",actionListenerImg.Drag);
 		}
+
+		var dropeditor = document.getElementById("areaeditor");
+		Core.addEventListener(dropeditor,"dragenter",actionListenerImg.DragEnter);
+		Core.addEventListener(dropeditor,"dragleave",actionListenerImg.DragLeave);
+		Core.addEventListener(dropeditor,"dragover",actionListenerImg.DragOver);
+		Core.addEventListener(dropeditor,"drop",actionListenerImg.Drop);
+
 	},
 	
 	/*Crea l'input di default*/
@@ -90,38 +92,6 @@ var actionListenerImg =
 		Code.writeCodeFromComponent(newComponent);
 	},
 	
-	/*Gestisce l'evento click*/
-	MouseListenerClick: function(pulsante){
-		if(pulsante.title == "New"){
-			if(componentVett.length != 0){
-				if(confirm("Sure you want to leave this page?")){location.reload();}
-			}
-			else{location.reload();}
-		}
-		if(pulsante.title == "Save"){
-			var sourcecode = Core.getElementsByClass("codeclass")[0];
-			Code.estraiTesto(sourcecode,pulsante.title,GraphURIPrefix);
-		}
-		if(pulsante.title == "Properties"){
-			//var json = JSON.stringify(componentVett);
-		}
-		if(pulsante.title == "Play & Save"){
-			var sourcecode = Core.getElementsByClass("codeclass")[0];
-			Code.estraiTesto(sourcecode,pulsante.title,GraphURIPrefix);
-//			window.open("http://localhost:8080/swows-web/play?df=" + encodeURIComponent(URISystemGraphStore + encodeURIComponent(dataflowURI)),"_blank");
-			window.open("http://localhost:8080/swows-web/play?df=" + encodeURIComponent(dataflowURI),"_blank");
-		}
-		
-		if(pulsante.title == "load"){
-			Component.jsonLoad();
-		}
-		
-		if(pulsante.title == "publish"){
-			Code.sendCodeURIUpdate();
-		}
-		
-	},
-	
 	
 	/*MouseOver: function(event){
 		actionListenerImg.MouseListenerOver(this);
@@ -140,7 +110,22 @@ var actionListenerImg =
 	/* ***************************************** Drag & drop ***************************************** */
 	
 	DragStart: function(event){
+		console.log("drag start");
+		console.log("x: " + event.x + ", y: " + event.y);
+		console.log("clientX: " + event.clientX + ", clientY: " + event.clientY);
+		console.log("offsetX: " + event.offsetX + ", offsetY: " + event.offsetY);
+		console.log("layerX: " + event.layerX + ", layerY: " + event.layerY);
 		event.dataTransfer.setData("compId",this.id);
+		event.dataTransfer.setData("offsetX",event.offsetX);
+		event.dataTransfer.setData("offsetY",event.offsetY);
+	},
+	
+	Drag: function(event){
+		console.log("drag");
+		console.log("x: " + event.x + ", y: " + event.y);
+		console.log("clientX: " + event.clientX + ", clientY: " + event.clientY);
+		console.log("offsetX: " + event.offsetX + ", offsetY: " + event.offsetY);
+		console.log("layerX: " + event.layerX + ", layerY: " + event.layerY);
 	},
 	
 	DragEnter: function(event){
@@ -158,13 +143,21 @@ var actionListenerImg =
 		Core.preventDefault(event);
 	},
 	/*Gestisce l'evento drop del mouse, quando un componente viene rilasciato nell'area editor questo vine creato e inseriro nel vettore dei Componneti*/
-	DropStart: function(event){
+	Drop: function(event){
+		console.log("drop");
+		console.log("x: " + event.x + ", y: " + event.y);
+		console.log("clientX: " + event.clientX + ", clientY: " + event.clientY);
+		console.log("offsetX: " + event.offsetX + ", offsetY: " + event.offsetY);
+		console.log("layerX: " + event.layerX + ", layerY: " + event.layerY);
+		
 		Core.preventDefault(event); 
 		//Core.removeClass(this,"attivo");
 		
 		var id = event.dataTransfer.getData("compId");
+		var offsetX = event.dataTransfer.getData("offsetX");
+		var offsetY = event.dataTransfer.getData("offsetY");
 		var dropeditor = Core.getElementsByClass("areaeditor");
-		Component.createFromTypeId(id, dropeditor[0], event.clientX, event.clientY);
+		Component.createFromTypeId(id, dropeditor[0], event.clientX - parseInt(offsetX), event.clientY - parseInt(offsetY));
 	},
 };
 

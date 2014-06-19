@@ -56,6 +56,7 @@
 		<script type="text/javascript" src="js/Form.js"></script>
 		<script type="text/javascript" src="js/Endpoint.js"></script>
 		<script type="text/javascript" src="js/n3-browser.min.js"></script>
+		<script type="text/javascript" src="js/mainActions.js"></script>
 <!-- 		<script type="text/javascript" src="js/activelink.js"></script> -->
 		
 		<!-- Controllo del Browser utente -->
@@ -110,11 +111,11 @@
 			<div id="pulsante">
 				<ul title="pulsanti">
 <!-- 					<li><img class="pulsanti" src="IMG/new.gif" title="New" draggable="false"/></li> -->
-					<li><img class="pulsanti" src="IMG/salva.gif" title="Save" draggable="false"/></li>
+					<li><img class="pulsanti" src="IMG/salva.gif" title="Save" draggable="false" onclick="MainActions.savePipe()"/></li>
 <!-- 					<li><img class="pulsanti" src="IMG/Proprieta.gif" title="Properties" draggable="false"/></li> -->
-					<li><img class="pulsanti" src="IMG/play.gif" title="Play &amp; Save" draggable="false"/></li>
+					<li><img class="pulsanti" src="IMG/play.gif" title="Play &amp; Save" draggable="false" onclick="MainActions.playPipe()"/></li>
 <!-- 					<li><img class="pulsanti" src="IMG/reload.gif" title="load" draggable="false"/></li> -->
-					<li><img class="pulsanti" src="IMG/publish.gif" title="publish" draggable="false"/></li>
+<!-- 					<li><img class="pulsanti" src="IMG/publish.gif" title="publish" draggable="false"/></li> -->
 				</ul>
 			</div>
 <!-- 		</div> -->
@@ -151,7 +152,7 @@
 <!-- 							<td><img class="graph" id="datasetComp" src="IMG/compLogos-fileSource.svg" title="File Source"/></td> -->
 <!-- 						</tr> -->
 <!-- 					</table> -->
- 					<table id="componentTable" class="inComponentTable">
+ 					<table id="componentImg" class="inComponentTable">
 						<tr class="inComponentTable"><td class="inComponentTable"><div id="inputComp" class="componentPrototype componentPrototype_input component_input"><label class="compLabelPrototype compLabel compLabel_input">Input</label></div></td></tr>
 						<tr class="inComponentTable"><td class="inComponentTable"><div id="outputComp" class="componentPrototype componentPrototype_output component_output"><label class="compLabelPrototype compLabel compLabel_output">Output</label></div></td></tr>
 						<tr class="inComponentTable"><td class="inComponentTable"><div id="datasetComp" class="componentPrototype componentPrototype_dataset component_dataset"><label class="compLabelPrototype compLabel compLabel_dataset">File</label></div></td></tr>
