@@ -23,6 +23,10 @@
 	<target name ="upload-all" description="Upload the CAR file">
 	    <property file="${basedir}/callimachus.properties"/>
 	  	<input
+	  	    message="Please enter callimachus host:"
+	  	    addproperty="callimachus.host">
+	    </input>
+	  	<input
 		    message="Please enter callimachus username:"
 	  	    addproperty="callimachus.user"
 	 	  />
@@ -34,12 +38,16 @@
 	 	  <arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
 	 	  <arg value="--digest"/>
 	 	  <arg line="--upload-file ${basedir}/bin/WorldPipes.car"/>
-	 	  <arg value="http://localhost:4040/SWOWS/?archive"/>
+	 	  <arg value="${callimachus.host}/SWOWS/?archive"/>
 	 	</exec>
 	  </target>
 
 	<target name="upload-updates" description="Upload just the updated files">
 	    <property file="${basedir}/callimachus.properties"/>
+	  	<input
+	  	    message="Please enter callimachus host:"
+	  	    addproperty="callimachus.host">
+	    </input>
 	  	<input
 		    message="Please enter callimachus username:"
 	  	    addproperty="callimachus.user"
@@ -74,12 +82,16 @@
 	  	 	<arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
 	  		<arg line="--digest"/>
 	  	 	<arg line="--upload-file ${basedir}/${theFile}"/>
-	  	 	<arg line="http://localhost:4040/SWOWS/${thePath}/"/>
+	  	 	<arg line="${callimachus.host}/SWOWS/${thePath}/"/>
 	  	</exec>
 	</target>
 
 	<target name ="upload-system" description="Create the CAR file">
 	    <property file="${basedir}/callimachus.properties"/>
+	  	<input
+	  	    message="Please enter callimachus host:"
+	  	    addproperty="callimachus.host">
+	    </input>
 	  	<input
 		    message="Please enter callimachus username:"
 	  	    addproperty="callimachus.user"
@@ -92,7 +104,7 @@
 	 	  <arg line="--user ${callimachus.user}:${callimachus.pwd}"/>
 	 	  <arg value="--digest"/>
 	 	  <arg line="--upload-file ${basedir}/bin/WorldPipes-system.car"/>
-	 	  <arg value="http://localhost:4040/SWOWS/system/?archive"/>
+	 	  <arg value="${callimachus.host}/SWOWS/system/?archive"/>
 	 	</exec>
 	  </target>
 
