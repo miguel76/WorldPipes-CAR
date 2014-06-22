@@ -97,7 +97,8 @@ Component.createGraphics = function(componentObject, editor) {
 			componentObject.Query,
 			componentObject.InputList,
 			componentObject.X,
-			componentObject.Y);
+			componentObject.Y,
+			componentObject);
 //	alert("Component " + componentObject.Code + " created");
 };
 
@@ -376,7 +377,7 @@ Component.updatePositions = function(editor,componentVett){
 //}
 
 /*Ricarica la pipeline creata*/
-Component._loadPipeline = function(editor,code,component,id,uri,name,query,inputlist,x,y){
+Component._loadPipeline = function(editor,code,component,id,uri,name,query,inputlist,x,y,componentObject){
 	//alert(code + component + id + uri + name + query + inputlist + x + y);
 	
 	var div = document.createElement("div");
@@ -425,7 +426,7 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 		Core.addEventListener(proprieta,"click",function(){
 			var body = document.createElement("div");
 			body.setAttribute("class","body");
-			formIN = Form.createForm(div,code);
+			formIN = Form.createForm(div,componentObject);
 			document.getElementsByTagName("body")[0].appendChild(formIN);
 			document.getElementsByTagName("body")[0].appendChild(body);
 		});

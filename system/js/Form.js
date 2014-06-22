@@ -3,7 +3,9 @@ var Form = {};
 
 /*Crea il form corrispondente al componente passato in input*/
 Form.createForm = function(parent,componentObject){
+	console.log("Entering createForm for " + JSON.stringify(componentObject) + " inside " + parent);
 	var componente = componentObject.Component;
+	console.log("componente = " + componente);
 	
 	form = document.createElement("form");
 	form.name = "Properties";
