@@ -477,18 +477,6 @@ JsonToServer._generateSaveNQ =
 
 JsonToServer.savePipelineAndLayout = function (graphStore, mainURI, pipelineURI, layoutURI, componentsVector, callback) {
 	
-  if (!callback)
-	  return JsonToServer.savePipelineAndLayout(
-			  graphStore, mainURI, pipelineURI, layoutURI, componentsVector,
-			  function(err, result) {
-				  if (err) {
-					  alert('Error: ' + JSON.stringify(err));
-					  updateStatus('Error Saving Pipeline');
-				  } else {
-					  updateStatus('Pipeline Saved!');
-				  }
-			  });
-	
 //  alert(JSON.stringify(componentsVector));
   var jsonModified = JsonToServer._jsonConvertValues(componentsVector, JsonToServer._jsonEncode);
 //  alert(JSON.stringify(jsonModified));
@@ -555,22 +543,21 @@ JsonToServer.saveDataflow = function (dataflowURI, dataflowTurtle, callback) {
 	return JsonToServer._saveTurtle(null, dataflowURI, dataflowTurtle, callback);
 };
 
-JsonToServer.savePipelineData = function (graphStore, pipelineMainURI, componentsVector) {
+JsonToServer.savePipelineData = function (graphStore, pipelineMainURI, componentsVector, callback) {
 
 	return JsonToServer._getPipelineAndLayoutUris(
 			graphStore,
 			pipelineMainURI,
 			function(err, pipelineURI, layoutURI, dataflowUri) {
 				if (err) {
-					alert('Error: ' + err);
-					updateStatus('Error Saving Pipeline');
+					callback(err);
 				} else
-					JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineMainURI, pipelineURI, layoutURI, componentsVector);
+					JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineMainURI, pipelineURI, layoutURI, componentsVector, callback);
 			});
 	
 };
 
-JsonToServer.saveAll = function (graphStore, pipelineMainURI, dataflowTurtle, componentsVector) {
+JsonToServer.saveAll = function (graphStore, pipelineMainURI, dataflowTurtle, componentsVector, callback) {
 	updateStatus(
 			'Saving Pipeline...',
 			function() {
@@ -579,18 +566,16 @@ JsonToServer.saveAll = function (graphStore, pipelineMainURI, dataflowTurtle, co
 						pipelineMainURI,
 						function(err, pipelineURI, layoutURI, dataflowUri) {
 							if (err) {
-								alert('Error: ' + err);
-								updateStatus('Error Saving Pipeline');
+								callback(err);
 							}
 							else
 								JsonToServer.saveDataflow(
 										dataflowUri, dataflowTurtle,
 										function(err) {
 											if (err) {
-												alert('Error: ' + err);
-												updateStatus('Error Saving Pipeline');
+												callback(err);
 											} else
-												JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineMainURI, pipelineURI, layoutURI, componentsVector);
+												JsonToServer.savePipelineAndLayout(graphStore + '?graph=', pipelineMainURI, pipelineURI, layoutURI, componentsVector, callback);
 										}
 								);
 						});

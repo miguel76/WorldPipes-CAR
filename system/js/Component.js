@@ -424,11 +424,9 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 		div.appendChild(buttonSet);
 		
 		Core.addEventListener(proprieta,"click",function(){
-			var body = document.createElement("div");
-			body.setAttribute("class","body");
-			formIN = Form.createForm(div,componentObject);
-			document.getElementsByTagName("body")[0].appendChild(formIN);
-			document.getElementsByTagName("body")[0].appendChild(body);
+			document.getElementById("dialogBackground").style.display = "";
+			var settingsForm = Form.createForm(div,componentObject);
+			document.getElementById("dialogContainer").appendChild(settingsForm);
 		});
 					
 		Core.addEventListener(elimina,"click",function(){

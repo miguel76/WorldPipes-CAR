@@ -10,21 +10,23 @@ Form.createForm = function(parent,componentObject){
 	form = document.createElement("form");
 	form.name = "Properties";
 	form.setAttribute("method","POST");
+	form.setAttribute("class","compForm");
 //	form.setAttribute("action","WorldPipesNew.html");
 			
 	var fieldset = document.createElement("fieldset");
-	fieldset.setAttribute("id","form");
+//	fieldset.setAttribute("id","form");
+	fieldset.setAttribute("class","compFormFieldset");
 	
 	fieldset.innerHTML += "<input type='hidden' name='code' value='" + componentObject.code + "'>"
 	
 	if (componente == "output" || componente == "dataset" || componente == "input"){
-		fieldset.innerHTML += "<label id='label'> URI</br> <input id='input' name='URI' type='text' size = '35' value='"+ componentObject.URI + "'></br> </label>";
+		fieldset.innerHTML += "<label class='compFormLabel'>URI</br> <input class='compFormInput' name='URI' type='text' size = '35' value='"+ componentObject.URI + "'></br> </label>";
 	}
 
-	fieldset.innerHTML += "<label id='label'> Name</br> <input id='input' name='Name' type='text' size = '35' value='"+ componentObject.Name +"'></br></br> </label>";
+	fieldset.innerHTML += "<label class='compFormLabel'>Name <input class='compFormInput' name='Name' type='text' size = '35' value='"+ componentObject.Name +"'></br></br> </label>";
 	
 	if(componente == "construct" || componente == "updatable"){
-		fieldset.innerHTML += "<label id='label'> Query</br> <textarea name='Query' rows='10' cols='30' id='input'>" + componentObject.Query + "</textarea></br></br> </label>";
+		fieldset.innerHTML += "<label class='compFormLabel'> Query</br> <textarea name='Query' id='compQuery' class='compFormInput compFormTextarea'>" + componentObject.Query + "</textarea></br></br> </label>";
 		Form.createAddTable(fieldset,componentObject.InputList);
 	}		
 	if(componente == "pipeline"){
@@ -58,7 +60,7 @@ Form.createForm = function(parent,componentObject){
 					var td = tr.insertCell(0);
 					td.setAttribute("id","inputName");
 						var input = document.createElement("input");
-						input.setAttribute("id","inputRow");
+						input.setAttribute("class","compFormInputsTableCell");
 						input.setAttribute("type","text");
 						input.value = "Input " + rowCount;
 						input.name = "nameInput";
@@ -67,7 +69,7 @@ Form.createForm = function(parent,componentObject){
 					var td = tr.insertCell(1);
 					td.setAttribute("id","inputName");
 						var input = document.createElement("input");
-						input.setAttribute("id","inputRow");
+						input.setAttribute("class","compFormInputsTableCell");
 						input.setAttribute("type","text");
 						input.value = "InputId" + rowCount;
 						input.name = "idInput";
@@ -135,12 +137,13 @@ Form.createForm = function(parent,componentObject){
 	}
 	
 	/*Gestione evento submit*/
-	Core.addEventListener(form,"submit",function(){
+	form.addEventListener("submit",function(evt){
+		evt.preventDefault();
 		
 		/*** Occorre salvare i dati inseriti nel form per poterli poi inviare al server ***/
-		var inputVett = Component.getVett(cnt);
+		var inputVett = componentObject.InputList;
 		
-		if(Component.getComponent(cnt) == "construct" || Component.getComponent(cnt) == "updatable"){
+		if(componente == "construct" || componente == "updatable"){
 			var table = document.getElementById("tableInput");
 			InputType.fillVett(table,inputVett,parent);
 			Endpoint.createEndpoint(parent,cnt,1);
@@ -158,27 +161,38 @@ Form.createForm = function(parent,componentObject){
 		Code.updateCodeFromComponent(componentObject);
 		
 		var sourcecode = Core.getElementsByClass("codeclass")[0];
-		Code.estraiTesto(sourcecode,"formSave",GraphURIPrefix);
 		
-		var label = Component.scriviNome(parent,cnt);
-		var figli = parent.childNodes;
-		parent.replaceChild(label,figli[1]);
+		Code.estraiTesto(
+				sourcecode, "formSave",
+//				GraphURIPrefix,
+				function(err) {
+					if (err) {
+						alert('Error: ' + JSON.stringify(err));
+						updateStatus('Error Saving Pipeline');
+						evt.preventDefault();
+					} else {
+						updateStatus('Pipeline Saved!');
+						
+//						var label = Component.scriviNome(parent,cnt);
+						
+						var label = parent.getElementsByClassName("compLabel")[0];
+						label.textContent = componentObject.name;
+						
+						var figli = parent.childNodes;
+						parent.replaceChild(label,figli[1]);
+						
+						form.parentNode.removeChild(form);
+						document.getElementById("dialogBackground").style.display = "none";
+						evt.preventDefault();
+					}
+				});
 		
-		var div = document.getElementsByTagName("body")[0].lastChild;
-		var table = div.previousSibling;
-		document.getElementsByTagName("body")[0].removeChild(table);
-		document.getElementsByTagName("body")[0].removeChild(div);
-		
-		Core.preventDefault(event);
 	});
 
 	/*Gestione evento reset*/
-	Core.addEventListener(form,"reset",function(){
-		var div = document.getElementsByTagName("body")[0].lastChild;
-		var form = div.previousSibling;
-		document.getElementsByTagName("body")[0].removeChild(form);
-		document.getElementsByTagName("body")[0].removeChild(div);
-		
+	form.addEventListener("reset",function(event){
+		form.parentNode.removeChild(form);
+		document.getElementById("dialogBackground").style.display = "none";
 		Core.preventDefault(event);
 	});
 	
@@ -194,22 +208,22 @@ Form.createAddTable = function(form,inputVett){
 	var thead = document.createElement("thead");
 		var tr = document.createElement("tr");
 			var th = document.createElement("th");
-			th.setAttribute("id","label");
+			th.setAttribute("class","inputsTableLabel");
 			th.appendChild(document.createTextNode("Input"));
 		tr.appendChild(th);
 						
 			var th = document.createElement("th");
-			th.setAttribute("id","label");
+			th.setAttribute("class","inputsTableLabel");
 			th.appendChild(document.createTextNode("ID"));
 		tr.appendChild(th);
 						
 			var th = document.createElement("th");
-			th.setAttribute("id","label");
+			th.setAttribute("class","inputsTableLabel");
 			th.appendChild(document.createTextNode("Shape"));
 		tr.appendChild(th);
 		
 		var th = document.createElement("th");
-			th.setAttribute("id","label");
+		th.setAttribute("class","inputsTableLabel");
 			th.appendChild(document.createTextNode("Color"));
 		tr.appendChild(th);
 	thead.appendChild(tr);

@@ -714,7 +714,7 @@ Code.cercaTarget = function(source){
 };
 
 /*Invia il codice RDF al server*/
-Code.estraiTesto = function(code,name){
+Code.estraiTesto = function(code, name, callback){
 	
 //Code.estraiTesto = function(code,name,graphURIPrefix){
 //	
@@ -728,8 +728,8 @@ Code.estraiTesto = function(code,name){
 	
 //	Code.sendCodeDataflowURI(textCode,name);
 //	JsonToServer.savePipelineData(URIGraphStore,PipelineMainURI,componentVett);
-	JsonToServer.saveAll(URIGraphStore, PipelineMainURI, textCode, componentVett);
-
+	JsonToServer.saveAll(URIGraphStore, PipelineMainURI, textCode, componentVett, callback);
+	
 };
 
 Code.sendCodeDataflowURI = function(textCode,name){
