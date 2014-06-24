@@ -4,7 +4,7 @@ function linkedPlumb() {
 linkedPlumb.jsPlumb2Turtle = function (componentElementList, jspInstance, graphWriter) {
 	
 	function writeTypes(typedObject, objectURI, graphWriter) {
-		typedObject.getType();
+		console.log(objectURI + " has type(s) " + typedObject.getType());
 		// TODO: write rdf:type statements from object (endpoint or connection) types
 	}
 	
@@ -20,12 +20,17 @@ linkedPlumb.jsPlumb2Turtle = function (componentElementList, jspInstance, graphW
 	
 	function fromEndpoint(endpoint, graphWriter) {
 		// TODO: generate endpoint URI
+		var endpointURI = ep.getUuid();
+		writeTypes(endpoint, endpointURI, graphWriter);
+		endpoint.getLabel();
+		ep.getParameters();
 		// TODO: write endpoint data
 		// TODO: return endpoint URI
 	}
 	
 	function fromConnection(connection, graphWriter) {
 		// TODO: generate connection URI
+		writeTypes(endpoint, objectURI, graphWriter);
 		// TODO: write connection data
 		// TODO: return connection URI
 	}
