@@ -56,7 +56,7 @@ var actionListenerImg =
 		
 		var name = indef.title;
 		var newComponent = componentVett[componentVett.length] = new ComponentClass(cntInDef,"inputdefault","defaultInput",null,name,null,null,x,y);		
-		Endpoint.createEndpoint(indef,cntInDef,null);
+		Endpoint.createEndpoint(indef,newComponent,null);
 		Code.writeCodeFromComponent(newComponent);
 	},
 	
@@ -87,7 +87,7 @@ var actionListenerImg =
 		var inputOutDef = [];
 		var name = outdef.title;
 		var newComponent = componentVett[componentVett.length] = new ComponentClass(cntOutDef,"outputdefault","","",name,null,inputOutDef,x,y);
-		Endpoint.createEndpoint(outdef,cntOutDef,null);
+		Endpoint.createEndpoint(outdef,newComponent,null);
 		Code.writeCodeFromComponent(newComponent);
 	},
 	

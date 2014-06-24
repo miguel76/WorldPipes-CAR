@@ -2,8 +2,8 @@
 
 var Endpoint = {};
 
-Endpoint.createEndpoint = function(div,code,info){	
-	var component = Component.getComponent(code);
+Endpoint.createEndpoint = function(div,componentObject,info){	
+	var component = componentObject.Component;
 	
 	//Setting up drop options
 	var targetDropOptions = {
@@ -58,8 +58,7 @@ Endpoint.createEndpoint = function(div,code,info){
 //					}}}]
 				],
 				parameters:{
-					"source":Component.getComponent(code),
-					"codeSource":code
+					"source":componentObject
 				}
 			};
 			
@@ -72,8 +71,7 @@ Endpoint.createEndpoint = function(div,code,info){
 				isTarget:true,
 				dropOptions:targetDropOptions,
 				parameters:{
-					"target":Component.getComponent(code),
-					"codeTarget":code
+					"target":componentObject
 				}	
 			};
 			
@@ -107,7 +105,7 @@ Endpoint.createEndpoint = function(div,code,info){
 			if(component == "updatable"){jsPlumb.addEndpoint(div, { anchor:"BottomCenter" }, sourceEndpoint);}
 		}
 		else{	
-			var inputVett = Component.getVett(code);
+			var inputVett = componentObject.InputList;
 			
 			var endpoints = jsPlumb.getEndpoints(div);
 			
@@ -139,8 +137,7 @@ Endpoint.createEndpoint = function(div,code,info){
 							["Label",{cssClass:"tooltip", label:name, id:"lab"}]
 						],
 						parameters:{
-							"target":Component.getComponent(code),
-							"codeTarget":code
+							"target":componentObject
 						}	
 					};
 				
@@ -169,37 +166,19 @@ Endpoint.createEndpoint = function(div,code,info){
 				var parameter = connection.getParameters();
 				
 				/*** Collegamenti non possibili ***/ 
-				if(info.sourceId == info.targetId ){
-					jsPlumb.detach(connection);
-				}
+//				if(info.sourceId == info.targetId ){
+//					jsPlumb.detach(connection);
+//				}
 			
-				if(parameter.target == "construct"){
-					var inputConstr = Component.getVett(parameter.codeTarget);
-					var label = info.targetEndpoint.getOverlays();
-					InputType.addSource(label[0].getLabel(),parameter.codeSource,inputConstr);
-					Code.modificaCodice(parameter.codeTarget);
+				var inputList = parameter.target.InputList;
+				var label = info.targetEndpoint.getOverlays();
+				if (parameter.target.Component == "construct" || parameter.target.Component == "updatable") {
+					InputType.addSource(label[0].getLabel(),parameter.source.Code,inputList);
+				} else {
+					InputType.inizializzaInput(inputList,parameter.source.Code);
 				}
-				if(parameter.target == "updatable"){
-					var inputUpdat = Component.getVett(parameter.codeTarget);
-					var label = info.targetEndpoint.getOverlays();
-					InputType.addSource(label[0].getLabel(),parameter.codeSource,inputUpdat);
-					Code.modificaCodice(parameter.codeTarget);
-				}
-				if(parameter.target == "union"){
-					var inputUnion = Component.getVett(parameter.codeTarget);
-					InputType.inizializzaInput(inputUnion,parameter.codeSource);
-					Code.modificaCodice(parameter.codeTarget);
-				}
-				if(parameter.target == "outputdefault"){
-					var inputoutDef = Component.getVett(parameter.codeTarget);
-					InputType.inizializzaInput(inputoutDef,parameter.codeSource);
-					Code.modificaCodice(parameter.codeTarget);
-				}
-				if(parameter.target == "output"){
-					var inputOut = Component.getVett(parameter.codeTarget);
-					InputType.inizializzaInput(inputOut,parameter.codeSource);
-					Code.modificaCodice(parameter.codeTarget);
-				}
+				Code.modificaCodice(parameter.target.Code);
+
 			});
 			
 			jsPlumb.bind("connectionDetached",function(info){

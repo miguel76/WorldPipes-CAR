@@ -448,9 +448,9 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	
 	editor.appendChild(div);	
 	
-	Endpoint.createEndpoint(div,code,null);	
+	Endpoint.createEndpoint(div,componentObject,null);	
 	
-	if((component == "construct" || component == "updatable") && inputlist.length != 0){Endpoint.createEndpoint(div,code,2);}
+	if((component == "construct" || component == "updatable") && inputlist.length != 0){Endpoint.createEndpoint(div,componentObject,2);}
 	
 //	Code.modificaCodice(code);
 };

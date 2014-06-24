@@ -89,7 +89,7 @@
 .compLabel_updatable {	top:17px; left:2px; }
 .compLabel_dataset { top:11px; left:11px; }
 
-div.compButtonSet {	position:relative; }
+div.compButtonSet {	position:relative; width:0px; height:0px; }
 
 div.compButtonSet_input { left:144px; top:-31px; }
 div.compButtonSet_inputdefault { left:144px; top:-31px; }

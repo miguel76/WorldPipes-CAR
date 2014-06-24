@@ -6,6 +6,7 @@ Form.createForm = function(parent,componentObject){
 	console.log("Entering createForm for " + JSON.stringify(componentObject) + " inside " + parent);
 	var componente = componentObject.Component;
 	console.log("componente = " + componente);
+//	console.log("componentVett = " + JSON.stringify(componentVett));
 	
 	form = document.createElement("form");
 	form.name = "Properties";
@@ -146,7 +147,7 @@ Form.createForm = function(parent,componentObject){
 		if(componente == "construct" || componente == "updatable"){
 			var table = document.getElementById("tableInput");
 			InputType.fillVett(table,inputVett,parent);
-			Endpoint.createEndpoint(parent,cnt,1);
+			Endpoint.createEndpoint(parent,componentObject,1);
 		}
 		
 		var x = parent.offsetLeft;
