@@ -9,7 +9,7 @@
 
 	  <target name ="makeCAR" description="Create the CAR file">
 	    <zip destfile="${basedir}/bin/WorldPipes.car">
-	      <zipfileset dir="." excludes="bin/WorldPipes.car,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,ant-lib/**,**/.*,**/.*/**"/>
+	      <zipfileset dir="." excludes="bin/WorldPipes.car,*.txt,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,ant-lib/**,**/.*,**/.*/**"/>
 	    </zip>
 	    <zip destfile="${basedir}/bin/WorldPipes-system.car">
 	      <zipfileset dir="system"/>
@@ -58,7 +58,7 @@
 	    </input>
 		<pathconvert property="fileList" pathsep=",">
 		  	<path>
-	  			<fileset dir="." excludes="bin/WorldPipes.car,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,ant-lib/**,**/.*,**/.*/**">
+	  			<fileset dir="." excludes="bin/WorldPipes.car,*.txt,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,ant-lib/**,**/.*,**/.*/**">
 	  				<modified/>
 	  			</fileset>
 			</path>
