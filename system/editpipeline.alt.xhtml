@@ -1,0 +1,216 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+	<head>
+		<script type="text/javascript" src="js/rdfUtils.js"></script>	
+		<script type="text/javascript" src="js/JsonToServer.js"></script>
+     	<script type="text/javascript">
+     	<![CDATA[
+     		function getQueryParams(qs) {
+     	    	qs = qs.split("+").join(" ");
+
+     	    	var params = {}, tokens,
+     	        	re = /[?&]?([^=]+)=([^&]*)/g;
+
+     	    	while (tokens = re.exec(qs)) {
+     	        	params[decodeURIComponent(tokens[1])]
+     	            	= decodeURIComponent(tokens[2]);
+     	    	}
+
+     	    	return params;
+     		}
+     		var query = getQueryParams(document.location.search);
+     		     		
+     		GraphURIPrefix = null;
+     		if (query.dfURI) {
+     			PipelineMainURI = query.dfURI;
+	    		GraphURIPrefix = query.dfURI + "-Internal-Data/";
+     		}
+     		
+     		DataURIPrefix = JsonToServer.qualifyURL("../data/");
+     	]]>	
+    	</script>
+
+		<link rel="stylesheet" href="/callimachus/1.3/styles/callimachus.less?less" />
+
+		<link type="text/css" rel="stylesheet" href="css/pagestyle.css" />
+		<link type="text/css" rel="stylesheet" href="css/actionListenerStyle.css" />
+		<link type="text/css" rel="stylesheet" href="css/drag%26dropstyle.css" />
+		<link type="text/css" rel="stylesheet" href="css/tablestyle.css" />
+
+		<link type="text/css" rel="stylesheet" href="jsplumb/css/jsplumb.css" />
+		<link type="text/css" rel="stylesheet" href="css/font-awesome.min.css" />
+		
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<!-- 		<script type="text/javascript" src="js/jquery.jsPlumb-1.5.2.js"></script> -->
+
+		<script type="text/javascript" src="jsplumb/js/dom.jsPlumb-1.6.2-min.js"></script>
+		<script type="text/javascript" src="js/widgets.js"></script>
+
+		<script type="text/javascript" src="js/jsonld.js"></script>	
+		<script type="text/javascript" src="js/core.js"></script>	
+		<script type="text/javascript" src="js/Sourcecode.js"></script>	
+		<script type="text/javascript" src="js/Component.js"></script>	
+		<script type="text/javascript" src="js/InputType.js"></script>	
+		<script type="text/javascript" src="js/Form.js"></script>
+		<script type="text/javascript" src="js/Endpoint.js"></script>
+		<script type="text/javascript" src="js/n3-browser.min.js"></script>
+		<script type="text/javascript" src="js/mainActions.js"></script>
+<!-- 		<script type="text/javascript" src="js/activelink.js"></script> -->
+		
+		<!-- Controllo del Browser utente -->
+		<script type="text/javascript">
+			<!--[if IE]>
+			if ((navigator.userAgent.indexOf("Microsoft")!=-1) ||(navigator.userAgent.indexOf("Windows")!=-1)) {
+					alert("Microsoft Interner Explorer not supported!")
+					window.close();
+					window.open("http://www.google.it");
+			}
+			<![endif]-->
+		</script>
+	
+		<script type="text/javascript" src="js/areahelp.js"></script>
+		<script type="text/javascript" src="js/actionListenerResizeX.js"></script>
+		<script type="text/javascript" src="js/actionListenerResizeY.js"></script>
+		<script type="text/javascript" src="js/actionListenerImg.js"></script>
+		
+		<!-- Flint (SPARQL Editor) Resources -->
+		<script type="text/javascript" src="sparql/jquery-1.5.2.min.js">//</script>
+		<script type="text/javascript" src="sparql/lib/codemirror.js">//</script>
+		<script type="text/javascript" src="sparql/sparql10querymode_ll1.js">//</script>
+		<script type="text/javascript" src="sparql/sparql11querymode_ll1.js">//</script>
+		<script type="text/javascript" src="sparql/sparql11updatemode_ll1.js">//</script>
+		<script type="text/javascript" src="sparql/flint-editor.js">//</script>
+		<link rel="stylesheet" href="sparql/lib/codemirror.css" />
+		<link rel="stylesheet" href="sparql/css/sparqlcolors.css" />
+		<link rel="stylesheet" href="sparql/css/docs.css" />
+
+		<script type="text/javascript">
+     	<![CDATA[
+			function onLoad() {
+				jsPlumb.Defaults.Container = document.getElementById("areaeditor");
+				Component.jsonLoad();
+			}
+
+			function updateStatus(newText,cont) {
+				var statusBarElement = document.getElementById("statusBar");
+				statusBarElement.textContent = newText;
+				if (cont)
+					return cont();
+			}
+     	]]>	
+		</script>
+
+<!-- 		
+		<script type="text/javascript" src="js/jquery.rdfquery.core-1.0.js"></script>
+		<script type="text/javascript" src="js/jquery.rdfquery.rdfa-1.0.js"></script>
+		<script type="text/javascript" src="js/jquery.rdfquery.rules-1.0.js"></script>
+ -->
+ 	
+	</head>
+	<body onload="onLoad()">	
+	  <div id="editorContainer">	
+		<!-- Barra immagine -->
+		<!-- 
+		<div class="barraimg"> World pipes </div>
+		 -->
+
+		<!-- Status Bar -->
+    	<div id="statusBar"> </div>
+		
+		<!-- Barra pulsanti -->
+<!-- 		<div class="barrapulsanti"> -->
+			<div id="pulsante">
+				<ul title="pulsanti">
+<!-- 					<li><img class="pulsanti" src="IMG/new.gif" title="New" draggable="false"/></li> -->
+					<li><img class="pulsanti" src="IMG/salva.gif" title="Save" draggable="false" onclick="MainActions.savePipe()"/></li>
+<!-- 					<li><img class="pulsanti" src="IMG/Proprieta.gif" title="Properties" draggable="false"/></li> -->
+					<li><img class="pulsanti" src="IMG/play.gif" title="Play &amp; Save" draggable="false" onclick="MainActions.playPipe()"/></li>
+<!-- 					<li><img class="pulsanti" src="IMG/reload.gif" title="load" draggable="false"/></li> -->
+<!-- 					<li><img class="pulsanti" src="IMG/publish.gif" title="publish" draggable="false"/></li> -->
+				</ul>
+			</div>
+<!-- 		</div> -->
+		
+		<!-- Barra Tools -->
+		<div class="barratools">
+			<div class="componenti">
+			<!-- 
+				<div id="tabscomp">
+					<ul title="componenti">
+						<li id="activelinkcomp"><a href="#tab0"> Components </a></li>
+					</ul>
+				</div>
+				 -->
+				<div id="grafici">
+<!-- 					<ul title="componentImg"> -->
+<!-- 						<li><img class="graph" id="grafo" src="IMG/Input.gif" title="input graph"/><br/>input</li> -->
+<!-- 						<li><img class="graph" id="grafo" src="IMG/Output.gif" title="output graph"/><br/>output</li> -->
+<!-- 						<li><img class="graph" id="grafo" src="IMG/Construct.gif" title="construct graph"/><br/>construct</li> -->
+<!-- 						<li><img class="graph" id="grafo" src="IMG/Union.gif" title="union graph"/><br/>union</li> -->
+<!-- 						<li><img class="graph" id="grafo" src="IMG/Updatable.gif" title="updatable graph"/><br/>updatable</li> -->
+<!-- 					</ul> -->
+<!-- 					<table id="componentImg"> -->
+<!-- 						<tr> -->
+<!-- 							<td><img class="graph" id="inputComp" src="IMG/compLogos-input.svg" title="Input"/></td> -->
+<!-- 							<td><img class="graph" id="outputComp" src="IMG/compLogos-output.svg" title="Output"/></td> -->
+<!-- 						</tr> -->
+<!-- 						<tr> -->
+<!-- 							<td><img class="graph" id="constructComp" src="IMG/compLogos-transform.svg" title="Transform"/></td> -->
+<!-- 							<td><img class="graph" id="unionComp" src="IMG/compLogos-union.svg" title="Union"/></td> -->
+<!-- 						</tr> -->
+<!-- 						<tr> -->
+<!-- 							<td><img class="graph" id="updatableComp" src="IMG/compLogos-state.svg" title="Stateful"/></td> -->
+<!-- 							<td><img class="graph" id="datasetComp" src="IMG/compLogos-fileSource.svg" title="File Source"/></td> -->
+<!-- 						</tr> -->
+<!-- 					</table> -->
+ 					<table id="componentImg" class="inComponentTable">
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="inputComp" class="componentPrototype componentPrototype_input component_input"><label class="compLabelPrototype compLabel compLabel_input">Input</label></div></td></tr>
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="outputComp" class="componentPrototype componentPrototype_output component_output"><label class="compLabelPrototype compLabel compLabel_output">Output</label></div></td></tr>
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="datasetComp" class="componentPrototype componentPrototype_dataset component_dataset"><label class="compLabelPrototype compLabel compLabel_dataset">File</label></div></td></tr>
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="unionComp" class="componentPrototype componentPrototype_union component_union"><label class="compLabelPrototype compLabel compLabel_union">Union</label></div></td></tr>
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="constructComp" class="componentPrototype componentPrototype_construct component_construct"><label class="compLabelPrototype compLabel compLabel_construct">Transform</label></div></td></tr>
+						<tr class="inComponentTable"><td class="inComponentTable"><div id="updatableComp" class="componentPrototype componentPrototype_updatable component_updatable"><label class="compLabelPrototype compLabel compLabel_updatable">Store</label></div></td></tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+			
+		<!-- ORIZONTAL RESIZE -->
+		<div class="orizontalresize">
+			<div id="orizontalbotton"></div>
+		</div>
+		
+		<!-- VERTICAL RESIZE -->
+		<div class="verticalresize">
+			<div id="verticalbotton"></div>
+		</div>
+					
+		<!-- Area Editor -->
+		<div id="areaeditor" class="areaeditor">
+			<div id="edit">
+				<div class="dropareainvite">
+					<div class="droptext">drag modules here</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Area helper -->
+		<div class="areahelper" title="Helper Area"> 
+			<p id="paragrafo"></p>
+		</div>
+		
+		<!-- Source code -->
+		<div id="sourcecodeArea" class="sourcecode" title="Source code Area">
+			<p class="codeclass">
+				@prefix df: &lt;http://www.swows.org/dataflow#&gt; . <br/>
+				@prefix swi: &lt;http://www.swows.org/instance#&gt; . <br/>
+				@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; . <br/><br/>
+			</p>
+		</div>
+	  </div>
+	</body>
+</html>
