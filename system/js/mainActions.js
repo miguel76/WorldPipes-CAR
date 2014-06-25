@@ -6,6 +6,13 @@ MainActions.newPipe = function() {
 	else{location.reload();}
 };
 MainActions.savePipe = function() {
+	
+	var store = N3.Store();
+	linkedPlumb.jsPlumb2Turtle(
+			document.getElementsByClassName("jsplumb-draggable"),
+			jsPlumb, store);
+	console.log("Store: " + JSON.stringify(store));
+	
 	var sourcecode = Core.getElementsByClass("codeclass")[0];
 	Code.estraiTesto(
 			sourcecode, pulsante.title,
