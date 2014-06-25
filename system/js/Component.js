@@ -16,6 +16,9 @@ var ComponentClass = function(CODE,COMPONENT,ID,URI,NAME,QUERY,INPUT,X,Y){
 	this.InputList = INPUT;
 	this.X = X;
 	this.Y = Y;
+	this.setElement = function(element) { this.element = element; };
+	this.getElement = function() { return this.element; };
+	this.getId = function() { return this.ID; };
 };
 
 Component.componentTypeNameFromId = function(componentTypeId) {
@@ -452,6 +455,7 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	
 	if((component == "construct" || component == "updatable") && inputlist.length != 0){Endpoint.createEndpoint(div,componentObject,2);}
 	
+	componentObject.setElement(div);
 //	Code.modificaCodice(code);
 };
 

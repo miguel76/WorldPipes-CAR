@@ -8,10 +8,20 @@ MainActions.newPipe = function() {
 MainActions.savePipe = function() {
 	
 	var store = N3.Store();
-	linkedPlumb.jsPlumb2Turtle(
-			document.getElementsByClassName("jsplumb-draggable"),
+	linkedPlumb.jsPlumbToRDF(
+//			document.getElementsByClassName("jsplumb-draggable"),
+			componentVett,
 			jsPlumb, store);
-	console.log("Store: " + JSON.stringify(store));
+	
+	var writer = N3.Writer();
+	writer.addTriples(store.find(null,null,null));
+	writer.end(
+			function (error, result) {
+				if (error)
+					console.error(error);
+				else
+					console.log("Store: " + result);
+			});
 	
 	var sourcecode = Core.getElementsByClass("codeclass")[0];
 	Code.estraiTesto(

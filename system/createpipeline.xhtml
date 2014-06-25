@@ -8,7 +8,7 @@
 <head>
     <title>New SWOWS Pipeline</title>
     <script>
-    	function createPipeline() {
+    	function createPipeline(event) {
     		var resource = calli.slugify($('#label').val());
 //     		$('#pipelineGraph').val(resource + '/pipeline');
 //     		$('#layoutGraph').val(resource + '/pipeline-layout');
@@ -25,7 +25,7 @@
     		role="form"
     		method="POST" action=""
     		enctype="application/rdf+xml" typeof=""
-            onsubmit="createPipeline()">
+            onsubmit="createPipeline(event)">
             <fieldset class="col-sm-4">
                 <div class="form-group">
                     <label for="label">Label</label>
