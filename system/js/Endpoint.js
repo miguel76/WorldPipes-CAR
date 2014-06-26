@@ -10,6 +10,15 @@ var rdf = function (localName) {
 	return "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName;
 }
 
+var graphic = function (localName) {
+	return "http://purl.org/viso/graphic/" + localName;
+}
+
+
+var capitalize = function(s) {
+    return s[0].toUpperCase() + s.slice(1);
+}
+
 Endpoint.createEndpoint = function(div,componentObject,info){	
 	var component = componentObject.Component;
 	
@@ -152,8 +161,11 @@ Endpoint.createEndpoint = function(div,componentObject,info){
 						],
 						parameters:{
 //							"@id": componentObject.ID + "/" + inputVett[i].Id,
-							"dcterms:title": inputVett[i].Id,
-							"@type": mecomp("Input")
+							"dcterms:title": name,
+							"dcterms:identifier": inputVett[i].Id,
+							"@type": mecomp("Input"),
+							"graphic:shape_named": graphic(shape),
+							"graphic:color_named": graphic(capitalize(color))
 						}	
 					};
 					

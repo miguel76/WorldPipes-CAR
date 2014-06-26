@@ -17,6 +17,10 @@ var dcterms = function (localName) {
 	return "http://purl.org/dc/terms/" + localName;
 }
 
+var graphic = function (localName) {
+	return "http://purl.org/viso/graphic/" + localName;
+}
+
 linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 	
 	var objectIdCount = 0;
@@ -73,8 +77,14 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 							endpoint.getParameter(parameterName) + "'");
 					if (parameterName == "@type")
 						graphWriter.addTriple(endpointURI, rdf("type"), parameters[parameterName]);
+					else if (parameterName == "dcterms:identifier")
+						graphWriter.addTriple(endpointURI, dcterms("identifier"), parameters[parameterName]);
 					else if (parameterName == "dcterms:title")
 						graphWriter.addTriple(endpointURI, dcterms("title"), parameters[parameterName]);
+					else if (parameterName == "graphic:color_named")
+						graphWriter.addTriple(endpointURI, graphic("color_named"), parameters[parameterName]);
+					else if (parameterName == "graphic:shape_named")
+						graphWriter.addTriple(endpointURI, graphic("shape_named"), parameters[parameterName]);
 					else if (parameterName != "@id")
 						graphWriter.addTriple(endpointURI, parameterName, parameters[parameterName]);
 				}
@@ -102,12 +112,15 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 		}
 		if (object.getLabel)
 			console.log("Label: " + object.getLabel());
+		if (object.toRDF)
+			object.toRDF(objectURI, graphWriter);
 		return objectURI;
 	}
 	
 	function fromWorlkflowComponent(component, dataflowURI, graphWriter) {
 		// may have a dcterms:title
 		componentURI = fromObject(component, graphWriter);
+		graphWriter.addTriple(componentURI, rdf("type"), mecomp("WorkflowComponent"));
 		graphWriter.addTriple(dataflowURI, mecomp("has-component"), componentURI);
 		graphWriter.addTriple(componentURI, mecomp("belongs-to-workflow"), dataflowURI);
 		return componentURI;
@@ -117,6 +130,7 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 		console.log("Scanning component " + component);
 //		console.log("Content: " + JSON.stringify(component));
 		componentURI = fromWorlkflowComponent(component, dataflowURI, graphWriter);
+		graphWriter.addTriple(componentURI, rdf("type"), mecomp("NodeComponent"));
 		var componentElement = component.getElement();
 		var endpointList = jspInstance.getEndpoints(componentElement);
 		if (endpointList) {
@@ -161,6 +175,7 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 	// may produce  dcterms:identifier for the dataflow
 	
 	var dataflowURI = "";
+	graphWriter.addTriple(dataflowURI, rdf("type"), mecomp("Dataflow"));
 	if (componentList) {
 		for (var compIndex = 0; compIndex < componentList.length; compIndex++) {
 			fromNodeComponent(componentList[compIndex], dataflowURI, graphWriter);

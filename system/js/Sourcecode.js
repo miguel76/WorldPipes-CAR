@@ -726,6 +726,21 @@ Code.estraiTesto = function(code, name, callback){
 	var editor = Core.getElementsByClass("areaeditor")[0];
     Component.updatePositions(editor, componentVett);
 	
+	var store = N3.Store();
+	linkedPlumb.jsPlumbToRDF(
+//			document.getElementsByClassName("jsplumb-draggable"),
+			componentVett,
+			jsPlumb, store);
+	
+	var writer = N3.Writer();
+	writer.addTriples(store.find(null,null,null));
+	writer.end(
+			function (error, result) {
+				if (error)
+					console.error(error);
+				else
+					console.log("Store: " + result);
+			});
 
 //	JsonToServer.saveAll(URIGraphStore, PipelineMainURI, textCode, componentVett, callback);
 	
