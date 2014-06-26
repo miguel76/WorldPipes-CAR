@@ -20,7 +20,7 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 		if (!objectID && object.getId)
 			objectID = object.getId();
 		if (!objectID && object.getParameter)
-			objectID = object.getParameter("id");
+			objectID = object.getParameter("@id");
 		if (!objectID) {
 			objectID = "obj-" + objectIdCount++;
 			object.id = objectID;
@@ -28,20 +28,51 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 		return objectID;
 	}
 	
-	function fromObject(object, contextURI, graphWriter) {
+	function fromObject(object, contextURI, graphWriter/*, callback*/) {
 //		var objectURI = contextURI + "/" + getId(object);
 		var objectURI = getId(object);
-		if (object.getType)
-			console.log(objectURI + " has type(s) " + object.getType());
+		if (object.getType) {
+			var typeString = object.getType();
+			if (typeString) {
+				var typeList = typeString.split(" ");
+				for (var typeIndex = 0; typeIndex < typeList.length; typeIndex++) {
+					graphWriter.addTriple(objectURI, rdf("type"), typeList[typeIndex]);
+				}
+				console.log(objectURI + " has type(s) " + typeString);
+			}
+		}
 		if (object.getLabel)
 			console.log("Label: " + object.getLabel());
-		if (object.getParameters)
-			console.log("Parameters " + object.getParameters());
-		// TODO: write rdf:type statements from object (endpoint or connection) types
-		if (object.toRDF)
-			object.toRDF(objectURI, graphWriter);
-		console.log("New URI: " + objectURI);
-		return objectURI;
+		if (object.getParameters) {
+			var parameters = object.getParameters();
+			if (parameters) {
+				console.log("Parameters " + parameters);
+//				if (!parameters["@id"])
+//					parameters["@id"] = objectURI;
+//				var nquads = jsonld.toRDF(
+//						parameters, {format : "application/nquads"},
+//						function(err, dataset) {
+//							var parser = N3.Parser();
+//							parser.parse(
+//									nquads,
+//							        function (error, triple, prefixes) {
+//										if (triple) {
+//											console.log(triple.subject, triple.predicate, triple.object, '.');
+//											graphWriter.addTriple(triple);
+//										} else {
+//							                console.log("# That's all, folks!", prefixes)
+//											if (object.toRDF)
+//												object.toRDF(objectURI, graphWriter);
+//											console.log("New URI: " + objectURI);
+//											callback(objectURI);
+//							            }
+//							        });
+//						});
+				for (parameterName in parameters) {
+					graphWriter.addTriple(objectURI, parameterName, parameters[parameterName]);
+				}
+			}
+		}
 	}
 	
 	function fromWorlkflowComponent(component, dataflowURI, graphWriter) {
