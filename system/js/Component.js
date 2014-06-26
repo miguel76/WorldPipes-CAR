@@ -46,6 +46,8 @@ var ComponentClass = function(CODE,COMPONENT,ID,URI,NAME,QUERY,INPUT,X,Y){
 	this.toRDF = function(componentURI, graphWriter) {
 		graphWriter.addTriple(componentURI, dcterms("identifier"), this.ID);
 		graphWriter.addTriple(componentURI, dcterms("title"), this.Name);
+		graphWriter.addTriple(componentURI, graphic("x_position"), this.X);
+		graphWriter.addTriple(componentURI, graphic("y_position"), this.Y);
 		var componentTypeName = this.Component;
 		if (componentTypeName == "input") {
 			graphWriter.addTriple(componentURI, rdf("type"), mecomp("Source"));
@@ -64,10 +66,12 @@ var ComponentClass = function(CODE,COMPONENT,ID,URI,NAME,QUERY,INPUT,X,Y){
 				graphWriter.addTriple(componentURI, rdf("type"), swowscomp("UnionProcessor"));
 			} else if (componentTypeName == "construct") {
 				graphWriter.addTriple(componentURI, rdf("type"), swowscomp("TransformProcessor"));
-				graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
+//				graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
+				graphWriter.addTriple(componentURI, mecomp("processor-script"), '"' + this.Query + '"');
 			} else if (componentTypeName == "updatable") {
 				graphWriter.addTriple(componentURI, rdf("type"), swowscomp("Store"));
-				graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
+//				graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
+				graphWriter.addTriple(componentURI, mecomp("processor-script"), '"' + this.Query + '"');
 			}
 		}
 	}
