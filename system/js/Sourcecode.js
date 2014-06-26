@@ -726,9 +726,8 @@ Code.estraiTesto = function(code, name, callback){
 	var editor = Core.getElementsByClass("areaeditor")[0];
     Component.updatePositions(editor, componentVett);
 	
-//	Code.sendCodeDataflowURI(textCode,name);
-//	JsonToServer.savePipelineData(URIGraphStore,PipelineMainURI,componentVett);
-	JsonToServer.saveAll(URIGraphStore, PipelineMainURI, textCode, componentVett, callback);
+
+//	JsonToServer.saveAll(URIGraphStore, PipelineMainURI, textCode, componentVett, callback);
 	
 };
 

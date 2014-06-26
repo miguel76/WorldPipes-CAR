@@ -58,7 +58,7 @@
 	    </input>
 		<pathconvert property="fileList" pathsep=",">
 		  	<path>
-	  			<fileset dir="." excludes="bin/WorldPipes.car,*.txt,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,ant-lib/**,**/.*,**/.*/**">
+	  			<fileset dir="system" excludes="bin/WorldPipes.car,*.txt,*.properties,LICENSE,README.md,projectBuilder.xml,bin,bin/**,ant-lib/**,**/.*,**/.*/**">
 	  				<modified/>
 	  			</fileset>
 			</path>

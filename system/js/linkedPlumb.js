@@ -9,18 +9,27 @@ var rdf = function (localName) {
 	return "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName;
 }
 
+var dc = function (localName) {
+	return "http://purl.org/dc/elements/1.1/" + localName;
+}
+
+var dcterms = function (localName) {
+	return "http://purl.org/dc/terms/" + localName;
+}
+
 linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 	
 	var objectIdCount = 0;
 	
+	
 	function getId(object) {
 		var objectID;
-		if (object.id)
-			objectID = object.id;
-		if (!objectID && object.getId)
-			objectID = object.getId();
 		if (!objectID && object.getParameter)
 			objectID = object.getParameter("@id");
+		if (!objectID && object.getId)
+			objectID = object.getId();
+		if (!objectID && object.id)
+			objectID = object.id;
 		if (!objectID) {
 			objectID = "obj-" + objectIdCount++;
 			object.id = objectID;
@@ -28,23 +37,9 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 		return objectID;
 	}
 	
-	function fromObject(object, contextURI, graphWriter/*, callback*/) {
-//		var objectURI = contextURI + "/" + getId(object);
-		var objectURI = getId(object);
-		if (object.getType) {
-			var typeString = object.getType();
-			if (typeString) {
-				var typeList = typeString.split(" ");
-				for (var typeIndex = 0; typeIndex < typeList.length; typeIndex++) {
-					graphWriter.addTriple(objectURI, rdf("type"), typeList[typeIndex]);
-				}
-				console.log(objectURI + " has type(s) " + typeString);
-			}
-		}
-		if (object.getLabel)
-			console.log("Label: " + object.getLabel());
-		if (object.getParameters) {
-			var parameters = object.getParameters();
+	function parametersAsRDF(endpoint, endpointURI, graphWriter) {
+		if (endpoint.getParameters) {
+			var parameters = endpoint.getParameters();
 			if (parameters) {
 				console.log("Parameters " + parameters);
 //				if (!parameters["@id"])
@@ -69,15 +64,50 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 //							        });
 //						});
 				for (parameterName in parameters) {
-					graphWriter.addTriple(objectURI, parameterName, parameters[parameterName]);
+					console.log(
+							"Endpoint " + endpointURI +
+							" has parameter '" + parameterName +
+							"' with value '" + parameters[parameterName] + "'");
+					console.log(
+							"and (" + endpointURI + ").getParameter(" + parameterName + ") = '" +
+							endpoint.getParameter(parameterName) + "'");
+					if (parameterName == "@type")
+						graphWriter.addTriple(endpointURI, rdf("type"), parameters[parameterName]);
+					else if (parameterName == "dcterms:title")
+						graphWriter.addTriple(endpointURI, dcterms("title"), parameters[parameterName]);
+					else if (parameterName != "@id")
+						graphWriter.addTriple(endpointURI, parameterName, parameters[parameterName]);
 				}
 			}
 		}
 	}
 	
+	function fromObject(object, /*contextURI, */graphWriter/*, callback*/) {
+//		var objectURI = contextURI + "/" + getId(object);
+		var objectURI = getId(object);
+		if (object.getType) {
+			var types = object.getType();
+			if (types) {
+				var typeString = new String(types);
+				if (typeString.length > 0) {
+					console.log(objectURI + " has types '" + typeString + "' (" + typeString.split(" ") + ")");
+					var typeList = typeString.split(" ");
+					console.log(objectURI + " has types '" + typeString + "'");
+					for (var typeIndex = 0; typeIndex < typeList.length; typeIndex++) {
+						console.log(objectURI + " has type '" + typeList[typeIndex] + "'");
+						graphWriter.addTriple(objectURI, rdf("type"), typeList[typeIndex]);
+					}
+				}
+			}
+		}
+		if (object.getLabel)
+			console.log("Label: " + object.getLabel());
+		return objectURI;
+	}
+	
 	function fromWorlkflowComponent(component, dataflowURI, graphWriter) {
 		// may have a dcterms:title
-		componentURI = fromObject(component, dataflowURI, graphWriter);
+		componentURI = fromObject(component, graphWriter);
 		graphWriter.addTriple(dataflowURI, mecomp("has-component"), componentURI);
 		graphWriter.addTriple(componentURI, mecomp("belongs-to-workflow"), dataflowURI);
 		return componentURI;
@@ -91,18 +121,19 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 		var endpointList = jspInstance.getEndpoints(componentElement);
 		if (endpointList) {
 			for (var epIndex = 0; epIndex < endpointList.length; epIndex++) {
-				fromEndpoint(endpointList[epIndex], componentURI, graphWriter);
+				fromEndpoint(endpointList[epIndex], componentURI, dataflowURI, graphWriter);
 			}
 		}
 		console.log("Component " + componentElement + " scanned");
 		return componentURI;
 	}
 	
-	function fromEndpoint(endpoint, componentURI, graphWriter) {
+	function fromEndpoint(endpoint, componentURI, dataflowURI, graphWriter) {
 		console.log("Scanning endpoint " + endpoint);
-		endpointURI = fromWorlkflowComponent(endpoint, componentURI, graphWriter);
+		endpointURI = fromWorlkflowComponent(endpoint, dataflowURI, graphWriter);
 		graphWriter.addTriple(endpointURI, rdf("type"), mecomp("IOComponent"));
 		graphWriter.addTriple(endpointURI, mecomp("for-component"), componentURI);
+		parametersAsRDF(endpoint, endpointURI, graphWriter);
 		for (var connectionIndex; connectionIndex < endpoint.connections.length; connectionIndex++) {
 			var connection = endpoint.connections[connectionIndex];
 			var connectionURI = getId(connection);

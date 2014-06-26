@@ -2,6 +2,14 @@
 
 var Endpoint = {};
 
+var mecomp = function (localName) {
+	return "http://rdf.myexperiment.org/ontologies/components/" + localName;
+}
+
+var rdf = function (localName) {
+	return "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName;
+}
+
 Endpoint.createEndpoint = function(div,componentObject,info){	
 	var component = componentObject.Component;
 	
@@ -14,6 +22,8 @@ Endpoint.createEndpoint = function(div,componentObject,info){
 		
 	if(info == null){ 
 		//Setting up a Source endPoint
+//		var sourceEndpointParams = {};
+//		sourceEndpointParams[rdf("type")] = mecomp("Output");
 		var sourceEndpoint = {
 			endpoint:["Dot", { radius:7 }],
 			paintStyle:{strokeStyle:"black",fillStyle:"#CCCCCC"},
@@ -57,12 +67,15 @@ Endpoint.createEndpoint = function(div,componentObject,info){
 //						}		
 //					}}}]
 				],
-				parameters:{
-					"source":componentObject
-				}
-			};
+			parameters:{
+//				"@id": componentObject.ID + "/output",
+				"@type": mecomp("Output")
+			}	
+		};
 			
 			//Setting up a Target endPoint
+//			var targetEndpointParams = {};
+//			targetEndpointParams[rdf("type")] = mecomp("Input");
 			var targetEndpoint = {
 				endpoint:["Dot", { radius:7 }],
 				paintStyle:{ strokeStyle:"black",fillStyle:"#CCCCCC"},
@@ -71,7 +84,8 @@ Endpoint.createEndpoint = function(div,componentObject,info){
 				isTarget:true,
 				dropOptions:targetDropOptions,
 				parameters:{
-					"target":componentObject
+//					"@id": componentObject.ID + "/input",
+					"@type": mecomp("Input")
 				}	
 			};
 			
@@ -137,9 +151,12 @@ Endpoint.createEndpoint = function(div,componentObject,info){
 							["Label",{cssClass:"tooltip", label:name, id:"lab"}]
 						],
 						parameters:{
-							"target":componentObject
+//							"@id": componentObject.ID + "/" + inputVett[i].Id,
+							"dcterms:title": inputVett[i].Id,
+							"@type": mecomp("Input")
 						}	
 					};
+					
 				
 					jsPlumb.Defaults.HoverPaintStyle = { strokeStyle: "#FF3300" };
 				
