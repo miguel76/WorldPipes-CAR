@@ -30,7 +30,7 @@ var graphic = function (localName) {
 }
 
 /*Costrutture della classe ComponentClass*/
-var ComponentClass = function(CODE,COMPONENT,ID,URI,NAME,QUERY,INPUT,X,Y){
+function ComponentClass(CODE,COMPONENT,ID,URI,NAME,QUERY,INPUT,X,Y) {
 	this.Code = CODE;
 	this.Component = COMPONENT
 	this.ID = ID;
@@ -40,42 +40,46 @@ var ComponentClass = function(CODE,COMPONENT,ID,URI,NAME,QUERY,INPUT,X,Y){
 	this.InputList = INPUT;
 	this.X = X;
 	this.Y = Y;
-	this.setElement = function(element) { this.element = element; };
-	this.getElement = function() { return this.element; };
-	this.getId = function() { return this.ID; };
-	this.toRDF = function(componentURI, graphWriter) {
-		graphWriter.addTriple(componentURI, dcterms("identifier"), this.ID);
-		graphWriter.addTriple(componentURI, dcterms("title"), this.Name);
-		graphWriter.addTriple(componentURI, graphic("x_position"), this.X);
-		graphWriter.addTriple(componentURI, graphic("y_position"), this.Y);
-		var componentTypeName = this.Component;
-		if (componentTypeName == "input") {
-			graphWriter.addTriple(componentURI, rdf("type"), mecomp("Source"));
-		} else if (componentTypeName == "output") {
-			graphWriter.addTriple(componentURI, rdf("type"), mecomp("Sink"));
-		} else {
-			graphWriter.addTriple(componentURI, rdf("type"), mecomp("Processor"));
-			if (componentTypeName == "dataset") {
-				graphWriter.addTriple(componentURI, rdf("type"), mecomp("ConstantProcessor"));
-				graphWriter.addTriple(componentURI, rdf("type"), swowscomp("URISourceProcessor"));
-				graphWriter.addTriple(componentURI, mecomp("processor-value"), this.URI);
-			} else if (componentTypeName == "pipes") {
-				graphWriter.addTriple(componentURI, rdf("type"), mecomp("DataflowProcessor"));
-//				graphWriter.addTriple(componentURI, rdf("type"), swowscomp("DataflowProcessor"));
-			} else if (componentTypeName == "union") {
-				graphWriter.addTriple(componentURI, rdf("type"), swowscomp("UnionProcessor"));
-			} else if (componentTypeName == "construct") {
-				graphWriter.addTriple(componentURI, rdf("type"), swowscomp("TransformProcessor"));
-//				graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
-				graphWriter.addTriple(componentURI, mecomp("processor-script"), '"' + this.Query + '"');
-			} else if (componentTypeName == "updatable") {
-				graphWriter.addTriple(componentURI, rdf("type"), swowscomp("Store"));
-//				graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
-				graphWriter.addTriple(componentURI, mecomp("processor-script"), '"' + this.Query + '"');
-			}
+};
+
+ComponentClass.prototype.setElement = function(element) { this.element = element; };
+
+ComponentClass.prototype.getElement = function() { return this.element; };
+
+ComponentClass.prototype.getId = function() { return this.ID; };
+
+ComponentClass.prototype.toRDF = function(componentURI, graphWriter) {
+	graphWriter.addTriple(componentURI, dcterms("identifier"), '"' + this.ID + '"');
+	graphWriter.addTriple(componentURI, dcterms("title"), '"' + this.Name + '"');
+	graphWriter.addTriple(componentURI, graphic("x_position"), '"' + this.X + '"^^<http://www.w3.org/2001/XMLSchema#float>');
+	graphWriter.addTriple(componentURI, graphic("y_position"), '"' + this.Y + '"^^<http://www.w3.org/2001/XMLSchema#float>');
+	var componentTypeName = this.Component;
+	if (componentTypeName == "input") {
+		graphWriter.addTriple(componentURI, rdf("type"), mecomp("Source"));
+	} else if (componentTypeName == "output") {
+		graphWriter.addTriple(componentURI, rdf("type"), mecomp("Sink"));
+	} else {
+		graphWriter.addTriple(componentURI, rdf("type"), mecomp("Processor"));
+		if (componentTypeName == "dataset") {
+			graphWriter.addTriple(componentURI, rdf("type"), mecomp("ConstantProcessor"));
+			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("URISourceProcessor"));
+			graphWriter.addTriple(componentURI, mecomp("processor-value"), this.URI);
+		} else if (componentTypeName == "pipes") {
+			graphWriter.addTriple(componentURI, rdf("type"), mecomp("DataflowProcessor"));
+//			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("DataflowProcessor"));
+		} else if (componentTypeName == "union") {
+			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("UnionProcessor"));
+		} else if (componentTypeName == "construct") {
+			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("TransformProcessor"));
+//			graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
+			graphWriter.addTriple(componentURI, mecomp("processor-script"), '"' + this.Query + '"');
+		} else if (componentTypeName == "updatable") {
+			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("Store"));
+//			graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
+			graphWriter.addTriple(componentURI, mecomp("processor-script"), '"' + this.Query + '"');
 		}
 	}
-};
+}
 
 Component.componentTypeNameToRDFClasses = function(componentURI, componentTypeName, graphWriter) {
 };
@@ -514,7 +518,8 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	
 	if((component == "construct" || component == "updatable") && inputlist.length != 0){Endpoint.createEndpoint(div,componentObject,2);}
 	
-	componentObject.setElement(div);
+	componentObject.element = div;
+//	componentObject.setElement(div);
 //	Code.modificaCodice(code);
 };
 
