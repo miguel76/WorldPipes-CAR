@@ -6,6 +6,10 @@ var mecomp = function (localName) {
 	return "http://rdf.myexperiment.org/ontologies/components/" + localName;
 }
 
+var swowscomp = function (localName) {
+	return "http://swows.org/components/" + localName;
+}
+
 var rdf = function (localName) {
 	return "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName;
 }
@@ -158,32 +162,33 @@ Endpoint.createEndpoint = function(div,componentObject,info){
 						anchor:["Continuous", { faces:["top"] } ],
 						overlays:[
 							["Label",{cssClass:"tooltip", label:name, id:"lab"}]
-						],
-						parameters:{
-//							"@id": componentObject.ID + "/" + inputVett[i].Id,
-							"dcterms:title": name,
-							"dcterms:identifier": inputVett[i].Id,
-							"@type": mecomp("Input"),
-							"graphic:shape_named": graphic(shape),
-							"graphic:color_named": graphic(capitalize(color))
-						}	
+						]
+//						parameters: {
+////							"@id": componentObject.ID + "/" + inputVett[i].Id,
+//							"dcterms:title": name,
+//							"dcterms:identifier": inputVett[i].Id,
+//							"@type": ([ mecomp("Input") ]).concat(inputVett[i].InDefault ? [ "@type": swowscomp("isInDefaultInput") ] : [] ),
+//							"graphic:shape_named": graphic(shape),
+//							"graphic:color_named": graphic(capitalize(color))
+//						}
 					};
 					
 				
 					jsPlumb.Defaults.HoverPaintStyle = { strokeStyle: "#FF3300" };
 				
 				
-					if(info == 1 || info == 2){
-						if(component == "construct"){
-							var eConstr = jsPlumb.addEndpoint(div,targetEndpoint);
-							Endpoint.fixEndpoint(div);
-							Endpoint.eventLabel(eConstr);
-						}
-						if(component == "updatable"){
-							var eUpdat = jsPlumb.addEndpoint(div,targetEndpoint);
-							Endpoint.fixEndpoint(div);
-							Endpoint.eventLabel(eUpdat);
-						}
+					if ((info == 1 || info == 2) && (component == "construct" || component == "updatable")) {
+						var newEndpoint = jsPlumb.addEndpoint(div,targetEndpoint);
+						Endpoint.fixEndpoint(div);
+						newEndpoint.toRDF = function (endpointURI, graphWriter) {
+							graphWriter.addTriple(componentURI, dcterms("identifier"), '"' + inputVett[i].Id + '"');
+							graphWriter.addTriple(componentURI, dcterms("title"), '"' + inputVett[i].Name + '"');
+							graphWriter.addTriple(componentURI, graphic("shape_named"), graphic(inputVett[i].Shape));
+							graphWriter.addTriple(componentURI, graphic("color_named"), graphic(capitalize(inputVett[i].Color)));
+							graphWriter.addTriple(componentURI, graphic("color_named"), graphic(capitalize(inputVett[i].Color)));
+							"@type": ([ mecomp("Input") ]).concat(inputVett[i].InDefault ? [ "@type": swowscomp("isInDefaultInput") ] : [] ),
+						};
+						Endpoint.eventLabel(newEndpoint);
 					}
 					i++;
 				}
