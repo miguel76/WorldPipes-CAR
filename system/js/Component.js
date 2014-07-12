@@ -81,6 +81,112 @@ ComponentClass.prototype.toRDF = function(componentURI, graphWriter) {
 	}
 }
 
+Component.fromRDF = function(graph, componentURI) {
+	
+	var propLiteralValue = function(graph, subjectURI, propertyURI) {
+		var objects = graph.find(subjectURI, propertyURI, null);
+		if (objects && N3.Util.isLiteral(objects[0]))
+			return N3.getLiteralValue(objects[0]);
+		return null;
+	}
+	
+//	var propFloatValue = function(graph, subjectURI, propertyURI) {
+//		var objects = graph.find(subjectURI, propertyURI, null);
+//		if (objects && N3.Util.isLiteral(objects[0]))
+//			return N3.getLiteralValue(objects[0]);
+//		return null;
+//	}
+	
+	var createComponentFromRDFType =
+		function(
+				graph, componentURI, componentType,
+				code, identifier, title, x_position, y_position) {
+//		function(code, componentTypeName, name, x, y) {
+		switch (componentType) {
+			case "input":
+				return new ComponentClass(
+						code,"input",title,"",title,null,null,
+						x_position,y_position);
+			case "output":
+				return new ComponentClass(
+						code,"output","","",title,null,[],
+						x_position,y_position);
+			case "union":
+				return new ComponentClass(
+						code,"union",title,null,title,null,[],
+						x_position,y_position);
+			case "construct":
+				return new ComponentClass(
+						code,"construct",title,null,title,"CONSTRUCT{?s ?p ?o}\nWHERE{?s ?p ?o}",[],
+						x_position,y_position);
+			case "updatable":
+				return new ComponentClass(
+						code,"updatable",title,null,title,"",[],
+						x_position,y_position);
+			case "dataset":
+				return new ComponentClass(
+						code,"dataset","","",title,null,null,
+						x_position,y_position);
+			case "pipes":
+				return new ComponentClass(
+						code,"pipes",title,null,title,null,[],
+						x_position,y_position);
+			default:
+				return null;
+		}
+	};
+
+	cnt++;
+	var code = cnt;
+
+	var identifier = propLiteralValue(graph, componentURI, dcterms("identifier"));
+	var title = propLiteralValue(graph, componentURI, dcterms("title"));
+	
+	var x_position = propLiteralValue(graph, componentURI, graphic("x_position"));
+	var y_position = propLiteralValue(graph, componentURI, graphic("y_position"));
+	
+	var componentTypes = graph.find(componentURI, rdf("type"), null);
+	if (componentTypes) {
+		for (var componentTypeIndex = 0; componentTypeIndex < componentTypes.length; componentTypeIndex++) { 
+			var newComponent =
+				createComponentFromRDFType(
+						graph, componentURI,
+						componentTypes[componentTypeIndex],
+						identifier, title, x_position, y_position);
+			if (newComponent)
+				return newComponent;
+		}
+	}
+	return null;
+	
+	var componentTypeName = this.Component;
+	if (componentTypeName == "input") {
+		graphWriter.addTriple(componentURI, rdf("type"), mecomp("Source"));
+	} else if (componentTypeName == "output") {
+		graphWriter.addTriple(componentURI, rdf("type"), mecomp("Sink"));
+	} else {
+		graphWriter.addTriple(componentURI, rdf("type"), mecomp("Processor"));
+		if (componentTypeName == "dataset") {
+			graphWriter.addTriple(componentURI, rdf("type"), mecomp("ConstantProcessor"));
+			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("URISourceProcessor"));
+			graphWriter.addTriple(componentURI, mecomp("processor-value"), this.URI);
+		} else if (componentTypeName == "pipes") {
+			graphWriter.addTriple(componentURI, rdf("type"), mecomp("DataflowProcessor"));
+//			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("DataflowProcessor"));
+		} else if (componentTypeName == "union") {
+			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("UnionProcessor"));
+		} else if (componentTypeName == "construct") {
+			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("TransformProcessor"));
+//			graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
+			graphWriter.addTriple(componentURI, mecomp("processor-script"), '"' + this.Query + '"');
+		} else if (componentTypeName == "updatable") {
+			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("Store"));
+//			graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
+			graphWriter.addTriple(componentURI, mecomp("processor-script"), '"' + this.Query + '"');
+		}
+	}
+}
+
 Component.componentTypeNameToRDFClasses = function(componentURI, componentTypeName, graphWriter) {
 };
 

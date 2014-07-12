@@ -189,3 +189,94 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 		}
 	}
 }
+
+linkedPlumb.jsPlumbFromRDF = function (graph, dataflowURI, jspInstance) {
+	
+	var objectIdCount = 0;
+	var componentList = [];
+	
+	function getId(object) {
+		var objectID;
+		if (!objectID && object.getParameter)
+			objectID = object.getParameter("@id");
+		if (!objectID && object.getId)
+			objectID = object.getId();
+		if (!objectID && object.id)
+			objectID = object.id;
+		if (!objectID) {
+			objectID = "obj-" + objectIdCount++;
+			object.id = objectID;
+		}
+		return objectID;
+	}
+	
+	function toObject(graph, objectURI) {
+		// TODO: a factory must be used, but based on RDF type or just generic (type checked internally)?
+		if (objectFactory.toRDF)
+			object.toRDF(objectURI, graphWriter);
+		return objectURI;
+	}
+	
+	function toWorlkflowComponent(graph, componentURI) {
+		// may have a dcterms:title
+		componentURI = fromObject(component, graphWriter);
+		graphWriter.addTriple(componentURI, rdf("type"), mecomp("WorkflowComponent"));
+		graphWriter.addTriple(dataflowURI, mecomp("has-component"), componentURI);
+		graphWriter.addTriple(componentURI, mecomp("belongs-to-workflow"), dataflowURI);
+		return componentURI;
+	}
+	
+	function toNodeComponent(graph, componentURI) {
+		console.log("Scanning component " + component);
+//		console.log("Content: " + JSON.stringify(component));
+		componentURI = fromWorlkflowComponent(component, dataflowURI, graphWriter);
+		graphWriter.addTriple(componentURI, rdf("type"), mecomp("NodeComponent"));
+		var componentElement = component.getElement();
+		var endpointList = jspInstance.getEndpoints(componentElement);
+		if (endpointList) {
+			for (var epIndex = 0; epIndex < endpointList.length; epIndex++) {
+				fromEndpoint(endpointList[epIndex], componentURI, dataflowURI, graphWriter);
+			}
+		}
+		console.log("Component " + componentElement + " scanned");
+		return componentURI;
+	}
+	
+	function toEndpoint(graph, endpointURI) {
+		console.log("Scanning endpoint " + endpoint);
+		endpointURI = fromWorlkflowComponent(endpoint, dataflowURI, graphWriter);
+		graphWriter.addTriple(endpointURI, rdf("type"), mecomp("IOComponent"));
+		graphWriter.addTriple(endpointURI, mecomp("for-component"), componentURI);
+		parametersAsRDF(endpoint, endpointURI, graphWriter);
+		for (var connectionIndex; connectionIndex < endpoint.connections.length; connectionIndex++) {
+			var connection = endpoint.connections[connectionIndex];
+			var connectionURI = getId(connection);
+			if (endpoint.hasType(mecomp("Input"))) {
+				graphWriter.addTriple(connectionURI, mecomp("to-input"), endpointURI);
+			}
+			if (endpoint.hasType(mecomp("Output"))) {
+				graphWriter.addTriple(connectionURI, mecomp("from-output"), endpointURI);
+			}
+		}
+//		graphWriter.addTriple(connectionURI,  dcterms("title"), title);
+		// TODO: write endpoint data
+		// TODO: return endpoint URI
+		console.log("Endpoint " + endpoint + " scanned");
+	}
+	
+	function toConnection(graph, connectionURI, jspInstance) {
+		// TODO: add connection to jspInstance
+	}
+	
+	components = graph.find(dataflowURI, mecomp("has-component"), null);
+	if (componentURIs) {
+		for (var compIndex = 0; compIndex < componentURIs.length; compIndex++) {
+			if ( graph.find(dataflowURI, rdf("type"), mecomp("NodeComponent") )
+					toNodeComponent(graph, componentURIs[compIndex], jspInstance);
+		}
+		for (var compIndex = 0; compIndex < componentURIs.length; compIndex++) {
+			if ( graph.find(dataflowURI, rdf("type"), mecomp("Link") )
+					toConnection(graph, componentURIs[compIndex], jspInstance);
+		}
+	}
+}
