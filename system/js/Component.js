@@ -103,31 +103,31 @@ Component.fromRDF = function(graph, componentURI) {
 				code, identifier, title, x_position, y_position) {
 //		function(code, componentTypeName, name, x, y) {
 		switch (componentType) {
-			case "input":
+			case mecomp("Source"):
 				return new ComponentClass(
 						code,"input",title,"",title,null,null,
 						x_position,y_position);
-			case "output":
+			case mecomp("Sink"):
 				return new ComponentClass(
 						code,"output","","",title,null,[],
 						x_position,y_position);
-			case "union":
+			case swowscomp("UnionProcessor"):
 				return new ComponentClass(
 						code,"union",title,null,title,null,[],
 						x_position,y_position);
-			case "construct":
+			case swowscomp("TransformProcessor"):
 				return new ComponentClass(
 						code,"construct",title,null,title,"CONSTRUCT{?s ?p ?o}\nWHERE{?s ?p ?o}",[],
 						x_position,y_position);
-			case "updatable":
+			case swowscomp("Store"):
 				return new ComponentClass(
 						code,"updatable",title,null,title,"",[],
 						x_position,y_position);
-			case "dataset":
+			case swowscomp("URISourceProcessor"):
 				return new ComponentClass(
 						code,"dataset","","",title,null,null,
 						x_position,y_position);
-			case "pipes":
+			case mecomp("DataflowProcessor"):
 				return new ComponentClass(
 						code,"pipes",title,null,title,null,[],
 						x_position,y_position);
@@ -159,32 +159,6 @@ Component.fromRDF = function(graph, componentURI) {
 	}
 	return null;
 	
-	var componentTypeName = this.Component;
-	if (componentTypeName == "input") {
-		graphWriter.addTriple(componentURI, rdf("type"), mecomp("Source"));
-	} else if (componentTypeName == "output") {
-		graphWriter.addTriple(componentURI, rdf("type"), mecomp("Sink"));
-	} else {
-		graphWriter.addTriple(componentURI, rdf("type"), mecomp("Processor"));
-		if (componentTypeName == "dataset") {
-			graphWriter.addTriple(componentURI, rdf("type"), mecomp("ConstantProcessor"));
-			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("URISourceProcessor"));
-			graphWriter.addTriple(componentURI, mecomp("processor-value"), this.URI);
-		} else if (componentTypeName == "pipes") {
-			graphWriter.addTriple(componentURI, rdf("type"), mecomp("DataflowProcessor"));
-//			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("DataflowProcessor"));
-		} else if (componentTypeName == "union") {
-			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("UnionProcessor"));
-		} else if (componentTypeName == "construct") {
-			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("TransformProcessor"));
-//			graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
-			graphWriter.addTriple(componentURI, mecomp("processor-script"), '"' + this.Query + '"');
-		} else if (componentTypeName == "updatable") {
-			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("Store"));
-//			graphWriter.addTriple(componentURI, swowscomp("processor-transformation"), '"' + this.Query + '"');
-			graphWriter.addTriple(componentURI, mecomp("processor-script"), '"' + this.Query + '"');
-		}
-	}
 }
 
 Component.componentTypeNameToRDFClasses = function(componentURI, componentTypeName, graphWriter) {
