@@ -741,6 +741,16 @@ Code.estraiTesto = function(code, name, callback){
 				else
 					console.log("Store: " + result);
 			});
+	
+	Component.refreshEditor(document.getElementById("areaeditor"));
+	
+	linkedPlumb.jsPlumbFromRDF(
+			store, null, jsPlumb,
+			{
+				generatorFor: function(objectType) {
+					return Component.factory.generatorFor(objectType) || Endpoint.factory.generatorFor(objectType);
+				}
+			});
 
 //	JsonToServer.saveAll(URIGraphStore, PipelineMainURI, textCode, componentVett, callback);
 	

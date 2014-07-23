@@ -39,7 +39,11 @@ Endpoint.createOutputEndpoint = function(componentObject) {
 				anchor: "BottomCenter",
 				connectorOverlays:[	"Arrow"	]
 			});
-
+	newEndpoint.isInputEndpoint = function () { return false; }
+	newEndpoint.isOutputEndpoint = function () { return true; }
+	newEndpoint.toRDF = function (endpointURI, graphWriter) {
+		graphWriter.addTriple(endpointURI, rdf("type"), mecomp("Output"));
+	};
 	return newEndpoint;
 }
 
@@ -87,6 +91,8 @@ Endpoint.createInputEndpoint = function(componentObject, identifier, name, color
 					["Label",{cssClass:"tooltip", label:name, id:"lab"}]
 				]
 			});
+	newEndpoint.isInputEndpoint = function () { return true; }
+	newEndpoint.isOutputEndpoint = function () { return false; }
 	newEndpoint.meta = {
 			"identifier": identifier,
 			"name": name,
@@ -165,6 +171,19 @@ Endpoint.inputFromRDF = function(graph, endpointURI, componentObject) {
 
 Endpoint.outputFromRDF = function(graph, endpointURI, componentObject) {
 	Endpoint.createOutputEndpoint(componentObject);
+}
+
+Endpoint.factory = {
+		generatorFor: function(objectType) {
+			switch(objectType) {
+			case mecomp("Input"):
+				return Endpoint.inputFromRDF;
+			case mecomp("Output"):
+				return Endpoint.outputFromRDF;
+			default:
+				return null;
+			}
+		}
 }
 
 Endpoint.createDefaultEndpoints = function(componentObject) {	

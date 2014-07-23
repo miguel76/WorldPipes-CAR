@@ -81,6 +81,21 @@ ComponentClass.prototype.toRDF = function(componentURI, graphWriter) {
 	}
 }
 
+Component.factory = {
+		generatorFor: function(objectType) {
+			if (
+					[mecomp("Source"),
+					 mecomp("Sink"),
+					 swowscomp("UnionProcessor"),
+					 swowscomp("TransformProcessor"),
+					 swowscomp("Store"),
+					 swowscomp("URISourceProcessor"),
+					 mecomp("DataflowProcessor")].indexOf(objectType) > 0 )
+				return Component.fromRDF;
+			return null;
+		}
+}
+
 Component.fromRDF = function(graph, componentURI) {
 	
 	var propLiteralValue = function(graph, subjectURI, propertyURI) {

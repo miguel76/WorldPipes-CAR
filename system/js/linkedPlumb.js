@@ -21,7 +21,7 @@ var graphic = function (localName) {
 	return "http://purl.org/viso/graphic/" + localName;
 }
 
-linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
+linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter, dataflowURI) {
 	
 	var objectIdCount = 0;
 	
@@ -151,10 +151,10 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 		for (var connectionIndex; connectionIndex < endpoint.connections.length; connectionIndex++) {
 			var connection = endpoint.connections[connectionIndex];
 			var connectionURI = getId(connection);
-			if (endpoint.hasType(mecomp("Input"))) {
+			if (endpoint.isInputEnpoint()) {
 				graphWriter.addTriple(connectionURI, mecomp("to-input"), endpointURI);
 			}
-			if (endpoint.hasType(mecomp("Output"))) {
+			if (endpoint.isOutputEnpoint()) {
 				graphWriter.addTriple(connectionURI, mecomp("from-output"), endpointURI);
 			}
 		}
@@ -174,7 +174,7 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter) {
 	
 	// may produce  dcterms:identifier for the dataflow
 	
-	var dataflowURI = "";
+	if (!dataflowURI) dataflowURI = "";
 	graphWriter.addTriple(dataflowURI, rdf("type"), mecomp("Dataflow"));
 	if (componentList) {
 		for (var compIndex = 0; compIndex < componentList.length; compIndex++) {
@@ -198,10 +198,10 @@ linkedPlumb.jsPlumbFromRDF = function (graph, dataflowURI, jspInstance, objectFa
 	var innerObjectFactory = {
 			generatorFor: function(typeURI) {
 				switch (typeURI) {
-				case mecomp("NodeComponent"):
-					return function() {};
-				case mecomp("IOComponent"):
-					return function() {};
+//				case mecomp("NodeComponent"):
+//					return function() {};
+//				case mecomp("IOComponent"):
+//					return function() {};
 				default:
 					return null;
 				}
@@ -264,7 +264,9 @@ linkedPlumb.jsPlumbFromRDF = function (graph, dataflowURI, jspInstance, objectFa
 		// TODO: add connection to jspInstance
 	}
 	
-	components = graph.find(dataflowURI, mecomp("has-component"), null);
+	if (!dataflowURI) dataflowURI = "";
+	jspInstance.deleteEveryEndpoint(); // reset the jspPlumb instance without removing listeners
+	componentURIs = graph.find(dataflowURI, mecomp("has-component"), null);
 	if (componentURIs) {
 		for (var compIndex = 0; compIndex < componentURIs.length; compIndex++) {
 			if ( graph.find(dataflowURI, rdf("type"), mecomp("NodeComponent")) )
