@@ -595,11 +595,13 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 	
 	editor.appendChild(div);	
 	
-	Endpoint.createEndpoint(div,componentObject,null);	
-	
-	if((component == "construct" || component == "updatable") && inputlist.length != 0){Endpoint.createEndpoint(div,componentObject,2);}
+//	Endpoint.createEndpoint(div,componentObject,null);	
+//	if((component == "construct" || component == "updatable") && inputlist.length != 0){Endpoint.createEndpoint(div,componentObject,2);}
 	
 	componentObject.element = div;
+	Endpoint.createDefaultEndpoints(componentObject);
+	jsPlumb.repaint(div);
+	jsPlumb.draggable(div);
 //	componentObject.setElement(div);
 //	Code.modificaCodice(code);
 };

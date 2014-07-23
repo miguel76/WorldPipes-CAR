@@ -40,7 +40,7 @@ Endpoint.createOutputEndpoint = function(componentObject) {
 				connectorOverlays:[	"Arrow"	]
 			});
 
-	return new newEndpoint;
+	return newEndpoint;
 }
 
 Endpoint.createInputEndpoint = function(componentObject, identifier, name, color, shape, inDefault) {	
@@ -144,7 +144,7 @@ Endpoint.createInputEndpoint = function(componentObject, identifier, name, color
 		this.setPaintStyle(paintStyleFromColor(color));
 		this.meta.color = color;
 	};
-	return new newEndpoint;
+	return newEndpoint;
 }
 
 Endpoint.inputFromRDF = function(graph, endpointURI, componentObject) {
@@ -173,22 +173,22 @@ Endpoint.createDefaultEndpoints = function(componentObject) {
 		Endpoint.createOutputEndpoint(componentObject);
 	}
 	
-	if(component == "output" || component == "outputdefault" ) {
+	if(componentType == "output" || componentType == "outputdefault" ) {
 		Endpoint.createInputEndpoint(componentObject);
 	}
 		
-	if(component == "union") {
+	if(componentType == "union") {
 		for (var i = 0; i < 6; i++) {
 			Endpoint.createInputEndpoint(componentObject);
 		}
 		Endpoint.createOutputEndpoint(componentObject);
 	}
 
-	if(component == "construct") {
+	if(componentType == "construct") {
 		Endpoint.createOutputEndpoint(componentObject);
 	}
 
-	if(component == "updatable") {
+	if(componentType == "updatable") {
 		Endpoint.createOutputEndpoint(componentObject);
 	}
 };
