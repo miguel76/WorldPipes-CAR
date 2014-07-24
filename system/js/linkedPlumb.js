@@ -119,7 +119,7 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter, da
 	
 	function fromWorlkflowComponent(component, dataflowURI, graphWriter) {
 		// may have a dcterms:title
-		componentURI = fromObject(component, graphWriter);
+		var componentURI = fromObject(component, graphWriter);
 		graphWriter.addTriple(componentURI, rdf("type"), mecomp("WorkflowComponent"));
 		graphWriter.addTriple(dataflowURI, mecomp("has-component"), componentURI);
 		graphWriter.addTriple(componentURI, mecomp("belongs-to-workflow"), dataflowURI);
@@ -129,7 +129,7 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter, da
 	function fromNodeComponent(component, dataflowURI, graphWriter) {
 		console.log("Scanning component " + component);
 //		console.log("Content: " + JSON.stringify(component));
-		componentURI = fromWorlkflowComponent(component, dataflowURI, graphWriter);
+		var componentURI = fromWorlkflowComponent(component, dataflowURI, graphWriter);
 		graphWriter.addTriple(componentURI, rdf("type"), mecomp("NodeComponent"));
 		var componentElement = component.getElement();
 		var endpointList = jspInstance.getEndpoints(componentElement);
@@ -144,7 +144,7 @@ linkedPlumb.jsPlumbToRDF = function (componentList, jspInstance, graphWriter, da
 	
 	function fromEndpoint(endpoint, componentURI, dataflowURI, graphWriter) {
 		console.log("Scanning endpoint " + endpoint);
-		endpointURI = fromWorlkflowComponent(endpoint, dataflowURI, graphWriter);
+		var endpointURI = fromWorlkflowComponent(endpoint, dataflowURI, graphWriter);
 		graphWriter.addTriple(endpointURI, rdf("type"), mecomp("IOComponent"));
 		graphWriter.addTriple(endpointURI, mecomp("for-component"), componentURI);
 		parametersAsRDF(endpoint, endpointURI, graphWriter);
@@ -221,22 +221,13 @@ linkedPlumb.jsPlumbFromRDF = function (graph, dataflowURI, jspInstance, objectFa
 	}
 	
 	function toObject(objectURI, container) {
-		typeURIs = graph.find(objectURI, rdf("type"), null);
-		for (var typeIndex = 0; typeIndex < typeURIs.length; typeIndex++) {
-			var newObject = toTypedObject(objectURI, typeURIs[typeIndex], container);
+		var typeTriples = graph.find(objectURI, rdf("type"), null);
+		for (var typeIndex = 0; typeIndex < typeTriples.length; typeIndex++) {
+			var newObject = toTypedObject(objectURI, typeTriples[typeIndex].object, container);
 			if (newObject)
 				return newObject;
 		}
 		return null;
-	}
-	
-	function toWorlkflowComponent(graph, componentURI) {
-		// may have a dcterms:title
-		componentURI = fromObject(component, graphWriter);
-		graphWriter.addTriple(componentURI, rdf("type"), mecomp("WorkflowComponent"));
-		graphWriter.addTriple(dataflowURI, mecomp("has-component"), componentURI);
-		graphWriter.addTriple(componentURI, mecomp("belongs-to-workflow"), dataflowURI);
-		return componentURI;
 	}
 	
 	var toNodeComponent = function(componentURI) {
@@ -247,34 +238,36 @@ linkedPlumb.jsPlumbFromRDF = function (graph, dataflowURI, jspInstance, objectFa
 		var endpointURIs = graph.find(null, mecomp("for-component"), componentURI);
 		if (endpointURIs) {
 			for (var epIndex = 0; epIndex < endpointURIs.length; epIndex++) {
-				toEndpoint(endpointURIs[epIndex], newNodeComponent);
+				toEndpoint(endpointURIs[epIndex].subject, newNodeComponent);
 			}
 		}
 		console.log("Component " + componentURI + " built");
 		return newNodeComponent;
 	}
 	
-	var toEndpoint = function(endpointURI) {
+	var toEndpoint = function(endpointURI, nodeComponent) {
 		console.log("Building endpoint " + endpointURI);
 		var newEndpoint = toObject(endpointURI, nodeComponent);
 		console.log("Endpoint " + endpointURI + " built");
 	}
 	
-	function toConnection(graph, connectionURI, jspInstance) {
+	function toConnection(connectionURI) {
 		// TODO: add connection to jspInstance
 	}
 	
 	if (!dataflowURI) dataflowURI = "";
 	jspInstance.deleteEveryEndpoint(); // reset the jspPlumb instance without removing listeners
-	componentURIs = graph.find(dataflowURI, mecomp("has-component"), null);
+	var componentURIs = graph.find(dataflowURI, mecomp("has-component"), null);
 	if (componentURIs) {
 		for (var compIndex = 0; compIndex < componentURIs.length; compIndex++) {
-			if ( graph.find(dataflowURI, rdf("type"), mecomp("NodeComponent")) )
-					toNodeComponent(graph, componentURIs[compIndex], jspInstance);
+			var componentURI = componentURIs[compIndex].object;
+			if ( graph.find(componentURI, rdf("type"), mecomp("NodeComponent")) )
+					toNodeComponent(componentURI);
 		}
 		for (var compIndex = 0; compIndex < componentURIs.length; compIndex++) {
-			if ( graph.find(dataflowURI, rdf("type"), mecomp("Link")) )
-					toConnection(graph, componentURIs[compIndex], jspInstance);
+			var componentURI = componentURIs[compIndex].object;
+			if ( graph.find(componentURI, rdf("type"), mecomp("Link")) )
+					toConnection(componentURI);
 		}
 	}
 }

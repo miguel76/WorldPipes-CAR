@@ -99,9 +99,9 @@ Component.factory = {
 Component.fromRDF = function(graph, componentURI) {
 	
 	var propLiteralValue = function(graph, subjectURI, propertyURI) {
-		var objects = graph.find(subjectURI, propertyURI, null);
-		if (objects && N3.Util.isLiteral(objects[0]))
-			return N3.getLiteralValue(objects[0]);
+		var triples = graph.find(subjectURI, propertyURI, null);
+		if (triples && N3.Util.isLiteral(triples[0].object))
+			return N3.getLiteralValue(triples[0].object);
 		return null;
 	}
 	
@@ -166,7 +166,7 @@ Component.fromRDF = function(graph, componentURI) {
 			var newComponent =
 				createComponentFromRDFType(
 						graph, componentURI,
-						componentTypes[componentTypeIndex],
+						componentTypes[componentTypeIndex].object,
 						identifier, title, x_position, y_position);
 			if (newComponent)
 				return newComponent;

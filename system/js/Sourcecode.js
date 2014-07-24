@@ -724,7 +724,7 @@ Code.estraiTesto = function(code, name, callback){
 
 	var textCode = code.textContent;
 	var editor = Core.getElementsByClass("areaeditor")[0];
-    Component.updatePositions(editor, componentVett);
+//    Component.updatePositions(editor, componentVett);
 	
 	var store = N3.Store();
 	linkedPlumb.jsPlumbToRDF(

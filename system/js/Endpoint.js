@@ -107,7 +107,7 @@ Endpoint.createInputEndpoint = function(componentObject, identifier, name, color
 		graphWriter.addTriple(endpointURI, graphic("color_named"), graphic(capitalize(this.getColor())));
 		graphWriter.addTriple(endpointURI, rdf("type"), mecomp("Input"));
 		if (this.getInDefault())
-			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("isInDefaultInput"));
+			graphWriter.addTriple(endpointURI, rdf("type"), swowscomp("isInDefaultInput"));
 	};
 	newEndpoint.getIdentifier = function () {
 		return this.meta.identifier;
