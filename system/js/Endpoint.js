@@ -39,6 +39,7 @@ Endpoint.createOutputEndpoint = function(componentObject) {
 				anchor: "BottomCenter",
 				connectorOverlays:[	"Arrow"	]
 			});
+	jsPlumb.repaint(componentObject.getElement());
 	newEndpoint.isInputEndpoint = function () { return false; }
 	newEndpoint.isOutputEndpoint = function () { return true; }
 	newEndpoint.toRDF = function (endpointURI, graphWriter) {
@@ -91,6 +92,7 @@ Endpoint.createInputEndpoint = function(componentObject, identifier, name, color
 					["Label",{cssClass:"tooltip", label:name, id:"lab"}]
 				]
 			});
+	jsPlumb.repaint(componentObject.getElement());
 	newEndpoint.isInputEndpoint = function () { return true; }
 	newEndpoint.isOutputEndpoint = function () { return false; }
 	newEndpoint.meta = {
@@ -162,15 +164,15 @@ Endpoint.inputFromRDF = function(graph, endpointURI, componentObject) {
 	}
 	
 	var identifier = propLiteralValue(graph, endpointURI, dcterms("identifier"));
-	var name = propLiteralValue(graph, componentURI, dcterms("title"));
-	var shape = propLiteralValue(graph, componentURI, graphic("shape_named"));
-	var color = propLiteralValue(graph, componentURI, graphic("color_named"));
+	var name = propLiteralValue(graph, endpointURI, dcterms("title"));
+	var shape = propLiteralValue(graph, endpointURI, graphic("shape_named"));
+	var color = propLiteralValue(graph, endpointURI, graphic("color_named"));
 	var inDefault = graph.find(endpointURI, rdf("type"), swowscomp("isInDefaultInput")).length > 0;
-	Endpoint.createInputEndpoint(componentObject, identifier, name, color, shape, inDefault);
+	return Endpoint.createInputEndpoint(componentObject, identifier, name, color, shape, inDefault);
 }
 
 Endpoint.outputFromRDF = function(graph, endpointURI, componentObject) {
-	Endpoint.createOutputEndpoint(componentObject);
+	return Endpoint.createOutputEndpoint(componentObject);
 }
 
 Endpoint.factory = {

@@ -32,7 +32,7 @@ var graphic = function (localName) {
 /*Costrutture della classe ComponentClass*/
 function ComponentClass(CODE,COMPONENT,ID,URI,NAME,QUERY,INPUT,X,Y) {
 	this.Code = CODE;
-	this.Component = COMPONENT
+	this.Component = COMPONENT;
 	this.ID = ID;
 	this.URI = URI;
 	this.Name = NAME;
@@ -90,7 +90,7 @@ Component.factory = {
 					 swowscomp("TransformProcessor"),
 					 swowscomp("Store"),
 					 swowscomp("URISourceProcessor"),
-					 mecomp("DataflowProcessor")].indexOf(objectType) > 0 )
+					 mecomp("DataflowProcessor")].indexOf(objectType) >= 0 )
 				return Component.fromRDF;
 			return null;
 		}
@@ -101,7 +101,7 @@ Component.fromRDF = function(graph, componentURI) {
 	var propLiteralValue = function(graph, subjectURI, propertyURI) {
 		var triples = graph.find(subjectURI, propertyURI, null);
 		if (triples && N3.Util.isLiteral(triples[0].object))
-			return N3.getLiteralValue(triples[0].object);
+			return N3.Util.getLiteralValue(triples[0].object);
 		return null;
 	}
 	
@@ -114,9 +114,12 @@ Component.fromRDF = function(graph, componentURI) {
 	
 	var createComponentFromRDFType =
 		function(
-				graph, componentURI, componentType,
-				code, identifier, title, x_position, y_position) {
+					componentType,
+					identifier, title,
+					x_position, y_position) {
 //		function(code, componentTypeName, name, x, y) {
+		cnt++;
+		var code = cnt;
 		switch (componentType) {
 			case mecomp("Source"):
 				return new ComponentClass(
@@ -151,25 +154,25 @@ Component.fromRDF = function(graph, componentURI) {
 		}
 	};
 
-	cnt++;
-	var code = cnt;
-
 	var identifier = propLiteralValue(graph, componentURI, dcterms("identifier"));
 	var title = propLiteralValue(graph, componentURI, dcterms("title"));
 	
 	var x_position = propLiteralValue(graph, componentURI, graphic("x_position"));
 	var y_position = propLiteralValue(graph, componentURI, graphic("y_position"));
 	
+	var editor = Core.getElementsByClass("areaeditor")[0];
+	
 	var componentTypes = graph.find(componentURI, rdf("type"), null);
 	if (componentTypes) {
 		for (var componentTypeIndex = 0; componentTypeIndex < componentTypes.length; componentTypeIndex++) { 
 			var newComponent =
 				createComponentFromRDFType(
-						graph, componentURI,
 						componentTypes[componentTypeIndex].object,
 						identifier, title, x_position, y_position);
-			if (newComponent)
+			if (newComponent) {
+				Component.createGraphics(newComponent, editor);
 				return newComponent;
+			}
 		}
 	}
 	return null;
@@ -279,6 +282,10 @@ Component.createFromTypeId = function(componentTypeId, editor, clientX, clientY)
 	Code.writeCodeFromComponent(newComponent);
 	//Component.cercaElem();
 	Component.createGraphics(newComponent, editor);
+	Endpoint.createDefaultEndpoints(newComponent);
+//	jsPlumb.repaint(newComponent.getElement());
+//	jsPlumb.draggable(newComponent.getElement());
+
 	Code.updateCodeFromComponent(newComponent);
 };
 
@@ -614,8 +621,6 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 //	if((component == "construct" || component == "updatable") && inputlist.length != 0){Endpoint.createEndpoint(div,componentObject,2);}
 	
 	componentObject.element = div;
-	Endpoint.createDefaultEndpoints(componentObject);
-	jsPlumb.repaint(div);
 	jsPlumb.draggable(div);
 //	componentObject.setElement(div);
 //	Code.modificaCodice(code);
