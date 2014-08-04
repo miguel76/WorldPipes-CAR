@@ -1,5 +1,5 @@
 var linkedPlumb = (function() {
-
+	
 	var mecomp = function (localName) {
 		return "http://rdf.myexperiment.org/ontologies/components/" + localName;
 	}
@@ -26,6 +26,10 @@ var linkedPlumb = (function() {
 	
 			var objectIdCount = 0;
 			
+			var base = function(relativeURI) {
+				return URI(relativeURI).relativeTo(dataflowURI).toString();
+			}
+
 			function getId(object) {
 				var objectID;
 				if (!objectID && object.getParameter)
@@ -92,9 +96,8 @@ var linkedPlumb = (function() {
 				}
 			}
 			
-			function fromObject(object, /*contextURI, */graphWriter/*, callback*/) {
-//				var objectURI = contextURI + "/" + getId(object);
-				var objectURI = getId(object);
+			function fromObject(object, contextURI, graphWriter/*, callback*/) {
+				var objectURI = contextURI + "/" + getId(object);
 				if (object.getType) {
 					var types = object.getType();
 					if (types) {
@@ -119,7 +122,7 @@ var linkedPlumb = (function() {
 			
 			function fromWorlkflowComponent(component, dataflowURI, graphWriter) {
 				// may have a dcterms:title
-				var componentURI = fromObject(component, graphWriter);
+				var componentURI = fromObject(component, dataflowURI,graphWriter);
 				graphWriter.addTriple(componentURI, rdf("type"), mecomp("WorkflowComponent"));
 				graphWriter.addTriple(dataflowURI, mecomp("has-component"), componentURI);
 				graphWriter.addTriple(componentURI, mecomp("belongs-to-workflow"), dataflowURI);
@@ -263,7 +266,7 @@ var linkedPlumb = (function() {
 				});
 			}
 			
-			if (!dataflowURI) dataflowURI = "";
+			if (!dataflowURI) dataflowURI = "#";
 			jspInstance.deleteEveryEndpoint(); // reset the jspPlumb instance without removing listeners
 			var componentTriples = graph.find(dataflowURI, mecomp("has-component"), null);
 			if (componentTriples) {

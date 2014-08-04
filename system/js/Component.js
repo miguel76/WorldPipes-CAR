@@ -49,6 +49,15 @@ ComponentClass.prototype.getElement = function() { return this.element; };
 ComponentClass.prototype.getId = function() { return this.ID; };
 
 ComponentClass.prototype.toRDF = function(componentURI, graphWriter) {
+	
+	var base = function(uriString) {
+		var uri = URI(uriString);
+		if (uri.is("absolute"))
+			return uri.toString();
+		else
+			return uri.absoluteTo(componentURI).toString();
+	}
+	
 	graphWriter.addTriple(componentURI, dcterms("identifier"), '"' + this.ID + '"');
 	graphWriter.addTriple(componentURI, dcterms("title"), '"' + this.Name + '"');
 	graphWriter.addTriple(componentURI, graphic("x_position"), '"' + this.X + '"^^<http://www.w3.org/2001/XMLSchema#float>');
@@ -63,7 +72,7 @@ ComponentClass.prototype.toRDF = function(componentURI, graphWriter) {
 		if (componentTypeName == "dataset") {
 			graphWriter.addTriple(componentURI, rdf("type"), mecomp("ConstantProcessor"));
 			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("URISourceProcessor"));
-			graphWriter.addTriple(componentURI, mecomp("processor-value"), this.URI);
+			graphWriter.addTriple(componentURI, mecomp("processor-value"), base(this.URI));
 		} else if (componentTypeName == "pipes") {
 			graphWriter.addTriple(componentURI, rdf("type"), mecomp("DataflowProcessor"));
 //			graphWriter.addTriple(componentURI, rdf("type"), swowscomp("DataflowProcessor"));

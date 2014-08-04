@@ -52,13 +52,15 @@
 		<script type="text/javascript" src="js/core.js"></script>	
 <!-- 		<script type="text/javascript" src="js/underscore-min.js"></script>	 -->
 
+		<script type="text/javascript" src="js/URI.js"></script>	
 		<script type="text/javascript" src="js/Sourcecode.js"></script>	
 		<script type="text/javascript" src="js/Component.js"></script>	
 		<script type="text/javascript" src="js/InputType.js"></script>	
 		<script type="text/javascript" src="js/Form.js"></script>
 		<script type="text/javascript" src="js/Endpoint.js"></script>
 		<script type="text/javascript" src="js/n3-browser.min.js"></script>
-		<script type="text/javascript" src="js/mainActions.js"></script>
+		<script type="text/javascript" src="js/N3ServerSync.js"></script>
+		<script type="text/javascript" src="js/SWOWSPipes.js"></script>
 		<script type="text/javascript" src="js/linkedPlumb.js"></script>
 <!-- 		<script type="text/javascript" src="js/activelink.js"></script> -->
 		
@@ -91,8 +93,10 @@
 
 		<script type="text/javascript">
 			function onLoad() {
+	     		var query = getQueryParams(document.location.search);
+	     		SWOWSPipes.setMainPipelineURI(query.dfURI);
 				jsPlumb.Defaults.Container = document.getElementById("areaeditor");
-				Component.jsonLoad();
+				SWOWSPipes.load();
 			}
 
 			function updateStatus(newText,cont) {
@@ -125,9 +129,9 @@
 			<div id="pulsante">
 				<ul title="pulsanti">
 <!-- 					<li><img class="pulsanti" src="IMG/new.gif" title="New" draggable="false"/></li> -->
-					<li><img class="pulsanti" src="IMG/salva.gif" title="Save" draggable="false" onclick="MainActions.savePipe()"/></li>
+					<li><img class="pulsanti" src="IMG/salva.gif" title="Save" draggable="false" onclick="SWOWSPipes.save()"/></li>
 <!-- 					<li><img class="pulsanti" src="IMG/Proprieta.gif" title="Properties" draggable="false"/></li> -->
-					<li><img class="pulsanti" src="IMG/play.gif" title="Play &amp; Save" draggable="false" onclick="MainActions.playPipe()"/></li>
+					<li><img class="pulsanti" src="IMG/play.gif" title="Play &amp; Save" draggable="false" onclick="SWOWSPipes.play()"/></li>
 <!-- 					<li><img class="pulsanti" src="IMG/reload.gif" title="load" draggable="false"/></li> -->
 <!-- 					<li><img class="pulsanti" src="IMG/publish.gif" title="publish" draggable="false"/></li> -->
 				</ul>

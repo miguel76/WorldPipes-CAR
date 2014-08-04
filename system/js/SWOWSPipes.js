@@ -63,8 +63,9 @@ var SWOWSPipes = (function() {
 				componentVett,
 				jsPlumb,
 				N3ServerSync.createCalliUpdateWriter(
-						resourceURI,
-						callback));
+						this.pipelineURI,
+						callback),
+				this.pipelineURI);
 	};
 
 	_Pipeline.prototype.viewProperties = function() {

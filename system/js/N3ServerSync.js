@@ -101,22 +101,26 @@ var N3ServerSync = (function() {
 		xhr.seenBytes = 0;
 		xhr.onreadystatechange = function() { 1
 			if(xhr.readyState > 2) {
-		    	if (request.status == 200 || request.status == 201 || request.status == 204) {
-				    var newData = xhr.responseText.substr(xhr.seenBytes);
-				    if (process)
-				    	process(newData);
-				    xhr.seenBytes = xhr.responseText.length;
-			    	if (xhr.readyState == 4 && callback)
-			    		return callback();
+		    	if (xhr.status == 200 || xhr.status == 201 || xhr.status == 204) {
+		    		if (xhr.responseText) {
+		    			var newData = xhr.responseText.substr(xhr.seenBytes);
+		    			if (process)
+		    				process(newData);
+		    			xhr.seenBytes = xhr.responseText.length;
+		    		}
+		    		if (xhr.readyState == 4 && callback)
+		    			return callback();
 			    	return;
 		    	}
-				if (request.status == 400)
-					return callback("Parse error");
-				if (request.status == 500)
-					return callback("Server error"); 
-				if (request.status == 503)
-					return callback("Service not available");
-				return callback("Unknown HTTP response code: " + request.status);
+		    	if (xhr.readyState == 4 && callback) {
+					if (xhr.status == 400)
+						return callback("Parse error");
+					if (xhr.status == 500)
+						return callback("Server error"); 
+					if (xhr.status == 503)
+						return callback("Service not available");
+					return callback("Unknown HTTP response code: " + xhr.status);
+		    	}
 		  }
 		};
 	    
@@ -157,7 +161,8 @@ var N3ServerSync = (function() {
 	};
 
 	var _createCalliUpdateWriter = function(resourceURI, callback) {
-		var writer = new N3Writer({}); // TODO: add BASE!!! (maybe)
+//		var writer = N3.Writer({}); // TODO: add BASE!!! (maybe)
+		var writer = N3.Writer(); // TODO: add BASE!!! (maybe)
 		writer.end = function() {
 			var update =
 				'DELETE {?s ?p ?o}; ' +
@@ -185,7 +190,7 @@ var N3ServerSync = (function() {
 		return _httpGetStreaming(
 				graphURI,
 				function(chunk) {
-					parser.addChunk(responseText);
+					parser.addChunk(chunk);
 				},
 				'text/turtle',
 				function(error) {
@@ -197,21 +202,31 @@ var N3ServerSync = (function() {
 	};
 
 	var _writeFromRemoteGraph = function(graphURI, graphWriter, callback) {
-		var parser = new N3Parser(
+		var parser = N3.Parser();
+		var errorValue = null;
+		parser.parse(
 				function(error, triple, prefixes) {
-					if (error)
-						return callback("Parse Error: " + error);
-					if (triple)
-						return graphWriter.addTriple(
-								triple.subject, triple.predicate, triple.object,
-								function(error) {
-									if (error)
-										return callback(error);
-								});
-					else
-						return graphWriter.end(callback);
+					if (!errorValue) {
+						if (error)
+							errorValue = error;
+						else
+							if (triple)
+								graphWriter.addTriple(
+										triple.subject, triple.predicate, triple.object,
+										function(error) {
+											if (error)
+												errorValue = error;
+										});
+//							else
+//								if (graphWriter.end)
+//									return graphWriter.end(callback);
+//								else
+//									return callback();
+					}
 				}
 		);
+		if (errorValue)
+			return callback(errorValue);
 		return _readFromRemoteGraphStreaming(graphURI, parser, callback);
 	};
 
