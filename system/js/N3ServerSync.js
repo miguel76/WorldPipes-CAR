@@ -160,18 +160,88 @@ var N3ServerSync = (function() {
 		return writer;
 	};
 
-	var _createCalliUpdateWriter = function(resourceURI, callback) {
-//		var writer = N3.Writer({}); // TODO: add BASE!!! (maybe)
-		var writer = N3.Writer(); // TODO: add BASE!!! (maybe)
-		writer.end = function() {
-			var update =
-				'DELETE {?s ?p ?o}; ' +
-				'INSERT { ' +
-					_output +
-				'} WHERE {?s ?p ?o}; ';
-			return _httpPatch(resourceURI, 'application/sparql-update', update, callback);
+//	var _createCalliUpdateWriter = function(resourceURI, callback) {
+//
+//		console.log("Creating writer for " + resourceURI);
+//
+////		var writer = N3.Writer({}); // TODO: add BASE!!! (maybe)
+//		var writer = N3.Writer(); // TODO: add BASE!!! (maybe)
+//		writer.end = function() {
+//			var update =
+//				'DELETE { <> <http://rdf.myexperiment.org/ontologies/components/has-component> ?component. ?component ?componentP ?componentO. } ' +
+//				'INSERT { ' +
+//					this._output +
+//				'} WHERE { OPTIONAL { <> <http://rdf.myexperiment.org/ontologies/components/has-component> ?component. ?component ?componentP ?componentO. } }; ';
+//			console.log("Sending update to server: " + update);
+//			return _httpPatch(resourceURI + '?describe', 'application/sparql-update', update, callback);
+//		};
+//		return writer;
+//	};
+
+	var _createCalliUpdateWriter = function(resourceURI, oldGraph, callback) {
+
+		console.log("Creating writer for " + resourceURI);
+		
+		var deleteWriter = N3.Writer({}); 
+		var insertWriter = N3.Writer({}); 
+		var newGraph = N3.Store();
+		
+		var newGraphWriter = {
+			addTriple: function(s, p, o) {
+				if (!oldGraph || oldGraph.find(s, p, o).length == 0)
+					insertWriter.addTriple(s, p, o);
+				newGraph.addTriple(s, p, o);
+			},
+			end: function() {
+				if (oldGraph) {
+					var oldTriples = oldGraph.find(null, null, null);
+					for (var tripleIndex = 0; tripleIndex < oldTriples.length; tripleIndex++) {
+						var triple = oldTriples[tripleIndex];
+						var s = triple.subject, p = triple.predicate, o = triple.object;
+						if (newGraph.find(s, p, o).length == 0)
+							deleteWriter.addTriple(s, p, o);
+					}
+				}
+				insertWriter.end(
+						function (error, insertTurtle) {
+							if (error)
+								return callback(error);
+							deleteWriter.end(
+									function (error, deleteTurtle) {
+										if (error)
+											return callback(error);
+										var update =
+											'DELETE { ' +
+												deleteTurtle +
+											' } ' +
+											'INSERT { ' +
+												insertTurtle +
+											'} WHERE { }; ';
+										console.log("Sending update to server: " + update);
+										return _httpPatch(
+												resourceURI + '?describe', 'application/sparql-update',
+												update,
+												function(error) {
+													if (error)
+														callback(error)
+													callback(null, newGraph);
+												});
+									});
+						});
+			}
 		};
-		return writer;
+		
+//		var writer = N3.Writer(); // TODO: add BASE!!! (maybe)
+//		writer.end = function() {
+//			var update =
+//				'DELETE { <> <http://rdf.myexperiment.org/ontologies/components/has-component> ?component. ?component ?componentP ?componentO. } ' +
+//				'INSERT { ' +
+//					this._output +
+//				'} WHERE { OPTIONAL { <> <http://rdf.myexperiment.org/ontologies/components/has-component> ?component. ?component ?componentP ?componentO. } }; ';
+//			console.log("Sending update to server: " + update);
+//			return _httpPatch(resourceURI + '?describe', 'application/sparql-update', update, callback);
+//		};
+		return newGraphWriter;
 	};
 
 //	var _readFromRemoteGraph = function(graphURI, parser, callback) {

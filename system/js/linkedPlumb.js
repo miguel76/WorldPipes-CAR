@@ -49,36 +49,15 @@ var linkedPlumb = (function() {
 				if (endpoint.getParameters) {
 					var parameters = endpoint.getParameters();
 					if (parameters) {
-						console.log("Parameters " + parameters);
-//						if (!parameters["@id"])
-//							parameters["@id"] = objectURI;
-//						var nquads = jsonld.toRDF(
-//								parameters, {format : "application/nquads"},
-//								function(err, dataset) {
-//									var parser = N3.Parser();
-//									parser.parse(
-//											nquads,
-//									        function (error, triple, prefixes) {
-//												if (triple) {
-//													console.log(triple.subject, triple.predicate, triple.object, '.');
-//													graphWriter.addTriple(triple);
-//												} else {
-//									                console.log("# That's all, folks!", prefixes)
-//													if (object.toRDF)
-//														object.toRDF(objectURI, graphWriter);
-//													console.log("New URI: " + objectURI);
-//													callback(objectURI);
-//									            }
-//									        });
-//								});
+//						console.log("Parameters " + parameters);
 						for (parameterName in parameters) {
-							console.log(
-									"Endpoint " + endpointURI +
-									" has parameter '" + parameterName +
-									"' with value '" + parameters[parameterName] + "'");
-							console.log(
-									"and (" + endpointURI + ").getParameter(" + parameterName + ") = '" +
-									endpoint.getParameter(parameterName) + "'");
+//							console.log(
+//									"Endpoint " + endpointURI +
+//									" has parameter '" + parameterName +
+//									"' with value '" + parameters[parameterName] + "'");
+//							console.log(
+//									"and (" + endpointURI + ").getParameter(" + parameterName + ") = '" +
+//									endpoint.getParameter(parameterName) + "'");
 							if (parameterName == "@type")
 								graphWriter.addTriple(endpointURI, rdf("type"), parameters[parameterName]);
 							else if (parameterName == "dcterms:identifier")
@@ -113,8 +92,8 @@ var linkedPlumb = (function() {
 						}
 					}
 				}
-				if (object.getLabel)
-					console.log("Label: " + object.getLabel());
+//				if (object.getLabel)
+//					console.log("Label: " + object.getLabel());
 				if (object.toRDF)
 					object.toRDF(objectURI, graphWriter);
 				return objectURI;
@@ -130,7 +109,7 @@ var linkedPlumb = (function() {
 			}
 			
 			function fromNodeComponent(component, dataflowURI, graphWriter) {
-				console.log("Scanning component " + component);
+//				console.log("Scanning component " + component);
 //				console.log("Content: " + JSON.stringify(component));
 				var componentURI = fromWorlkflowComponent(component, dataflowURI, graphWriter);
 				graphWriter.addTriple(componentURI, rdf("type"), mecomp("NodeComponent"));
@@ -141,12 +120,12 @@ var linkedPlumb = (function() {
 						fromEndpoint(endpointList[epIndex], componentURI, dataflowURI, graphWriter);
 					}
 				}
-				console.log("Component " + componentElement + " scanned");
+//				console.log("Component " + componentElement + " scanned");
 				return componentURI;
 			}
 			
 			function fromEndpoint(endpoint, componentURI, dataflowURI, graphWriter) {
-				console.log("Scanning endpoint " + endpoint);
+//				console.log("Scanning endpoint " + endpoint);
 				var endpointURI = fromWorlkflowComponent(endpoint, dataflowURI, graphWriter);
 				graphWriter.addTriple(endpointURI, rdf("type"), mecomp("IOComponent"));
 				graphWriter.addTriple(endpointURI, mecomp("for-component"), componentURI);
@@ -164,15 +143,15 @@ var linkedPlumb = (function() {
 //				graphWriter.addTriple(connectionURI,  dcterms("title"), title);
 				// TODO: write endpoint data
 				// TODO: return endpoint URI
-				console.log("Endpoint " + endpoint + " scanned");
+//				console.log("Endpoint " + endpoint + " scanned");
 			}
 			
 			function fromConnection(connection, dataflowURI, graphWriter) {
-				console.log("Scanning connection " + connection);
+//				console.log("Scanning connection " + connection);
 				var connectionURI = fromWorlkflowComponent(connection, dataflowURI, graphWriter);
 				graphWriter.addTriple(dataflowURI, mecomp("Link"), connectionURI);
 				graphWriter.addTriple(connectionURI, rdf("type"), mecomp("Link"));
-				console.log("Connection " + connection + " scanned");
+//				console.log("Connection " + connection + " scanned");
 			}
 			
 			// may produce  dcterms:identifier for the dataflow
@@ -190,6 +169,7 @@ var linkedPlumb = (function() {
 					fromConnection(connectionList[connIndex], dataflowURI, graphWriter);
 				}
 			}
+			graphWriter.end();
 		},
 
 		jsPlumbFromRDF: function (graph, dataflowURI, jspInstance, objectFactory) {
@@ -236,13 +216,13 @@ var linkedPlumb = (function() {
 			}
 			
 			var toEndpoint = function(endpointURI, nodeComponent) {
-				console.log("Building endpoint " + endpointURI);
+//				console.log("Building endpoint " + endpointURI);
 				var newEndpoint = toObject(endpointURI, nodeComponent);
-				console.log("Endpoint " + endpointURI + " built");
+//				console.log("Endpoint " + endpointURI + " built");
 			}
 			
 			var toNodeComponent = function(componentURI) {
-				console.log("Building component " + componentURI);
+//				console.log("Building component " + componentURI);
 //				console.log("Content: " + JSON.stringify(component));
 				var newNodeComponent = toObject(componentURI);
 				
@@ -252,7 +232,7 @@ var linkedPlumb = (function() {
 						toEndpoint(endpointURIs[epIndex].subject, newNodeComponent);
 					}
 				}
-				console.log("Component " + componentURI + " built");
+//				console.log("Component " + componentURI + " built");
 				return newNodeComponent;
 			}
 			

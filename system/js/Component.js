@@ -487,7 +487,8 @@ Component.refreshEditor = function(editor){
 	for(var i=figli.length-1;i != 0; i--){
 		if(figli[i].id != "edit"){editor.removeChild(figli[i]);}
 	}*/
-	jsPlumb.reset();
+	if (jsPlumb.selectEndpoints().length > 0)
+		jsPlumb.reset();
 	var edit = document.getElementById("edit");
 	editor.innerHTML = edit.outerHTML;
 	

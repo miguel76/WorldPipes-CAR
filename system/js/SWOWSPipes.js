@@ -35,6 +35,7 @@ var SWOWSPipes = (function() {
 									return Component.factory.generatorFor(objectType) || Endpoint.factory.generatorFor(objectType);
 								}
 							});
+					this.graph = store;
 					callback();
 				});
 
@@ -42,6 +43,8 @@ var SWOWSPipes = (function() {
 	};
 
 	_Pipeline.prototype.save = function(callback) {
+		
+		console.log("Saving pipeline " + this.pipelineURI);
 		
 		var outerCallback = callback;
 		var callback = function (err) {
@@ -64,7 +67,12 @@ var SWOWSPipes = (function() {
 				jsPlumb,
 				N3ServerSync.createCalliUpdateWriter(
 						this.pipelineURI,
-						callback),
+						this.graph,
+						function(error, newGraph) {
+							if (error)
+								callback(error);
+							this.graph = newGraph;
+						}),
 				this.pipelineURI);
 	};
 
