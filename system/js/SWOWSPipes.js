@@ -1,8 +1,45 @@
 var SWOWSPipes = (function() {
+	
+	var mecomp = function (localName) {
+		return "http://rdf.myexperiment.org/ontologies/components/" + localName;
+	};
 
-	var _Pipeline = function(pipelineURI) {
+	var rdf = function (localName) {
+		return "http://www.w3.org/1999/02/22-rdf-syntax-ns#" + localName;
+	};
+
+	var dc = function (localName) {
+		return "http://purl.org/dc/elements/1.1/" + localName;
+	};
+
+	var dcterms = function (localName) {
+		return "http://purl.org/dc/terms/" + localName;
+	};
+
+	var graphic = function (localName) {
+		return "http://purl.org/viso/graphic/" + localName;
+	};
+
+	var calli = function (localName) {
+		return "http://callimachusproject.org/rdf/2009/framework#" + localName;
+	};
+	
+	var prov = function (localName) {
+		return "http://www.w3.org/ns/prov#" + localName;
+	};
+	
+	var _PipelineStore = function(storeURI) {
+		this.storeURI = storeURI;
+	};
+
+	var _Pipeline = function(storeURI, pipelineURI) {
+		this.storeURI = storeURI;
 		this.pipelineURI = pipelineURI;
-		this.load();
+		if (this.storeURI && !this.pipelineURI)
+			this.pipelineURI = this.storeURI;
+		if (!this.storeURI && this.pipelineURI)
+			this.storeURI = URI(this.pipelineURI).pathname("/").toString();
+//		this.load();
 	};
 
 	_Pipeline.prototype.load = function(callback) {
@@ -22,14 +59,46 @@ var SWOWSPipes = (function() {
 		Component.refreshEditor(document.getElementById("areaeditor"));
 		
 		var store = N3.Store();
-		N3ServerSync.calliRead(
-				this.pipelineURI,
+//		N3ServerSync.calliRead(
+//				this.pipelineURI,
+//				store,
+//				function(error) {
+//					if (error)
+//						callback(error);
+//					linkedPlumb.jsPlumbFromRDF(
+//							store, null, jsPlumb,
+//							{
+//								generatorFor: function(objectType) {
+//									return Component.factory.generatorFor(objectType) || Endpoint.factory.generatorFor(objectType);
+//								}
+//							});
+//					this.graph = store;
+//					callback();
+//				});
+		var viewQuery =
+			"CONSTRUCT { " +
+				"<" + this.pipelineURI + "> <" + mecomp("has-component") + "> ?component. " +
+				"<" + this.pipelineURI + "> <" + calli("hasComponent") + "> ?component. " +
+				"?component ?p ?o. " +
+			"} " +
+			"WHERE { " +
+				"<" + this.pipelineURI + "> <" + mecomp("has-component") + "> ?component. " +
+				"OPTIONAL { " +
+					"?component ?p ?o. " +
+					"FILTER(?p != <" + prov("wasGeneratedBy") + ">) . " +
+				"}" +
+			"}";
+		
+		var pipelineURI = this.pipelineURI;
+		N3ServerSync.calliQuery(
+				this.storeURI + "sparql",
+				viewQuery,
 				store,
 				function(error) {
 					if (error)
 						callback(error);
 					linkedPlumb.jsPlumbFromRDF(
-							store, null, jsPlumb,
+							store, pipelineURI, jsPlumb,
 							{
 								generatorFor: function(objectType) {
 									return Component.factory.generatorFor(objectType) || Endpoint.factory.generatorFor(objectType);
@@ -66,6 +135,7 @@ var SWOWSPipes = (function() {
 				componentVett,
 				jsPlumb,
 				N3ServerSync.createCalliUpdateWriter(
+						this.storeURI,
 						this.pipelineURI,
 						this.graph,
 						function(error, newGraph) {
@@ -92,6 +162,14 @@ var SWOWSPipes = (function() {
 		Code.sendCodeURIUpdate();
 	};
 	
+	var _setMainStoreURI = function(storeURI) {
+		SWOWSPipes._mainStoreURI = mainStoreURI;
+	};
+
+	var _getMainStoreURI = function() {
+		return SWOWSPipes._mainStoreURI; 
+	};
+	
 	var _setMainPipelineURI = function(mainPipelineURI) {
 		SWOWSPipes._mainPipelineURI = mainPipelineURI;
 	};
@@ -106,11 +184,13 @@ var SWOWSPipes = (function() {
 	
 	var _getMainPipeline = function() {
 		if (!SWOWSPipes._mainPipeline && SWOWSPipes._mainPipelineURI)
-			SWOWSPipes._mainPipeline = new _Pipeline(SWOWSPipes._mainPipelineURI);
+			SWOWSPipes._mainPipeline = new _Pipeline(SWOWSPipes._mainStoreURI, SWOWSPipes._mainPipelineURI);
 		return SWOWSPipes._mainPipeline; 
 	};
 	
-	var _load = function(pipelineURI) {
+	var _load = function(storeURI, pipelineURI) {
+		if (storeURI)
+			_setMainStoreURI(storeURI);
 		if (pipelineURI)
 			_setMainPipelineURI(pipelineURI);
 		_getMainPipeline().load();

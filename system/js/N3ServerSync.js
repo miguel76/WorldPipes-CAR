@@ -138,15 +138,19 @@ var N3ServerSync = (function() {
 	
 	var _httpGetStreaming = function(uri, process, mimeType, callback) {
 		return _httpRequest(uri, "GET", null, mimeType, null, process, callback);
-	}
+	};
 	
 	var _httpPost = function (uri, mimeType, content, callback) {
 		return _httpRequest(uri, "POST", mimeType, null, content, null, callback);
-	}
+	};
+	
+	var _httpPostStreaming = function (uri, process, inMimeType, outMimeType, content, callback) {
+		return _httpRequest(uri, "POST", inMimeType, outMimeType, content, process, callback);
+	};
 	
 	var _httpPatch = function (uri, mimeType, content, callback) {
 		return _httpRequest(uri, "PATCH", mimeType, null, content, null, callback);
-	}
+	};
 	
 	var _createCalliCreateWriter = function(folderURI, callback) {
 		var writer = new N3Writer({}); // TODO: add BASE!!! (maybe)
@@ -178,7 +182,7 @@ var N3ServerSync = (function() {
 //		return writer;
 //	};
 
-	var _createCalliUpdateWriter = function(resourceURI, oldGraph, callback) {
+	var _createCalliUpdateWriter = function(storeURI, resourceURI, oldGraph, callback) {
 
 		console.log("Creating writer for " + resourceURI);
 		
@@ -218,8 +222,17 @@ var N3ServerSync = (function() {
 												insertTurtle +
 											'} WHERE { }; ';
 										console.log("Sending update to server: " + update);
-										return _httpPatch(
-												resourceURI + '?describe', 'application/sparql-update',
+//										return _httpPatch(
+//												resourceURI + '?describe', 'application/sparql-update',
+//												update,
+//												function(error) {
+//													if (error)
+//														callback(error)
+//													callback(null, newGraph);
+//												});
+										return _httpPost(
+												storeURI + "sparql",
+												'application/sparql-update',
 												update,
 												function(error) {
 													if (error)
@@ -271,6 +284,79 @@ var N3ServerSync = (function() {
 				});
 	};
 
+	var _readFromQueryStreaming = function(endpointURI, query, parser, callback) {
+		return _httpPostStreaming(
+				endpointURI,
+				function(chunk) {
+					parser.addChunk(chunk);
+				},
+				'application/sparql-query',
+				'text/turtle',
+				query,
+				function(error) {
+					if (error)
+						return callback(error);
+					parser.end();
+					return callback();
+				});
+	};
+	
+	var _readFromQueryStreamingOld = function(endpointURI, query, parser, callback) {
+		var rdfXml = "";
+		return _httpPostStreaming(
+				endpointURI,
+				function(chunk) {
+					rdfXml += chunk;
+				},
+				'application/sparql-query',
+				'application/rdf+xml',
+				query,
+				function(error) {
+					if (error)
+						return callback(error);
+//					console.log("Loaded Graph (RDF/XML): " + rdfXml);
+					var graphFromRdfXml = new RDF();
+					graphFromRdfXml.loadRDFXML(rdfXml);
+//					console.log("loadRDFXML result : " + graphFromRdfXml.loadRDFXML(rdfXml));
+//					console.log("Loaded Graph (N-Triples): " + graphFromRdfXml.toNTriples());
+					parser.addChunk(graphFromRdfXml.toNTriples());
+					parser.end();
+					return callback();
+				});
+	};
+	
+	var _writeFromQuery = function(endpointURI, query, graphWriter, callback) {
+		var parser = N3.Parser();
+		var errorValue = null;
+		parser.parse(
+				function(error, triple, prefixes) {
+//					console.log("Parsing Triple: " + triple);
+					if (!errorValue) {
+						if (error)
+							errorValue = error;
+						else
+							if (triple) {
+//								console.log("Adding Triple: " + triple);
+								graphWriter.addTriple(
+										triple.subject,
+										triple.predicate,
+										triple.object);
+							} else
+								if (graphWriter.end)
+									graphWriter.end();
+					}
+				}
+		);
+		return _readFromQueryStreamingOld(
+				endpointURI, query, parser,
+				function(error) {
+					if (errorValue)
+						callback(errorValue);
+					else
+						callback(error);
+				});
+	};
+
 	var _writeFromRemoteGraph = function(graphURI, graphWriter, callback) {
 		var parser = N3.Parser();
 		var errorValue = null;
@@ -304,10 +390,15 @@ var N3ServerSync = (function() {
 		return _writeFromRemoteGraph(resourceURI, graphWriter, callback);
 	}
 	
+	var _calliQuery = function(endpointURI, query, graphWriter, callback) {
+		return _writeFromQuery(endpointURI, query, graphWriter, callback);
+	}
+	
 	return {
 		createCalliCreateWriter: _createCalliCreateWriter,
 		createCalliUpdateWriter: _createCalliUpdateWriter,
-		calliRead: _calliRead
+		calliRead: _calliRead,
+		calliQuery: _calliQuery
 	};
 
 }());

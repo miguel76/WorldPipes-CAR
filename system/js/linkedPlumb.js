@@ -20,6 +20,10 @@ var linkedPlumb = (function() {
 		return "http://purl.org/viso/graphic/" + localName;
 	}
 
+	var calli = function (localName) {
+		return "http://callimachusproject.org/rdf/2009/framework#" + localName;
+	}
+	
 	return {
 		
 		jsPlumbToRDF: function (componentList, jspInstance, graphWriter, dataflowURI) {
@@ -27,7 +31,7 @@ var linkedPlumb = (function() {
 			var objectIdCount = 0;
 			
 			var base = function(relativeURI) {
-				return URI(relativeURI).relativeTo(dataflowURI).toString();
+				return URI(relativeURI).absoluteTo(dataflowURI).toString();
 			}
 
 			function getId(object) {
@@ -105,6 +109,7 @@ var linkedPlumb = (function() {
 				graphWriter.addTriple(componentURI, rdf("type"), mecomp("WorkflowComponent"));
 				graphWriter.addTriple(dataflowURI, mecomp("has-component"), componentURI);
 				graphWriter.addTriple(componentURI, mecomp("belongs-to-workflow"), dataflowURI);
+				graphWriter.addTriple(dataflowURI, calli("hasComponent"), componentURI);
 				return componentURI;
 			}
 			
@@ -149,7 +154,6 @@ var linkedPlumb = (function() {
 			function fromConnection(connection, dataflowURI, graphWriter) {
 //				console.log("Scanning connection " + connection);
 				var connectionURI = fromWorlkflowComponent(connection, dataflowURI, graphWriter);
-				graphWriter.addTriple(dataflowURI, mecomp("Link"), connectionURI);
 				graphWriter.addTriple(connectionURI, rdf("type"), mecomp("Link"));
 //				console.log("Connection " + connection + " scanned");
 			}
