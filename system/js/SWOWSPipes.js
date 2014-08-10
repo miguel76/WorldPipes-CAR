@@ -89,7 +89,8 @@ var SWOWSPipes = (function() {
 				"}" +
 			"}";
 		
-		var pipelineURI = this.pipelineURI;
+		var pipeline = this;
+//		var pipelineURI = this.pipelineURI;
 		N3ServerSync.calliQuery(
 				this.storeURI + "sparql",
 				viewQuery,
@@ -97,14 +98,14 @@ var SWOWSPipes = (function() {
 				function(error) {
 					if (error)
 						callback(error);
-					linkedPlumb.jsPlumbFromRDF(
-							store, pipelineURI, jsPlumb,
+					componentVett = linkedPlumb.jsPlumbFromRDF(
+							store, pipeline.pipelineURI, jsPlumb,
 							{
 								generatorFor: function(objectType) {
 									return Component.factory.generatorFor(objectType) || Endpoint.factory.generatorFor(objectType);
 								}
 							});
-					this.graph = store;
+					pipeline.graph = store;
 					callback();
 				});
 
@@ -114,6 +115,7 @@ var SWOWSPipes = (function() {
 	_Pipeline.prototype.save = function(callback) {
 		
 		console.log("Saving pipeline " + this.pipelineURI);
+		updateStatus('Saving Pipeline...');
 		
 		var outerCallback = callback;
 		var callback = function (err) {
@@ -130,6 +132,7 @@ var SWOWSPipes = (function() {
 		var editor = Core.getElementsByClass("areaeditor")[0];
 	//  Component.updatePositions(editor, componentVett);
 		
+		var pipeline = this;
 		return linkedPlumb.jsPlumbToRDF(
 //				document.getElementsByClassName("jsplumb-draggable"),
 				componentVett,
@@ -141,7 +144,8 @@ var SWOWSPipes = (function() {
 						function(error, newGraph) {
 							if (error)
 								callback(error);
-							this.graph = newGraph;
+							pipeline.graph = newGraph;
+							callback();
 						}),
 				this.pipelineURI);
 	};

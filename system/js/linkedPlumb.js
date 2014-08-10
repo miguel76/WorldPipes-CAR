@@ -137,7 +137,7 @@ var linkedPlumb = (function() {
 				parametersAsRDF(endpoint, endpointURI, graphWriter);
 				for (var connectionIndex = 0; connectionIndex < endpoint.connections.length; connectionIndex++) {
 					var connection = endpoint.connections[connectionIndex];
-					var connectionURI = getId(connection);
+					var connectionURI = dataflowURI + "/" + getId(connection);
 					if (endpoint.isInputEndpoint()) {
 						graphWriter.addTriple(connectionURI, mecomp("to-input"), endpointURI);
 					}
@@ -257,7 +257,7 @@ var linkedPlumb = (function() {
 				for (var compIndex = 0; compIndex < componentTriples.length; compIndex++) {
 					var componentURI = componentTriples[compIndex].object;
 					if ( graph.find(componentURI, rdf("type"), mecomp("NodeComponent")).length > 0 )
-							toNodeComponent(componentURI);
+							componentList.push(toNodeComponent(componentURI));
 				}
 				for (var compIndex = 0; compIndex < componentTriples.length; compIndex++) {
 					var componentURI = componentTriples[compIndex].object;
@@ -265,6 +265,7 @@ var linkedPlumb = (function() {
 							toConnection(componentURI);
 				}
 			}
+			return componentList;
 		}
 	}
 
