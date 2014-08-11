@@ -1,0 +1,7 @@
+* Fix Component Properties Forms
+  - use callimachus mechanism?
+  - fix update callback (including endpoint creation/delete)
+  
+* Add new dataflow graph creation
+  - construct query from pipeline graph
+  - drop/create graph on data/public store? 
