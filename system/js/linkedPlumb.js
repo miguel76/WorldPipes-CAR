@@ -173,7 +173,8 @@ var linkedPlumb = (function() {
 					fromConnection(connectionList[connIndex], dataflowURI, graphWriter);
 				}
 			}
-			graphWriter.end();
+			if (graphWriter.end)
+				graphWriter.end();
 		},
 
 		jsPlumbFromRDF: function (graph, dataflowURI, jspInstance, objectFactory) {

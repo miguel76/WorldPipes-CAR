@@ -395,7 +395,7 @@ Component.modifica = function(code,ID,URI,NAME,QUERY,inputVett,X,Y){
 			if(componentVett[i].Name != null && componentVett[i].Name != NAME){
 				componentVett[i].Name = NAME;
 				componentVett[i].ID = encodeURIComponent(NAME);
-				alert(componentVett[i].ID);
+//				alert(componentVett[i].ID);
 			}
 			if(componentVett[i].Query != null && componentVett[i].Query != QUERY){
 				componentVett[i].Query = QUERY;

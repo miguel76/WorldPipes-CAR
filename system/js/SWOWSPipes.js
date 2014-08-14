@@ -192,20 +192,20 @@ var SWOWSPipes = (function() {
 		return SWOWSPipes._mainPipeline; 
 	};
 	
-	var _load = function(storeURI, pipelineURI) {
+	var _load = function(callback, storeURI, pipelineURI) {
 		if (storeURI)
 			_setMainStoreURI(storeURI);
 		if (pipelineURI)
 			_setMainPipelineURI(pipelineURI);
-		_getMainPipeline().load();
+		_getMainPipeline().load(callback);
 	};
 
-	var _save = function() {
-		_getMainPipeline().save();
+	var _save = function(callback) {
+		_getMainPipeline().save(callback);
 	};
 
-	var _play = function() {
-		_getMainPipeline().play();
+	var _play = function(callback) {
+		_getMainPipeline().play(callback);
 	};
 
 	return {

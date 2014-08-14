@@ -159,34 +159,49 @@ Form.createForm = function(parent,componentObject){
 		else{Component.modifica(componentObject.Code,(Form.getID() != null) ? Form.getID() : Form.getURI(),Form.getURI(),Form.getName(),Form.getQuery(),null,x,y);}
 		
 //		Code.modificaCodice(cnt);
-		Code.updateCodeFromComponent(componentObject);
+//		Code.updateCodeFromComponent(componentObject);
 		
-		var sourcecode = Core.getElementsByClass("codeclass")[0];
+//		var sourcecode = Core.getElementsByClass("codeclass")[0];
 		
-		Code.estraiTesto(
-				sourcecode, "formSave",
-//				GraphURIPrefix,
-				function(err) {
-					if (err) {
-						alert('Error: ' + JSON.stringify(err));
-						updateStatus('Error Saving Pipeline');
-						evt.preventDefault();
-					} else {
-						updateStatus('Pipeline Saved!');
-						
-//						var label = Component.scriviNome(parent,cnt);
-						
+	
+		SWOWSPipes.save(
+				function(error) {
+					if (!error) {
 						var label = parent.getElementsByClassName("compLabel")[0];
-						label.textContent = componentObject.name;
+						label.textContent = componentObject.Name;
 						
-						var figli = parent.childNodes;
-						parent.replaceChild(label,figli[1]);
+//						var figli = parent.childNodes;
+//						parent.replaceChild(label,figli[1]);
 						
 						form.parentNode.removeChild(form);
 						document.getElementById("dialogBackground").style.display = "none";
-						evt.preventDefault();
 					}
 				});
+		
+//		Code.estraiTesto(
+//				sourcecode, "formSave",
+////				GraphURIPrefix,
+//				function(err) {
+//					if (err) {
+//						alert('Error: ' + JSON.stringify(err));
+//						updateStatus('Error Saving Pipeline');
+//						evt.preventDefault();
+//					} else {
+//						updateStatus('Pipeline Saved!');
+//						
+////						var label = Component.scriviNome(parent,cnt);
+//						
+//						var label = parent.getElementsByClassName("compLabel")[0];
+//						label.textContent = componentObject.name;
+//						
+//						var figli = parent.childNodes;
+//						parent.replaceChild(label,figli[1]);
+//						
+//						form.parentNode.removeChild(form);
+//						document.getElementById("dialogBackground").style.display = "none";
+//						evt.preventDefault();
+//					}
+//				});
 		
 	});
 
