@@ -97,7 +97,11 @@
 	     		var query = getQueryParams(document.location.search);
 	     		SWOWSPipes.setMainPipelineURI(query.dfURI);
 				jsPlumb.Defaults.Container = document.getElementById("areaeditor");
-				SWOWSPipes.load();
+				SWOWSPipes.load(
+						function(error) {
+							if (!error)
+								document.getElementById("dialogBackground").style.display = "none";
+						});
 			}
 
 			function updateStatus(newText,cont) {
@@ -243,7 +247,7 @@
 			</p>
 		</div>
 	  </div>
-	  <div id="dialogBackground" style="display:none"> </div>	
+	  <div id="dialogBackground"> </div>	
 	  <div id="dialogContainer"> </div>
 	</body>
 </html>
