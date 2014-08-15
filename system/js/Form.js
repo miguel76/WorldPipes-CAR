@@ -325,6 +325,8 @@ Form.displayTable = function(table,inputVett){
 	var tbody = document.createElement("body");
 	for(var i=0;i<inputVett.length;i++){	
 		var tr = document.createElement("tr");
+//		inputVett[i].trDomElement = tr;
+//		tr.
 			var td = document.createElement("td");
 			td.setAttribute("id","inputName");
 				var input = document.createElement("input");

@@ -48,21 +48,27 @@ Endpoint.createOutputEndpoint = function(componentObject) {
 	return newEndpoint;
 }
 
-Endpoint.createInputEndpoint = function(componentObject, identifier, name, color, shape, inDefault) {	
+Endpoint.createInputEndpoint = function(componentObject, properties) {	
 	
-	if (!identifier) {
-		identifier = "default";
-		inDefault = true;
-	}
-	if (!name)
-		name = "default";
-	if (!color)
-		color = "#CCCCCC";
-	if (!shape)
-		shape = "Dot";
-	if (!inDefault)
-		inDefault = false;
+	var identifier = (properties && properties.identifier) || "default";
+	var name = (properties && properties.name) || "default";
+	var color = (properties && properties.color) || "#CCCCCC";
+	var shape = (properties && properties.shape) || "Dot";
+	var inDefault = !properties || !properties.identifier || properties.inDefault || false;
 	
+//	if (!identifier) {
+//		identifier = "default";
+//		inDefault = true;
+//	}
+//	if (!name)
+//		name = "default";
+//	if (!color)
+//		color = "#CCCCCC";
+//	if (!shape)
+//		shape = "Dot";
+//	if (!inDefault)
+//		inDefault = false;
+//	
 	jsPlumb.Defaults.HoverPaintStyle = { strokeStyle: "#FF3300" };
 	
 	//Setting up drop options
@@ -95,63 +101,44 @@ Endpoint.createInputEndpoint = function(componentObject, identifier, name, color
 	jsPlumb.repaint(componentObject.getElement());
 	newEndpoint.isInputEndpoint = function () { return true; }
 	newEndpoint.isOutputEndpoint = function () { return false; }
-	newEndpoint.meta = {
+	newEndpoint.properties = {
 			"identifier": identifier,
 			"name": name,
 			"inDefault": inDefault,
-			"shape": shape,
-			"color": color
+			get shape() { return shape; }
+			set shape(newShape) {
+				if (newShape != shape)
+					newEndpoint.setEndpoint(endpointFromShape(newShape));
+				shape = newShape;
+			},
+			get color() { return color; }
+			set color(newColor) {
+				if (newColor != color)
+					newEndpoint.setPaintStyle(paintStyleFromColor(newColor));
+				color = newColor;
+			}
 	};
 	newEndpoint.toRDF = function (endpointURI, graphWriter) {
-		graphWriter.addTriple(endpointURI, dcterms("identifier"), '"' + this.getIdentifier() + '"');
-		graphWriter.addTriple(endpointURI, dcterms("title"), '"' + this.getName() + '"');
-		graphWriter.addTriple(endpointURI, graphic("shape_named"), graphic(this.getShape()));
-		graphWriter.addTriple(endpointURI, graphic("color_named"), graphic(capitalize(this.getColor())));
+		graphWriter.addTriple(endpointURI, dcterms("identifier"), '"' + this.properties.identifier + '"');
+		graphWriter.addTriple(endpointURI, dcterms("title"), '"' + this.properties.name + '"');
+		graphWriter.addTriple(endpointURI, graphic("shape_named"), graphic(this.properties.shape));
+		graphWriter.addTriple(endpointURI, graphic("color_named"), graphic(capitalize(this.properties.color)));
 		graphWriter.addTriple(endpointURI, rdf("type"), mecomp("Input"));
-		if (this.getInDefault())
+		if (this.properties.inDefault())
 			graphWriter.addTriple(endpointURI, rdf("type"), swowscomp("isInDefaultInput"));
 	};
-	newEndpoint.getIdentifier = function () {
-		return this.meta.identifier;
-	};
-	newEndpoint.setIdentifier = function (identifier) {
-		return this.meta.identifier = identifier;
-	};
-	newEndpoint.getName = function () {
-		return this.meta.name;
-	};
-	newEndpoint.setName = function (name) {
-		return this.meta.name = name;
-	};
-	newEndpoint.getInDefault = function () {
-		return this.meta.inDefault;
-	};
-	newEndpoint.setInDefault = function (inDefault) {
-		return this.meta.inDefault = inDefault;
-	};
-	newEndpoint.getShape = function () {
-		return this.meta.shape;
-//		if (this instanceof Endpoints.Dot)
-//			return "Dot";
-//		if (this instanceof Endpoints.Rectangle)
-//			return "Rectangle";
-//		if (this instanceof Endpoints.Image)
-//			return "Image";
-//		if (this instanceof Endpoints.Blank)
-//			return "Blank";
-//		return null;
-	};
-	newEndpoint.setShape = function (shape) {
-		this.setEndpoint(endpointFromShape(shape)); 
-		this.meta.shape = shape;
-	};
-	newEndpoint.getColor = function () {
-		return this.meta.color;
-	};
-	newEndpoint.setColor = function (color) {
-		this.setPaintStyle(paintStyleFromColor(color));
-		this.meta.color = color;
-	};
+//	newEndpoint.updateProperties = function (identifier, name, color, shape, inDefault) {
+//		if (identifier != this.getIdentifier())
+//			this.setIdentifier(identifier);
+//		if (name != this.getName())
+//			this.setName(name);
+//		if (color != this.getColor())
+//			this.setColor(color);
+//		if (shape != this.getShape())
+//			this.setShape(shape);
+//		if (inDefault != this.getInDefault())
+//			this.setInDefault(inDefault);
+//	};
 	return newEndpoint;
 }
 
@@ -163,12 +150,14 @@ Endpoint.inputFromRDF = function(graph, endpointURI, componentObject) {
 		return null;
 	}
 	
-	var identifier = propLiteralValue(graph, endpointURI, dcterms("identifier"));
-	var name = propLiteralValue(graph, endpointURI, dcterms("title"));
-	var shape = propLiteralValue(graph, endpointURI, graphic("shape_named"));
-	var color = propLiteralValue(graph, endpointURI, graphic("color_named"));
-	var inDefault = graph.find(endpointURI, rdf("type"), swowscomp("isInDefaultInput")).length > 0;
-	return Endpoint.createInputEndpoint(componentObject, identifier, name, color, shape, inDefault);
+	var properties = {
+			identifier: propLiteralValue(graph, endpointURI, dcterms("identifier")),
+			name: propLiteralValue(graph, endpointURI, dcterms("title")),
+			shape: propLiteralValue(graph, endpointURI, graphic("shape_named")),
+			color: propLiteralValue(graph, endpointURI, graphic("color_named")),
+			inDefault: graph.find(endpointURI, rdf("type"), swowscomp("isInDefaultInput")).length > 0
+	}
+	return Endpoint.createInputEndpoint(componentObject, properties);
 }
 
 Endpoint.outputFromRDF = function(graph, endpointURI, componentObject) {
@@ -214,129 +203,103 @@ Endpoint.createDefaultEndpoints = function(componentObject) {
 	}
 };
 
-//Endpoint.createEndpoint = function(div,componentObject,info){	
-//	var componentType = componentObject.Component;
-//		
-//	if(info == null){ 
-//		
-//			if(componentType == "input" || componentType == "dataset" || componentType == "inputdefault") {
-//				Endpoint.createOutputEndpoint(componentObject);
+Endpoint.updateEndpoints = function(div,componentObject,info){	
+	var componentType = componentObject.Component;
+	var inputVett = componentObject.InputList;
+			
+	var endpoints = jsPlumb.getEndpoints(div);
+	
+	var inputAr = $.grep(endpoints, function (elementOfArray, indexInArray){return elementOfArray.isTarget;});
+	
+	var temp = 0;	
+	if(inputAr.length != 0){
+		for (var i=0;i<inputAr.length;i++){
+//			if (!inputAr[i].isFull()) {
+				jsPlumb.deleteEndpoint(inputAr[i]);
 //			}
-//			
-//			if(component == "output" || component == "outputdefault" ) {
-//				Endpoint.createInputEndpoint(componentObject);
-//			}
-//				
-//			if(component == "union") {
-//				for (var i = 0; i < 6; i++) {
-//					Endpoint.createInputEndpoint(componentObject);
+		}
+	}
+	
+	var i=0;	
+	while(i<inputVett.length){
+		if(inputVett[i].ConnectedComponentCode != null && info == 1){i++;}
+		else{
+			var shape = inputVett[i].Shape;
+			var color = inputVett[i].Color;
+			var name = inputVett[i].Name;
+		
+			var targetEndpoint = {
+				endpoint:[shape, { radius:7, width:14, height:14 }],
+				paintStyle:{ strokeStyle:"black",fillStyle:color},
+				maxConnections:100,
+				isTarget:true,				
+				dropOptions:targetDropOptions,
+				anchor:["Continuous", { faces:["top"] } ],
+				overlays:[
+					["Label",{cssClass:"tooltip", label:name, id:"lab"}]
+				]
+//				parameters: {
+////					"@id": componentObject.ID + "/" + inputVett[i].Id,
+//					"dcterms:title": name,
+//					"dcterms:identifier": inputVett[i].Id,
+//					"@type": ([ mecomp("Input") ]).concat(inputVett[i].InDefault ? [ "@type": swowscomp("isInDefaultInput") ] : [] ),
+//					"graphic:shape_named": graphic(shape),
+//					"graphic:color_named": graphic(capitalize(color))
 //				}
-//				Endpoint.createOutputEndpoint(componentObject);
-//			}
-//		
-//			if(component == "construct") {
-//				Endpoint.createOutputEndpoint(componentObject);
-//			}
-//		
-//			if(component == "updatable") {
-//				Endpoint.createOutputEndpoint(componentObject);
-//			}
-//		}
-//		else{	
-//			var inputVett = componentObject.InputList;
-//			
-//			var endpoints = jsPlumb.getEndpoints(div);
-//			
-//			var inputAr = $.grep(endpoints, function (elementOfArray, indexInArray){return elementOfArray.isTarget;});
-//			
-//			var temp = 0;	
-//			if(inputAr.length != 0){
-//				for(var i=0;i<inputAr.length;i++){
-//					if(!inputAr[i].isFull()){jsPlumb.deleteEndpoint(inputAr[i]);}
+			};
+			
+		
+			jsPlumb.Defaults.HoverPaintStyle = { strokeStyle: "#FF3300" };
+		
+		
+			if ((info == 1 || info == 2) && (component == "construct" || component == "updatable")) {
+				var newEndpoint = jsPlumb.addEndpoint(div,targetEndpoint);
+				Endpoint.fixEndpoint(div);
+				newEndpoint.toRDF = function (endpointURI, graphWriter) {
+					graphWriter.addTriple(componentURI, dcterms("identifier"), '"' + inputVett[i].Id + '"');
+					graphWriter.addTriple(componentURI, dcterms("title"), '"' + inputVett[i].Name + '"');
+					graphWriter.addTriple(componentURI, graphic("shape_named"), graphic(inputVett[i].Shape));
+					graphWriter.addTriple(componentURI, graphic("color_named"), graphic(capitalize(inputVett[i].Color)));
+					graphWriter.addTriple(componentURI, rdf("type"), mecomp("Input"));
+					if (inputVett[i].InDefault)
+						graphWriter.addTriple(componentURI, rdf("type"), swowscomp("isInDefaultInput"));
+				};
+				Endpoint.eventLabel(newEndpoint);
+			}
+			i++;
+		}
+	}//fine for
+		
+		jsPlumb.bind("connection",function(info){
+				var connection = info.connection;
+				var parameter = connection.getParameters();
+				
+				/*** Collegamenti non possibili ***/ 
+//				if(info.sourceId == info.targetId ){
+//					jsPlumb.detach(connection);
 //				}
-//			}
-//			
-//			var i=0;	
-//			while(i<inputVett.length){
-//				if(inputVett[i].ConnectedComponentCode != null && info == 1){i++;}
-//				else{
-//					var shape = inputVett[i].Shape;
-//					var color = inputVett[i].Color;
-//					var name = inputVett[i].Name;
-//				
-//					var targetEndpoint = {
-//						endpoint:[shape, { radius:7, width:14, height:14 }],
-//						paintStyle:{ strokeStyle:"black",fillStyle:color},
-//						maxConnections:100,
-//						isTarget:true,				
-//						dropOptions:targetDropOptions,
-//						anchor:["Continuous", { faces:["top"] } ],
-//						overlays:[
-//							["Label",{cssClass:"tooltip", label:name, id:"lab"}]
-//						]
-////						parameters: {
-//////							"@id": componentObject.ID + "/" + inputVett[i].Id,
-////							"dcterms:title": name,
-////							"dcterms:identifier": inputVett[i].Id,
-////							"@type": ([ mecomp("Input") ]).concat(inputVett[i].InDefault ? [ "@type": swowscomp("isInDefaultInput") ] : [] ),
-////							"graphic:shape_named": graphic(shape),
-////							"graphic:color_named": graphic(capitalize(color))
-////						}
-//					};
-//					
-//				
-//					jsPlumb.Defaults.HoverPaintStyle = { strokeStyle: "#FF3300" };
-//				
-//				
-//					if ((info == 1 || info == 2) && (component == "construct" || component == "updatable")) {
-//						var newEndpoint = jsPlumb.addEndpoint(div,targetEndpoint);
-//						Endpoint.fixEndpoint(div);
-//						newEndpoint.toRDF = function (endpointURI, graphWriter) {
-//							graphWriter.addTriple(componentURI, dcterms("identifier"), '"' + inputVett[i].Id + '"');
-//							graphWriter.addTriple(componentURI, dcterms("title"), '"' + inputVett[i].Name + '"');
-//							graphWriter.addTriple(componentURI, graphic("shape_named"), graphic(inputVett[i].Shape));
-//							graphWriter.addTriple(componentURI, graphic("color_named"), graphic(capitalize(inputVett[i].Color)));
-//							graphWriter.addTriple(componentURI, rdf("type"), mecomp("Input"));
-//							if (inputVett[i].InDefault)
-//								graphWriter.addTriple(componentURI, rdf("type"), swowscomp("isInDefaultInput"));
-//						};
-//						Endpoint.eventLabel(newEndpoint);
-//					}
-//					i++;
-//				}
-//			}//fine for
-//		}//fine else	
-//		
-//		jsPlumb.bind("connection",function(info){
-//				var connection = info.connection;
-//				var parameter = connection.getParameters();
-//				
-//				/*** Collegamenti non possibili ***/ 
-////				if(info.sourceId == info.targetId ){
-////					jsPlumb.detach(connection);
-////				}
-//			
-//				var inputList = parameter.target.InputList;
-//				var label = info.targetEndpoint.getOverlays();
-//				if (parameter.target.Component == "construct" || parameter.target.Component == "updatable") {
-//					InputType.addSource(label[0].getLabel(),parameter.source.Code,inputList);
-//				} else {
-//					InputType.inizializzaInput(inputList,parameter.source.Code);
-//				}
-//				Code.modificaCodice(parameter.target.Code);
-//
-//			});
-//			
-//			jsPlumb.bind("connectionDetached",function(info){
-//			
-//				var connection = info.connection;
-//				var parameter = connection.getParameters();
-//				
-//				var connections = jsPlumb.getConnections(div);	
-//			});
-//			jsPlumb.repaint(div);
-//			jsPlumb.draggable(div);
-//};
+			
+				var inputList = parameter.target.InputList;
+				var label = info.targetEndpoint.getOverlays();
+				if (parameter.target.Component == "construct" || parameter.target.Component == "updatable") {
+					InputType.addSource(label[0].getLabel(),parameter.source.Code,inputList);
+				} else {
+					InputType.inizializzaInput(inputList,parameter.source.Code);
+				}
+				Code.modificaCodice(parameter.target.Code);
+
+			});
+			
+			jsPlumb.bind("connectionDetached",function(info){
+			
+				var connection = info.connection;
+				var parameter = connection.getParameters();
+				
+				var connections = jsPlumb.getConnections(div);	
+			});
+			jsPlumb.repaint(div);
+			jsPlumb.draggable(div);
+};
 
 /*Prende il vettore degli endpoint target*/
 Endpoint.fixEndpoint = function(div){
