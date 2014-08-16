@@ -105,13 +105,13 @@ Endpoint.createInputEndpoint = function(componentObject, properties) {
 			"identifier": identifier,
 			"name": name,
 			"inDefault": inDefault,
-			get shape() { return shape; }
+			get shape() { return shape; },
 			set shape(newShape) {
 				if (newShape != shape)
 					newEndpoint.setEndpoint(endpointFromShape(newShape));
 				shape = newShape;
 			},
-			get color() { return color; }
+			get color() { return color; },
 			set color(newColor) {
 				if (newColor != color)
 					newEndpoint.setPaintStyle(paintStyleFromColor(newColor));
