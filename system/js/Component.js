@@ -46,7 +46,22 @@ ComponentClass.prototype.setElement = function(element) { this.element = element
 
 ComponentClass.prototype.getElement = function() { return this.element; };
 
+ComponentClass.prototype.getEndpoints = function() { return jsPlumb.getEndpoints(this.element); };
+ComponentClass.prototype.getInputEndpoints = function() {
+	return _.filter(
+			this.getEndpoints(),
+			function(ep) { return ep.isInputEndpoint(); } );
+};
+
 ComponentClass.prototype.getId = function() { return this.ID; };
+
+ComponentClass.prototype.allowsQuery = function() {
+	return _.contains(["construct","updatable"],this.Component);
+};
+
+ComponentClass.prototype.allowsMultipleInputs = function() {
+	return _.contains(["construct","updatable","pipeline"],this.Component);
+};
 
 ComponentClass.prototype.toRDF = function(componentURI, graphWriter) {
 	
@@ -603,9 +618,15 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 		div.appendChild(buttonSet);
 		
 		Core.addEventListener(proprieta,"click",function(){
-			document.getElementById("dialogBackground").style.display = "";
-			var settingsForm = Form.createForm(div,componentObject);
-			document.getElementById("dialogContainer").appendChild(settingsForm);
+//			document.getElementById("dialogBackground").style.display = "";
+//			var controller = angular.element(document.body).controller();
+//			var injector = angular.element(document.body).injector();
+			var scope = angular.element(document.body).scope();
+			scope.$apply(function(scope) {scope.sel.openFor(componentObject);});
+//			injector.invoke(function(rootScope) { rootScope.sel.component = this; }, componentObject);
+//			angular.$rootScope.$eval(function(scope) {scope.sel.component = componentObject});
+//			var settingsForm = Form.createForm(div,componentObject);
+//			document.getElementById("dialogContainer").appendChild(settingsForm);
 		});
 					
 		Core.addEventListener(elimina,"click",function(){

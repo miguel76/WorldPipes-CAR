@@ -257,7 +257,7 @@
 		</div>
 	  </div>
 
-	  <div id="dialogBackground"> </div>	
+	  <div id="dialogBackground" ng-show="sel.component"> </div>	
 	  <div id="dialogContainer">
 	  	<form id="componentProperties" ng-show="sel.component">
 	  		<fieldset id="compFormFieldset" class="compFormFieldset">
@@ -269,12 +269,12 @@
 	  				Name 
 	  				<input class='compFormInput' name='Name' type='text' size = '35' value='{{sel.component.Name}}' /></br></br>
 	  			</label> 
-	  			<label class='compFormLabel' ng-show="sel.component.Query">
+	  			<label class='compFormLabel' ng-show="sel.component.allowsQuery()">
 	  				Query</br>
 	  				<textarea name='Query' id='compQuery' class='compFormInput compFormTextarea'>{{sel.component.Query}}</textarea></br></br>
 	  			</label>
 	  			<!-- Input Table -->
-	  			<div id="inputs" ng-show="sel.component.hasMultipleInputs()">
+	  			<div id="inputs" ng-show="sel.component.allowsMultipleInputs()">
 	  				<table id="tableInput">
 	  					<thead>
 	  						<tr>
@@ -285,7 +285,7 @@
 	  						</tr>
 	  					</thead>
 	  					<tbody>
-	  						<tr ng-repeat="ep in sel.component.endpoints">
+	  						<tr ng-repeat="ep in sel.component.getInputEndpoints()">
 	  							<td><input type="text" name="name" value="{{ep.name}}" /></td>
 	  							<td>{{ep.id}}</td>
 	  							<td>
@@ -307,7 +307,7 @@
 	  				<button name='addrow'>Add Input</button> </br> </br>
 	  			</div>
 	  			<button type='submit' name='submit'>Save</button>
-	  			<button type='reset' name='reset'>Cancel</button>
+	  			<button type='reset' name='reset' ng-click="sel.close();">Cancel</button>
 	  		</fieldset>
 	  	</form>
 	  </div>
