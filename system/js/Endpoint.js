@@ -142,6 +142,10 @@ Endpoint.createInputEndpoint = function(componentObject, properties) {
 	return newEndpoint;
 }
 
+Endpoint.deleteEndpoint = function(endpoint){
+	jsPlumb.deleteEndpoint(endpoint);
+};
+
 Endpoint.inputFromRDF = function(graph, endpointURI, componentObject) {
 	var propLiteralValue = function(graph, subjectURI, propertyURI) {
 		var objects = graph.find(subjectURI, propertyURI, null);
