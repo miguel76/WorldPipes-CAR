@@ -30,16 +30,31 @@ var graphic = function (localName) {
 }
 
 /*Costrutture della classe ComponentClass*/
-function ComponentClass(CODE,COMPONENT,ID,URI,NAME,QUERY,INPUT,X,Y) {
-	this.Code = CODE;
-	this.Component = COMPONENT;
-	this.ID = ID;
+function ComponentClass(code,component,id,URI,name,query,input,x,y) {
+	this.Code = code;
+	this.Component = component;
+	this.ID = id;
 	this.URI = URI;
-	this.Name = NAME;
-	this.Query = QUERY;
-	this.InputList = INPUT;
-	this.X = X;
-	this.Y = Y;
+	this._name = name;
+	Object.defineProperties(this, {
+	    "Name": {
+	    	get: function () { return this._name; },
+	    	set: function (newName) {
+	    		this._name = newName;
+	    		if (this.element) {
+	    			_.forEach(
+	    					this.element.getElementsByClassName("compLabel"),
+	    					function(labelElement) {
+	    						labelElement.textContent = newName;
+	    					});
+	    		}
+	    	}
+	    }
+	});
+	this.Query = query;
+	this.InputList = input;
+	this.X = x;
+	this.Y = y;
 };
 
 ComponentClass.prototype.setElement = function(element) { this.element = element; };

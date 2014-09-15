@@ -1,17 +1,22 @@
 <form 	id="componentPropertiesForm"
 		ng-submit="sel.save();">
 	<fieldset id="compFormFieldset" class="compFormFieldset">
-	  			<label class='compFormLabel' ng-show="sel.component.Component == 'dataset'">
+	  			<label class='compFormLabel' ng-show="sel.component.componentType == 'dataset'">
 	  				URI</br>
-	  				<input class='compFormInput' name='URI' type='text' size = '35' value='{{sel.component.URI}}' /></br>
+	  				<input class='compFormInput' ng-model="sel.component.URI" type='text' size = '35'/></br>
 	  			</label>
 	  			<label class='compFormLabel'>
 	  				Name 
-	  				<input class='compFormInput' name='Name' type='text' size = '35' value='{{sel.component.Name}}' /></br></br>
+	  				<input 	class='compFormInput'
+	  						ng-model="sel.component.name"
+	  						type='text' size = '35' /></br></br>
 	  			</label> 
 	  			<label class='compFormLabel' ng-show="sel.component.allowsQuery()">
 	  				Query</br>
-	  				<textarea name='Query' id='compQuery' class='compFormInput compFormTextarea'>{{sel.component.Query}}</textarea></br></br>
+	  				<textarea name='Query'
+	  						ng-model="sel.component.query"
+	  						id='compQuery'
+	  						class='compFormInput compFormTextarea'></textarea></br></br>
 	  			</label>
 	  			<!-- Input Table -->
 	  			<div id="inputs" ng-show="sel.component.allowsMultipleInputs()">

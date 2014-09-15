@@ -22,7 +22,16 @@
 		}
 	  };
 	  this.openFor = function(component) {
-		  this.component = component;
+		  this.component = {
+				  name: component.Name,
+				  URI: component.URI,
+				  query: component.Query,
+				  componentType: component.Component,
+				  originalObject: component
+		  };
+		  this.component.allowsQuery = function() { return component.allowsQuery(); };
+		  this.component.allowsMultipleInputs = function() { return component.allowsMultipleInputs(); };
+
 		  if (component.allowsMultipleInputs()) {
 			  this.inputs = _.map(
 					  component.getInputEndpoints(),
@@ -72,6 +81,10 @@
 //			  return;
 //		  };
 		  var component = this.component;
+		  component.originalObject.Name = component.name;
+		  component.originalObject.URI = component.URI;
+		  component.originalObject.Query = component.query;
+
 		  _.each(
 				  this.inputsToBeDeleted, 
 				  function(input) {
@@ -91,7 +104,7 @@
 		  _.each(
 				  this.inputsToBeCreated, 
 				  function(input) {
-					  Endpoint.createInputEndpoint(component,input);
+					  Endpoint.createInputEndpoint(component.originalObject,input);
 				  });
 		  this.close();
 	  };
