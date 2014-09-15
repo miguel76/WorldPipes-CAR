@@ -262,58 +262,59 @@
 
 	  <div id="dialogBackground" ng-show="sel.component"> </div>	
 	  <div id="dialogContainer">
-	  	<form id="componentProperties" ng-show="sel.component">
-	  		<fieldset id="compFormFieldset" class="compFormFieldset">
-	  			<label class='compFormLabel' ng-show="sel.component.Component == 'dataset'">
-	  				URI</br>
-	  				<input class='compFormInput' name='URI' type='text' size = '35' value='{{sel.component.URI}}' /></br>
-	  			</label>
-	  			<label class='compFormLabel'>
-	  				Name 
-	  				<input class='compFormInput' name='Name' type='text' size = '35' value='{{sel.component.Name}}' /></br></br>
-	  			</label> 
-	  			<label class='compFormLabel' ng-show="sel.component.allowsQuery()">
-	  				Query</br>
-	  				<textarea name='Query' id='compQuery' class='compFormInput compFormTextarea'>{{sel.component.Query}}</textarea></br></br>
-	  			</label>
-	  			<!-- Input Table -->
-	  			<div id="inputs" ng-show="sel.component.allowsMultipleInputs()">
-	  				<table id="tableInput">
-	  					<thead>
-	  						<tr>
-	  							<th class="inputsTableLabel">Name</th>
-	  							<th class="inputsTableLabel">ID</th>
-	  							<th class="inputsTableLabel">Shape</th>
-	  							<th class="inputsTableLabel">Color</th>
-	  						</tr>
-	  					</thead>
-	  					<tbody>
-	  						<tr ng-repeat="input in sel.inputs">
-	  							<td><input type="text" name="name" ng-model="input.name" class="compFormInputsTableCell"/></td>
-	  							<td>{{"#" + input.identifier}}</td>
-	  							<td>
-	  								<select name="shape" ng-model="input.shape" class="compFormInputsTableCell">
-	  									<option value="dot">Dot</option>
-	  									<option value="rectangle">Rectangle</option>
-	  								</select>
-	  								<select name="color" ng-model="input.color" class="compFormInputsTableCell">
-	  									<option value="red">Red</option>
-	  									<option value="yellow">Yellow</option>
-	  									<option value="blue">Blue</option>
-	  									<option value="black">Black</option>
-	  									<option value="green">Green</option>
-	  								</select>
-	  								<button ng-click="sel.deleteInput(input);">x</button>
-	  							</td>
-	  						</tr>
-	  					</tbody>
-	  				</table>
-	  				<button name='addrow' ng-click="sel.addInput();">Add Input</button> </br> </br>
-	  			</div>
-	  			<button type='submit' name='submit'>Save</button>
-	  			<button type='reset' name='reset' ng-click="sel.close();">Cancel</button>
-	  		</fieldset>
-	  	</form>
+	  	<component-properties ng-show="sel.component"></component-properties>
+<!-- 	  	<form id="componentProperties" ng-show="sel.component"> -->
+<!-- 	  		<fieldset id="compFormFieldset" class="compFormFieldset"> -->
+<!-- 	  			<label class='compFormLabel' ng-show="sel.component.Component == 'dataset'"> -->
+<!-- 	  				URI</br> -->
+<!-- 	  				<input class='compFormInput' name='URI' type='text' size = '35' value='{{sel.component.URI}}' /></br> -->
+<!-- 	  			</label> -->
+<!-- 	  			<label class='compFormLabel'> -->
+<!-- 	  				Name  -->
+<!-- 	  				<input class='compFormInput' name='Name' type='text' size = '35' value='{{sel.component.Name}}' /></br></br> -->
+<!-- 	  			</label>  -->
+<!-- 	  			<label class='compFormLabel' ng-show="sel.component.allowsQuery()"> -->
+<!-- 	  				Query</br> -->
+<!-- 	  				<textarea name='Query' id='compQuery' class='compFormInput compFormTextarea'>{{sel.component.Query}}</textarea></br></br> -->
+<!-- 	  			</label> -->
+<!-- 	  			Input Table -->
+<!-- 	  			<div id="inputs" ng-show="sel.component.allowsMultipleInputs()"> -->
+<!-- 	  				<table id="tableInput"> -->
+<!-- 	  					<thead> -->
+<!-- 	  						<tr> -->
+<!-- 	  							<th class="inputsTableLabel">Name</th> -->
+<!-- 	  							<th class="inputsTableLabel">ID</th> -->
+<!-- 	  							<th class="inputsTableLabel">Shape</th> -->
+<!-- 	  							<th class="inputsTableLabel">Color</th> -->
+<!-- 	  						</tr> -->
+<!-- 	  					</thead> -->
+<!-- 	  					<tbody> -->
+<!-- 	  						<tr ng-repeat="input in sel.inputs"> -->
+<!-- 	  							<td><input type="text" name="name" ng-model="input.name" class="compFormInputsTableCell"/></td> -->
+<!-- 	  							<td>{{"#" + input.identifier}}</td> -->
+<!-- 	  							<td> -->
+<!-- 	  								<select name="shape" ng-model="input.shape" class="compFormInputsTableCell"> -->
+<!-- 	  									<option value="dot">Dot</option> -->
+<!-- 	  									<option value="rectangle">Rectangle</option> -->
+<!-- 	  								</select> -->
+<!-- 	  								<select name="color" ng-model="input.color" class="compFormInputsTableCell"> -->
+<!-- 	  									<option value="red">Red</option> -->
+<!-- 	  									<option value="yellow">Yellow</option> -->
+<!-- 	  									<option value="blue">Blue</option> -->
+<!-- 	  									<option value="black">Black</option> -->
+<!-- 	  									<option value="green">Green</option> -->
+<!-- 	  								</select> -->
+<!-- 	  								<button ng-click="sel.deleteInput(input);">x</button> -->
+<!-- 	  							</td> -->
+<!-- 	  						</tr> -->
+<!-- 	  					</tbody> -->
+<!-- 	  				</table> -->
+<!-- 	  				<button name='addrow' ng-click="sel.addInput();">Add Input</button> </br> </br> -->
+<!-- 	  			</div> -->
+<!-- 	  			<button type='submit' name='submit'>Save</button> -->
+<!-- 	  			<button type='reset' name='reset' ng-click="sel.close();">Cancel</button> -->
+<!-- 	  		</fieldset> -->
+<!-- 	  	</form> -->
 	  </div>
 
 	</body>

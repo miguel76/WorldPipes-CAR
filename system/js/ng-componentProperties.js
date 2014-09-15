@@ -2,7 +2,7 @@
 //  var initialProperties = {};
   var app = angular.module("componentProperties",[]);
   app.controller('SelectedComponentPropertiesController', function() {
-	  this.newInput = function(inputData) {
+	  var createInput = function(inputData) {
 		  var name = inputData.name;
 		  var identifier = inputData.name && calli.slugify(inputData.name);
 		  var shape = inputData.shape;
@@ -23,12 +23,33 @@
 	  };
 	  this.openFor = function(component) {
 		  this.component = component;
-		  if (component.allowsMultipleInputs()) { 
-			  this.inputs = _.map(
+		  if (component.allowsMultipleInputs()) {
+			  console.log(component.getInputEndpoints());
+			  console.log(_.map(
 					  component.getInputEndpoints(),
 					  function(inputObject) {
 						  return
-						  	this.newInput({
+						  	createInput({
+							  name: inputObject.properties.name,
+							  identifier: inputObject.properties.identifier,
+							  shape: inputObject.properties.shape,
+							  color: inputObject.properties.color,
+							  originalObject: inputObject });
+					  }));
+			  this.inputs = _.map(
+					  component.getInputEndpoints(),
+					  function(inputObject) {
+						  console.log(createInput);
+						  console.log(inputObject);
+						  console.log(inputObject.properties);
+						  console.log(createInput({
+							  name: inputObject.properties.name,
+							  identifier: inputObject.properties.identifier,
+							  shape: inputObject.properties.shape,
+							  color: inputObject.properties.color,
+							  originalObject: inputObject }));
+						  return
+						  	createInput({
 							  name: inputObject.properties.name,
 							  identifier: inputObject.properties.identifier,
 							  shape: inputObject.properties.shape,
@@ -41,12 +62,13 @@
 	  };
 	  this.addInput = function() {
 		  var newInput =
-			  	this.newInput({
-				  shape: "dot",
-				  color: "red"
+			  	createInput({
+				  shape: "Dot",
+				  color: "Red"
 			  	});
-		  this.inputs.push(newInput);
 		  this.inputsToBeCreated.push(newInput);
+		  this.inputs.push(newInput);
+		  event.preventDefault(); 
 	  };
 	  this.deleteInput = function(input) {
 		  var inputIndex = this.inputs.indexOf(input);
@@ -62,8 +84,16 @@
 //	  this.uuid
 	  this.close = function() {
 		  this.component = null;
+		  this.inputs = null;
 	  };
 	  this.save = function() {
+//		  console.log(componentProperties);
+//		  console.log(componentProperties.$valid);
+//		  if (!componentProperties.$valid) {
+//			  alert('Every input must have a name');
+//			  return;
+//		  };
+		  var component = this.component;
 		  _.each(
 				  this.inputsToBeDeleted, 
 				  function(input) {
@@ -83,12 +113,20 @@
 		  _.each(
 				  this.inputsToBeCreated, 
 				  function(input) {
-					  Endpoint.createInputEndpoint(this.component,input);
+					  Endpoint.createInputEndpoint(component,input);
 				  });
 		  this.close();
 	  };
 //	  this.component = Component.createComponentObject(0,"updatable","Ciccio", 50,50);
 //    this.product = gem;
   });
+  
+  app.directive('componentProperties', function() {
+	 return {
+		restrict: 'E',
+		templateUrl: 'component-properties.html'
+	 };
+  });
+
 })();
 
