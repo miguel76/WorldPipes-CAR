@@ -24,32 +24,21 @@
 	  this.openFor = function(component) {
 		  this.component = component;
 		  if (component.allowsMultipleInputs()) {
-			  console.log(component.getInputEndpoints());
-			  console.log(_.map(
-					  component.getInputEndpoints(),
-					  function(inputObject) {
-						  return
-						  	createInput({
-							  name: inputObject.properties.name,
-							  identifier: inputObject.properties.identifier,
-							  shape: inputObject.properties.shape,
-							  color: inputObject.properties.color,
-							  originalObject: inputObject });
-					  }));
+//			  console.log(component.getInputEndpoints());
+//			  console.log(_.map(
+//					  component.getInputEndpoints(),
+//					  function(inputObject) {
+//						  return createInput({
+//							  name: inputObject.properties.name,
+//							  identifier: inputObject.properties.identifier,
+//							  shape: inputObject.properties.shape,
+//							  color: inputObject.properties.color,
+//							  originalObject: inputObject });
+//					  }));
 			  this.inputs = _.map(
 					  component.getInputEndpoints(),
 					  function(inputObject) {
-						  console.log(createInput);
-						  console.log(inputObject);
-						  console.log(inputObject.properties);
-						  console.log(createInput({
-							  name: inputObject.properties.name,
-							  identifier: inputObject.properties.identifier,
-							  shape: inputObject.properties.shape,
-							  color: inputObject.properties.color,
-							  originalObject: inputObject }));
-						  return
-						  	createInput({
+						  return createInput({
 							  name: inputObject.properties.name,
 							  identifier: inputObject.properties.identifier,
 							  shape: inputObject.properties.shape,
