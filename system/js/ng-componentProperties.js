@@ -24,17 +24,6 @@
 	  this.openFor = function(component) {
 		  this.component = component;
 		  if (component.allowsMultipleInputs()) {
-//			  console.log(component.getInputEndpoints());
-//			  console.log(_.map(
-//					  component.getInputEndpoints(),
-//					  function(inputObject) {
-//						  return createInput({
-//							  name: inputObject.properties.name,
-//							  identifier: inputObject.properties.identifier,
-//							  shape: inputObject.properties.shape,
-//							  color: inputObject.properties.color,
-//							  originalObject: inputObject });
-//					  }));
 			  this.inputs = _.map(
 					  component.getInputEndpoints(),
 					  function(inputObject) {
@@ -65,7 +54,7 @@
 			  this.inputs.splice(inputIndex, 1);
 		  }
 		  var inputIndex = this.inputsToBeCreated.indexOf(input);
-		  if (inputIndex)
+		  if (inputIndex != -1)
 			  this.inputsToBeCreated.splice(inputIndex, 1);
 		  else
 			  this.inputsToBeDeleted.push(input);
@@ -86,7 +75,7 @@
 		  _.each(
 				  this.inputsToBeDeleted, 
 				  function(input) {
-					  Endpoint.deleteEndpoint(input);
+					  Endpoint.deleteEndpoint(input.originalObject);
 				  });
 		  _.each(
 				  this.inputs, 
