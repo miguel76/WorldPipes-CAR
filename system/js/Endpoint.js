@@ -148,17 +148,34 @@ Endpoint.deleteEndpoint = function(endpoint){
 
 Endpoint.inputFromRDF = function(graph, endpointURI, componentObject) {
 	var propLiteralValue = function(graph, subjectURI, propertyURI) {
-		var objects = graph.find(subjectURI, propertyURI, null);
-		if (objects && N3.Util.isLiteral(objects[0]))
-			return N3.getLiteralValue(objects[0]);
+		var triples = graph.find(subjectURI, propertyURI, null);
+		if (triples && N3.Util.isLiteral(triples[0].object))
+			return N3.Util.getLiteralValue(triples[0].object);
 		return null;
+	}
+	
+	var propURI = function(graph, subjectURI, propertyURI) {
+		var triples = graph.find(subjectURI, propertyURI, null);
+		if (triples && N3.Util.isUri(triples[0].object))
+			return "" + triples[0].object;
+		return null;
+	}
+	
+	var localFromGraphicURI = function(expandedURI) {
+		if (expandedURI && expandedURI.indexOf("http://purl.org/viso/graphic/") == 0)
+			return expandedURI.substr("http://purl.org/viso/graphic/".length);
+		return null;
+	}
+	
+	var lowerCase = function(string) {
+		return string && string.toLowerCase();
 	}
 	
 	var properties = {
 			identifier: propLiteralValue(graph, endpointURI, dcterms("identifier")),
 			name: propLiteralValue(graph, endpointURI, dcterms("title")),
-			shape: propLiteralValue(graph, endpointURI, graphic("shape_named")),
-			color: propLiteralValue(graph, endpointURI, graphic("color_named")),
+			shape: localFromGraphicURI(propURI(graph, endpointURI, graphic("shape_named"))),
+			color: lowerCase(localFromGraphicURI(propURI(graph, endpointURI, graphic("color_named")))),
 			inDefault: graph.find(endpointURI, rdf("type"), swowscomp("isInDefaultInput")).length > 0
 	}
 	return Endpoint.createInputEndpoint(componentObject, properties);
