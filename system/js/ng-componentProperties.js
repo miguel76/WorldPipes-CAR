@@ -41,6 +41,7 @@
 							  identifier: inputObject.properties.identifier,
 							  shape: inputObject.properties.shape,
 							  color: inputObject.properties.color,
+							  inDefault: inputObject.properties.inDefault,
 							  originalObject: inputObject });
 					  });
 			  this.inputsToBeDeleted = [];
@@ -99,6 +100,7 @@
 						  obj.properties.name = input.name;
 						  obj.properties.shape = input.shape;
 						  obj.properties.color = input.color;
+						  obj.properties.inDefault = input.inDefault;
 					  }
 				  });
 		  _.each(

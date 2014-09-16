@@ -27,6 +27,7 @@
 	  							<th class="inputsTableLabel">ID</th>
 	  							<th class="inputsTableLabel">Shape</th>
 	  							<th class="inputsTableLabel">Color</th>
+	  							<th class="inputsTableLabel">In Default</th>
 	  						</tr>
 	  					</thead>
 	  					<tbody>
@@ -51,6 +52,10 @@
 	  									<option value="Black">Black</option>
 	  									<option value="Green">Green</option>
 	  								</select>
+	  							</td>
+	  							<td>
+	  								<input type="checkbox" ng-model="input.inDefault" class="compFormInputsTableCell">
+	  								</input>
 	  							</td>
 	  							<td>
 	  								<button ng-click="sel.deleteInput(input);">x</button>
