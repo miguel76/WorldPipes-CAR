@@ -124,7 +124,7 @@ Endpoint.createInputEndpoint = function(componentObject, properties) {
 		graphWriter.addTriple(endpointURI, graphic("shape_named"), graphic(this.properties.shape));
 		graphWriter.addTriple(endpointURI, graphic("color_named"), graphic(capitalize(this.properties.color)));
 		graphWriter.addTriple(endpointURI, rdf("type"), mecomp("Input"));
-		if (this.properties.inDefault())
+		if (this.properties.inDefault)
 			graphWriter.addTriple(endpointURI, rdf("type"), swowscomp("isInDefaultInput"));
 	};
 //	newEndpoint.updateProperties = function (identifier, name, color, shape, inDefault) {

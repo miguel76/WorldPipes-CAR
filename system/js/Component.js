@@ -33,7 +33,9 @@ var graphic = function (localName) {
 function ComponentClass(code,component,id,URI,name,query,input,x,y) {
 	this.Code = code;
 	this.Component = component;
-	this.ID = id;
+//	this.ID = id;
+	if (name)
+		this.ID = calli.slugify(name);
 	this.URI = URI;
 	this._name = name;
 	Object.defineProperties(this, {
@@ -41,6 +43,7 @@ function ComponentClass(code,component,id,URI,name,query,input,x,y) {
 	    	get: function () { return this._name; },
 	    	set: function (newName) {
 	    		this._name = newName;
+	    		this.ID = calli.slugify(newName);
 	    		if (this.element) {
 	    			_.forEach(
 	    					this.element.getElementsByClassName("compLabel"),
