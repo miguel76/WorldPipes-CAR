@@ -93,8 +93,12 @@ ComponentClass.prototype.toRDF = function(componentURI, graphWriter) {
 	
 	graphWriter.addTriple(componentURI, dcterms("identifier"), '"' + this.ID + '"');
 	graphWriter.addTriple(componentURI, dcterms("title"), '"' + this.Name + '"');
-	graphWriter.addTriple(componentURI, graphic("x_position"), '"' + this.X + '"^^<http://www.w3.org/2001/XMLSchema#float>');
-	graphWriter.addTriple(componentURI, graphic("y_position"), '"' + this.Y + '"^^<http://www.w3.org/2001/XMLSchema#float>');
+
+	var pos_x = this.element.style.left;
+	var pos_y = this.element.style.top;
+	graphWriter.addTriple(componentURI, graphic("x_position"), '"' + pos_x + '"^^<http://www.w3.org/2001/XMLSchema#float>');
+	graphWriter.addTriple(componentURI, graphic("y_position"), '"' + pos_y + '"^^<http://www.w3.org/2001/XMLSchema#float>');
+	
 	var componentTypeName = this.Component;
 	if (componentTypeName == "input") {
 		graphWriter.addTriple(componentURI, rdf("type"), mecomp("Source"));
@@ -142,7 +146,7 @@ Component.fromRDF = function(graph, componentURI) {
 	
 	var propLiteralValue = function(graph, subjectURI, propertyURI) {
 		var triples = graph.find(subjectURI, propertyURI, null);
-		if (triples && N3.Util.isLiteral(triples[0].object))
+		if (triples && triples[0] && N3.Util.isLiteral(triples[0].object))
 			return N3.Util.getLiteralValue(triples[0].object);
 		return null;
 	}
@@ -158,7 +162,8 @@ Component.fromRDF = function(graph, componentURI) {
 		function(
 					componentType,
 					identifier, title,
-					x_position, y_position) {
+					x_position, y_position,
+					proc_script, proc_value ) {
 //		function(code, componentTypeName, name, x, y) {
 		cnt++;
 		var code = cnt;
@@ -177,15 +182,15 @@ Component.fromRDF = function(graph, componentURI) {
 						x_position,y_position);
 			case swowscomp("TransformProcessor"):
 				return new ComponentClass(
-						code,"construct",title,null,title,"CONSTRUCT{?s ?p ?o}\nWHERE{?s ?p ?o}",[],
+						code,"construct",title,null,title,proc_script || "CONSTRUCT{?s ?p ?o}\nWHERE{?s ?p ?o}",[],
 						x_position,y_position);
 			case swowscomp("Store"):
 				return new ComponentClass(
-						code,"updatable",title,null,title,"",[],
+						code,"updatable",title,null,title,proc_script || "",[],
 						x_position,y_position);
 			case swowscomp("URISourceProcessor"):
 				return new ComponentClass(
-						code,"dataset","","",title,null,null,
+						code,"dataset","",proc_value || "",title,null,null,
 						x_position,y_position);
 			case mecomp("DataflowProcessor"):
 				return new ComponentClass(
@@ -202,6 +207,9 @@ Component.fromRDF = function(graph, componentURI) {
 	var x_position = propLiteralValue(graph, componentURI, graphic("x_position"));
 	var y_position = propLiteralValue(graph, componentURI, graphic("y_position"));
 	
+	var proc_script = propLiteralValue(graph, componentURI, mecomp("processor-script"));
+	var proc_value = propLiteralValue(graph, componentURI, mecomp("processor-value"));
+
 	var editor = Core.getElementsByClass("areaeditor")[0];
 	
 	var componentTypes = graph.find(componentURI, rdf("type"), null);
@@ -210,7 +218,8 @@ Component.fromRDF = function(graph, componentURI) {
 			var newComponent =
 				createComponentFromRDFType(
 						componentTypes[componentTypeIndex].object,
-						identifier, title, x_position, y_position);
+						identifier, title, x_position, y_position,
+						proc_script, proc_value );
 			if (newComponent) {
 				Component.createGraphics(newComponent, editor);
 				return newComponent;
