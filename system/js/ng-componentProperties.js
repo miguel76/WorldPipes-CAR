@@ -117,7 +117,7 @@
   app.directive('componentProperties', function() {
 	 return {
 		restrict: 'E',
-		templateUrl: 'component-properties.html'
+		templateUrl: SWOWSPipes.resource('component-properties.html')
 	 };
   });
 

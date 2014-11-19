@@ -1,8 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    ng-app="componentProperties">
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 	<head>
     	<title resource="?this">{rdfs:label}</title>
 <!--         <script data-main="js/main" src="js/require.js"></script> -->
@@ -26,8 +25,6 @@
     <script src="/callimachus/scripts.js" type="text/javascript"></script>
     
     <script type="text/javascript" src="js/underscore-min.js"></script>
-    <script type="text/javascript" src="js/angular.min.js"></script>
-    <script type="text/javascript" src="js/ng-componentProperties.js"></script>
 
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -53,9 +50,12 @@
 		<script type="text/javascript" src="js/linkedPlumb.js"></script>
 <!-- 		<script type="text/javascript" src="js/activelink.js"></script> -->
 		
-		<script type="text/javascript" src="js/areahelp.js"></script>
-		<script type="text/javascript" src="js/actionListenerResizeX.js"></script>
-		<script type="text/javascript" src="js/actionListenerResizeY.js"></script>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/ng-componentProperties.js"></script>
+
+<!-- 		<script type="text/javascript" src="js/areahelp.js"></script> -->
+<!-- 		<script type="text/javascript" src="js/actionListenerResizeX.js"></script> -->
+<!-- 		<script type="text/javascript" src="js/actionListenerResizeY.js"></script> -->
 		<script type="text/javascript" src="js/actionListenerImg.js"></script>
 		
 		<!-- Flint (SPARQL Editor) Resources -->
@@ -94,8 +94,8 @@
 		</script>
  	
 	</head>
-	<body 	resource="?this"
-			onload="onLoad()"
+	<body 	onload="onLoad()"
+			ng-app="componentProperties"
 			ng-controller="SelectedComponentPropertiesController as sel">
 	 <div id="mainContainer" class="container">	
 	  <div id="editorContainer" class="panel">	
