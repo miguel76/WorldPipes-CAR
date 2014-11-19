@@ -94,8 +94,18 @@ ComponentClass.prototype.toRDF = function(componentURI, graphWriter) {
 	graphWriter.addTriple(componentURI, dcterms("identifier"), '"' + this.ID + '"');
 	graphWriter.addTriple(componentURI, dcterms("title"), '"' + this.Name + '"');
 
-	var pos_x = this.element.style.left;
-	var pos_y = this.element.style.top;
+	var _onlyValue = function(valueWithPx){
+		var floatingValue = (valueWithPx.substr(valueWithPx.length-2) == "px")
+								? valueWithPx.substr(0,valueWithPx.length-2)
+								: valueWithPx;
+		var pointIndex = floatingValue.search("\\.");
+		return parseInt((pointIndex != -1)
+					? floatingValue.substr(0,pointIndex)
+					: floatingValue);
+	}
+
+	var pos_x = _onlyValue(this.element.style.left);
+	var pos_y = _onlyValue(this.element.style.top);
 	graphWriter.addTriple(componentURI, graphic("x_position"), '"' + pos_x + '"^^<http://www.w3.org/2001/XMLSchema#float>');
 	graphWriter.addTriple(componentURI, graphic("y_position"), '"' + pos_y + '"^^<http://www.w3.org/2001/XMLSchema#float>');
 	
@@ -330,14 +340,14 @@ Component.createFromTypeId = function(componentTypeId, editor, clientX, clientY)
 	componentVett[componentVett.length] = newComponent;
 	
 //	Endpoint.createEndpoint(div,code,null);
-	Code.writeCodeFromComponent(newComponent);
+//	Code.writeCodeFromComponent(newComponent);
 	//Component.cercaElem();
 	Component.createGraphics(newComponent, editor);
 	Endpoint.createDefaultEndpoints(newComponent);
-//	jsPlumb.repaint(newComponent.getElement());
-//	jsPlumb.draggable(newComponent.getElement());
+	jsPlumb.repaint(newComponent.getElement());
+	jsPlumb.draggable(newComponent.getElement());
 
-	Code.updateCodeFromComponent(newComponent);
+//	Code.updateCodeFromComponent(newComponent);
 };
 
 Component.prototypeFromTypeId = function(componentTypeId, parentElement, posX, posY) {
@@ -632,13 +642,13 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 
 		var proprieta = document.createElement("img");
 		proprieta.setAttribute("class","bottongraph compButton compSettings compSettings_" + component);
-		proprieta.src = "IMG/Settings.png";
+		proprieta.src = SWOWSPipes.resource("IMG/Settings.png");
 		proprieta.title = "property";
 		buttonSet.appendChild(proprieta);
 
 		var elimina = document.createElement("img");
 		elimina.setAttribute("class","bottongraph compButton compDelete compDelete_" + component);
-		elimina.src = "IMG/Trash.png";
+		elimina.src = SWOWSPipes.resource("IMG/Trash.png");
 		elimina.title = "delete";
 		buttonSet.appendChild(elimina);
 		
@@ -670,8 +680,8 @@ Component._loadPipeline = function(editor,code,component,id,uri,name,query,input
 
 	}
 	
-	var x = div.style.left = x;
-	var y = div.style.top = y;
+	div.style.left = "" + x + "px";
+	div.style.top = "" + y + "px";
 	
 	editor.appendChild(div);	
 	

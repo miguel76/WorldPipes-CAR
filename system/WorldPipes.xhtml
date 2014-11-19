@@ -4,37 +4,13 @@
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
     ng-app="componentProperties">
 	<head>
+    	<title resource="?this">{rdfs:label}</title>
 <!--         <script data-main="js/main" src="js/require.js"></script> -->
 
 		<script type="text/javascript" src="js/rdfUtils.js"></script>	
 		<script type="text/javascript" src="js/JsonToServer.js"></script>
-     	<script type="text/javascript">
-     		function getQueryParams(qs) {
-     	    	qs = qs.split("+").join(" ");
 
-     	    	var params = {}, tokens,
-     	        	re = /[?&]?([^=]+)=([^&]*)/g;
-
-     	    	while (tokens = re.exec(qs)) {
-     	        	params[decodeURIComponent(tokens[1])]
-     	            	= decodeURIComponent(tokens[2]);
-     	    	}
-
-     	    	return params;
-     		}
-     		var query = getQueryParams(document.location.search);
-     		     		
-     		GraphURIPrefix = null;
-     		if (query.dfURI) {
-     			PipelineMainURI = query.dfURI;
-	    		GraphURIPrefix = query.dfURI + "-Internal-Data/";
-     		}
-     		
-     		DataURIPrefix = "/SWOWS/data/"; //JsonToServer.qualifyURL("/SWOWS/data/");
-     		
-    	</script>
-
-		<link rel="stylesheet" href="/callimachus/1.3/styles/callimachus.less?less">
+<!-- 		<link rel="stylesheet" href="/callimachus/1.3/styles/callimachus.less?less" /> -->
 
 		<link type="text/css" rel="stylesheet" href="css/pagestyle.css" />
 		<link type="text/css" rel="stylesheet" href="css/actionListenerStyle.css" />
@@ -66,7 +42,7 @@
 
 		<script type="text/javascript" src="js/URI.js"></script>	
 		<script type="text/javascript" src="js/parser.js"></script>
-		<script type="text/javascript" src="js/Sourcecode.js"></script>	
+<!-- 		<script type="text/javascript" src="js/Sourcecode.js"></script>	 -->
 		<script type="text/javascript" src="js/Component.js"></script>	
 		<script type="text/javascript" src="js/InputType.js"></script>	
 		<script type="text/javascript" src="js/Form.js"></script>
@@ -77,17 +53,6 @@
 		<script type="text/javascript" src="js/linkedPlumb.js"></script>
 <!-- 		<script type="text/javascript" src="js/activelink.js"></script> -->
 		
-		<!-- Controllo del Browser utente -->
-		<script type="text/javascript">
-			<!--[if IE]>
-			if ((navigator.userAgent.indexOf("Microsoft")!=-1) ||(navigator.userAgent.indexOf("Windows")!=-1)) {
-					alert("Microsoft Interner Explorer not supported!")
-					window.close();
-					window.open("http://www.google.it");
-			}
-			<!--[endif]-->
-		</script>
-	
 		<script type="text/javascript" src="js/areahelp.js"></script>
 		<script type="text/javascript" src="js/actionListenerResizeX.js"></script>
 		<script type="text/javascript" src="js/actionListenerResizeY.js"></script>
@@ -105,9 +70,12 @@
 		<link rel="stylesheet" href="sparql/css/docs.css" />
 
 		<script type="text/javascript">
+     	<![CDATA[
 			function onLoad() {
-	     		var query = getQueryParams(document.location.search);
-	     		SWOWSPipes.setMainPipelineURI(query.dfURI);
+// 	     		var query = getQueryParams(document.location.search);
+				GraphURIPrefix = location.origin + location.pathname;
+	     		DataURIPrefix = JsonToServer.qualifyURL("/SWOWS/data/");
+	     		SWOWSPipes.setMainPipelineURI(GraphURIPrefix);
 				jsPlumb.Defaults.Container = document.getElementById("areaeditor");
 				SWOWSPipes.load(
 						function(error) {
@@ -122,24 +90,22 @@
 				if (cont)
 					return cont();
 			}
+        ]]>
 		</script>
-
-<!-- 		
-		<script type="text/javascript" src="js/jquery.rdfquery.core-1.0.js"></script>
-		<script type="text/javascript" src="js/jquery.rdfquery.rdfa-1.0.js"></script>
-		<script type="text/javascript" src="js/jquery.rdfquery.rules-1.0.js"></script>
- -->
  	
 	</head>
-	<body onload="onLoad()" ng-controller="SelectedComponentPropertiesController as sel">
-	  <div id="editorContainer">	
+	<body 	resource="?this"
+			onload="onLoad()"
+			ng-controller="SelectedComponentPropertiesController as sel">
+	 <div id="mainContainer" class="container">	
+	  <div id="editorContainer" class="panel">	
 		<!-- Barra immagine -->
 		<!-- 
 		<div class="barraimg"> World pipes </div>
 		 -->
 
 		<!-- Status Bar -->
-    	<div id="statusBar">&nbsp;</div>
+    	<div id="statusBar">&#160;</div>
 		
 		<!-- Barra pulsanti -->
 <!-- 		<div class="barrapulsanti"> -->
@@ -166,27 +132,6 @@
 				</div>
 				 -->
 				<div id="grafici">
-<!-- 					<ul title="componentImg"> -->
-<!-- 						<li><img class="graph" id="grafo" src="IMG/Input.gif" title="input graph"/><br/>input</li> -->
-<!-- 						<li><img class="graph" id="grafo" src="IMG/Output.gif" title="output graph"/><br/>output</li> -->
-<!-- 						<li><img class="graph" id="grafo" src="IMG/Construct.gif" title="construct graph"/><br/>construct</li> -->
-<!-- 						<li><img class="graph" id="grafo" src="IMG/Union.gif" title="union graph"/><br/>union</li> -->
-<!-- 						<li><img class="graph" id="grafo" src="IMG/Updatable.gif" title="updatable graph"/><br/>updatable</li> -->
-<!-- 					</ul> -->
-<!-- 					<table id="componentImg"> -->
-<!-- 						<tr> -->
-<!-- 							<td><img class="graph" id="inputComp" src="IMG/compLogos-input.svg" title="Input"/></td> -->
-<!-- 							<td><img class="graph" id="outputComp" src="IMG/compLogos-output.svg" title="Output"/></td> -->
-<!-- 						</tr> -->
-<!-- 						<tr> -->
-<!-- 							<td><img class="graph" id="constructComp" src="IMG/compLogos-transform.svg" title="Transform"/></td> -->
-<!-- 							<td><img class="graph" id="unionComp" src="IMG/compLogos-union.svg" title="Union"/></td> -->
-<!-- 						</tr> -->
-<!-- 						<tr> -->
-<!-- 							<td><img class="graph" id="updatableComp" src="IMG/compLogos-state.svg" title="Stateful"/></td> -->
-<!-- 							<td><img class="graph" id="datasetComp" src="IMG/compLogos-fileSource.svg" title="File Source"/></td> -->
-<!-- 						</tr> -->
-<!-- 					</table> -->
  					<table id="componentImg" class="inComponentTable">
 						<tr class="inComponentTable"><td class="inComponentTable"><div id="inputComp" class="componentPrototype componentPrototype_input component_input"><label class="compLabelPrototype compLabel compLabel_input">Input</label></div></td></tr>
 						<tr class="inComponentTable"><td class="inComponentTable"><div id="outputComp" class="componentPrototype componentPrototype_output component_output"><label class="compLabelPrototype compLabel compLabel_output">Output</label></div></td></tr>
@@ -198,7 +143,7 @@
 				</div>
 			</div>
 <!-- 			<div class="datapipe"> -->
-<!-- 			<!--  -->
+<!-- 			  -->
 <!-- 				<div id="tabs"> -->
 <!-- 					<ul title="tabs"> -->
 <!-- 						<li title="lidataset" class="activelink"><a href="#dataset" name="dataset"> Data Sources </a></li> -->
@@ -213,7 +158,7 @@
 <!-- 						</ul> -->
 <!-- 					</div> -->
 <!-- 				</div> -->
-<!-- 			<!--  -->
+<!-- 			  -->
 <!-- 				<div name="contentpipeline" class="content hide" id="pipes"> -->
 <!-- 					<div id="grafici"> -->
 <!-- 						<ul title="pipesImg"> -->
@@ -224,18 +169,7 @@
 <!-- 				-->
 <!-- 			</div> -->
 		</div>
-		
-			
-		<!-- ORIZONTAL RESIZE -->
-		<div class="orizontalresize">
-			<div id="orizontalbotton"></div>
-		</div>
-		
-		<!-- VERTICAL RESIZE -->
-		<div class="verticalresize">
-			<div id="verticalbotton"></div>
-		</div>
-					
+							
 		<!-- Area Editor -->
 		<div id="areaeditor" class="areaeditor">
 			<div id="edit">
@@ -263,59 +197,7 @@
 	  <div id="dialogBackground" ng-show="sel.component"> </div>	
 	  <div id="dialogContainer">
 	  	<component-properties ng-show="sel.component"></component-properties>
-<!-- 	  	<form id="componentProperties" ng-show="sel.component"> -->
-<!-- 	  		<fieldset id="compFormFieldset" class="compFormFieldset"> -->
-<!-- 	  			<label class='compFormLabel' ng-show="sel.component.Component == 'dataset'"> -->
-<!-- 	  				URI</br> -->
-<!-- 	  				<input class='compFormInput' name='URI' type='text' size = '35' value='{{sel.component.URI}}' /></br> -->
-<!-- 	  			</label> -->
-<!-- 	  			<label class='compFormLabel'> -->
-<!-- 	  				Name  -->
-<!-- 	  				<input class='compFormInput' name='Name' type='text' size = '35' value='{{sel.component.Name}}' /></br></br> -->
-<!-- 	  			</label>  -->
-<!-- 	  			<label class='compFormLabel' ng-show="sel.component.allowsQuery()"> -->
-<!-- 	  				Query</br> -->
-<!-- 	  				<textarea name='Query' id='compQuery' class='compFormInput compFormTextarea'>{{sel.component.Query}}</textarea></br></br> -->
-<!-- 	  			</label> -->
-<!-- 	  			Input Table -->
-<!-- 	  			<div id="inputs" ng-show="sel.component.allowsMultipleInputs()"> -->
-<!-- 	  				<table id="tableInput"> -->
-<!-- 	  					<thead> -->
-<!-- 	  						<tr> -->
-<!-- 	  							<th class="inputsTableLabel">Name</th> -->
-<!-- 	  							<th class="inputsTableLabel">ID</th> -->
-<!-- 	  							<th class="inputsTableLabel">Shape</th> -->
-<!-- 	  							<th class="inputsTableLabel">Color</th> -->
-<!-- 	  						</tr> -->
-<!-- 	  					</thead> -->
-<!-- 	  					<tbody> -->
-<!-- 	  						<tr ng-repeat="input in sel.inputs"> -->
-<!-- 	  							<td><input type="text" name="name" ng-model="input.name" class="compFormInputsTableCell"/></td> -->
-<!-- 	  							<td>{{"#" + input.identifier}}</td> -->
-<!-- 	  							<td> -->
-<!-- 	  								<select name="shape" ng-model="input.shape" class="compFormInputsTableCell"> -->
-<!-- 	  									<option value="dot">Dot</option> -->
-<!-- 	  									<option value="rectangle">Rectangle</option> -->
-<!-- 	  								</select> -->
-<!-- 	  								<select name="color" ng-model="input.color" class="compFormInputsTableCell"> -->
-<!-- 	  									<option value="red">Red</option> -->
-<!-- 	  									<option value="yellow">Yellow</option> -->
-<!-- 	  									<option value="blue">Blue</option> -->
-<!-- 	  									<option value="black">Black</option> -->
-<!-- 	  									<option value="green">Green</option> -->
-<!-- 	  								</select> -->
-<!-- 	  								<button ng-click="sel.deleteInput(input);">x</button> -->
-<!-- 	  							</td> -->
-<!-- 	  						</tr> -->
-<!-- 	  					</tbody> -->
-<!-- 	  				</table> -->
-<!-- 	  				<button name='addrow' ng-click="sel.addInput();">Add Input</button> </br> </br> -->
-<!-- 	  			</div> -->
-<!-- 	  			<button type='submit' name='submit'>Save</button> -->
-<!-- 	  			<button type='reset' name='reset' ng-click="sel.close();">Cancel</button> -->
-<!-- 	  		</fieldset> -->
-<!-- 	  	</form> -->
 	  </div>
-
+     </div>
 	</body>
 </html>

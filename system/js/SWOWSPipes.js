@@ -1,5 +1,13 @@
 var SWOWSPipes = (function() {
 	
+	var scripts = document.getElementsByTagName("script");
+	var _scriptURI = scripts[scripts.length-1];
+	var _resourceRootURI = URI("..").absoluteTo(_scriptURI);
+	
+	var _resource = function(localPath) {
+		return URI(localPath).absoluteTo(_resourceRootURI);
+	}
+	
 	var mecomp = function (localName) {
 		return "http://rdf.myexperiment.org/ontologies/components/" + localName;
 	};
@@ -35,9 +43,11 @@ var SWOWSPipes = (function() {
 	var _Pipeline = function(storeURI, pipelineURI) {
 		this.storeURI = storeURI;
 		this.pipelineURI = pipelineURI;
-		if (this.storeURI && !this.pipelineURI)
+		if (this.storeURI != undefined
+				&& this.pipelineURI == undefined)
 			this.pipelineURI = this.storeURI;
-		if (!this.storeURI && this.pipelineURI)
+		if (this.storeURI == undefined
+				&& this.pipelineURI != undefined)
 			this.storeURI = URI(this.pipelineURI).pathname("/").toString();
 //		this.load();
 	};
@@ -187,7 +197,8 @@ var SWOWSPipes = (function() {
 	};
 	
 	var _getMainPipeline = function() {
-		if (!SWOWSPipes._mainPipeline && SWOWSPipes._mainPipelineURI)
+		if (!SWOWSPipes._mainPipeline
+				&& SWOWSPipes._mainPipelineURI != undefined)
 			SWOWSPipes._mainPipeline = new _Pipeline(SWOWSPipes._mainStoreURI, SWOWSPipes._mainPipelineURI);
 		return SWOWSPipes._mainPipeline; 
 	};
@@ -195,7 +206,7 @@ var SWOWSPipes = (function() {
 	var _load = function(callback, storeURI, pipelineURI) {
 		if (storeURI)
 			_setMainStoreURI(storeURI);
-		if (pipelineURI)
+		if (pipelineURI != undefined)
 			_setMainPipelineURI(pipelineURI);
 		_getMainPipeline().load(callback);
 	};
@@ -216,7 +227,8 @@ var SWOWSPipes = (function() {
 		setMainPipeline: _setMainPipeline,
 		load: _load,
 		save: _save,
-		play: _play
+		play: _play,
+		resource: _resource
 	};
 
 }());

@@ -45,6 +45,7 @@ button#pulsanti{
 
 div#statusBar {
 	position: absolute;
+	top: 112px;
 	leftt: 10px;
 	height: 20px;
 	width: 800px;
@@ -62,7 +63,9 @@ div#statusBar {
 /*"Buttons" layout*/
 div#pulsante{
 	position: absolute;
-	right: 10px;
+	top: 114px;
+/* 	right: 10px; */
+	margin-left: 1040px;
 	height: 20px;
 	width: 100px;
 	display:block;
@@ -92,13 +95,13 @@ img.pulsanti{
 /*Toolbar layout*/
 .barratools{
 	position:absolute;
-	top:35px;
-	left:5px;
-	right:auto;
-	bottom:5px;
+	top:135px;
+/* 	left:5px; */
+/* 	right:auto; */
+/* 	bottom:5px; */
 /* 	border: 1px solid #999999; */
-	width:220px;
-/* 	height:360px; */
+	width:195px;
+	height:225px;
 	overflow:auto;
 	display:block;
 	text-align:center;
@@ -106,12 +109,13 @@ img.pulsanti{
 }
 
 .componenti{
-	position:absolute;
-	top:0px;
-	left:0px;
-	right:5px;
-	height:300px;
+/* 	position:absolute; */
+/* 	top:0px; */
+/* 	left:0px; */
+/* 	right:5px; */
+/* 	height:225px; */
 	border: 1px solid #999999;
+	background-color: white;
 	overflow:auto;
 	display:block;
 	z-index:1;
@@ -271,10 +275,11 @@ p#paragrafo{
 	overflow:auto;
 	display:block;
 	position:absolute;
-	top:35px;
-	left:235px;
-	right:5px;
-	bottom:5px;
+	top:135px;
+	left:273px;
+	width: 937px;
+/* 	right:5px; */
+	bottom:110px;
 	border:1px solid #999999;
 /* 	height:450px;	 */
 	text-align: left;
@@ -309,17 +314,17 @@ p#paragrafo{
 
 /*Helper Area Layout*/
 .areahelper{
-	position:absolute;
-	top:340px;
-	left:5px;
-	right:5px;
-	bottom:5px;
-	border:1px solid #999999;
-	width:215px;
-	/*height:200px;*/
-	overflow:scroll;
-	display:block;
-	z-index:1;
+	display: none;
+/* 	position:absolute; */
+/* 	top:340px; */
+/* 	left:5px; */
+/* 	right:5px; */
+/* 	bottom:5px; */
+/* 	border:1px solid #999999; */
+/* 	width:215px; */
+/* 	overflow:scroll; */
+/* 	display:block; */
+/* 	z-index:1; */
 }
 
 /*SourceCode Area layout*/
