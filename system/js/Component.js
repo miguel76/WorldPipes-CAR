@@ -9,8 +9,12 @@ var mecomp = function (localName) {
 	return "http://rdf.myexperiment.org/ontologies/components/" + localName;
 }
 
-var swowscomp = function (localName) {
+var swowscompOld = function (localName) {
 	return "http://swows.org/components/" + localName;
+}
+
+var swowscomp = function (localName) {
+	return "http://swows.org/2014/09/components#" + localName;
 }
 
 var rdf = function (localName) {
@@ -146,6 +150,10 @@ Component.factory = {
 					 swowscomp("TransformProcessor"),
 					 swowscomp("Store"),
 					 swowscomp("URISourceProcessor"),
+					 swowscompOld("UnionProcessor"),
+					 swowscompOld("TransformProcessor"),
+					 swowscompOld("Store"),
+					 swowscompOld("URISourceProcessor"),
 					 mecomp("DataflowProcessor")].indexOf(objectType) >= 0 )
 				return Component.fromRDF;
 			return null;
@@ -187,18 +195,22 @@ Component.fromRDF = function(graph, componentURI) {
 						code,"output","","",title,null,[],
 						x_position,y_position);
 			case swowscomp("UnionProcessor"):
+			case swowscompOld("UnionProcessor"):
 				return new ComponentClass(
 						code,"union",title,null,title,null,[],
 						x_position,y_position);
 			case swowscomp("TransformProcessor"):
+			case swowscompOld("TransformProcessor"):
 				return new ComponentClass(
 						code,"construct",title,null,title,proc_script || "CONSTRUCT{?s ?p ?o}\nWHERE{?s ?p ?o}",[],
 						x_position,y_position);
 			case swowscomp("Store"):
+			case swowscompOld("Store"):
 				return new ComponentClass(
 						code,"updatable",title,null,title,proc_script || "",[],
 						x_position,y_position);
 			case swowscomp("URISourceProcessor"):
+			case swowscompOld("URISourceProcessor"):
 				return new ComponentClass(
 						code,"dataset","",proc_value || "",title,null,null,
 						x_position,y_position);

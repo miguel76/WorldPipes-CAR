@@ -6,8 +6,12 @@ var mecomp = function (localName) {
 	return "http://rdf.myexperiment.org/ontologies/components/" + localName;
 }
 
-var swowscomp = function (localName) {
+var swowscompOld = function (localName) {
 	return "http://swows.org/components/" + localName;
+}
+
+var swowscomp = function (localName) {
+	return "http://swows.org/2014/09/components#" + localName;
 }
 
 var rdf = function (localName) {
@@ -176,7 +180,9 @@ Endpoint.inputFromRDF = function(graph, endpointURI, componentObject) {
 			name: propLiteralValue(graph, endpointURI, dcterms("title")),
 			shape: localFromGraphicURI(propURI(graph, endpointURI, graphic("shape_named"))),
 			color: lowerCase(localFromGraphicURI(propURI(graph, endpointURI, graphic("color_named")))),
-			inDefault: graph.find(endpointURI, rdf("type"), swowscomp("isInDefaultInput")).length > 0
+			inDefault:
+				graph.find(endpointURI, rdf("type"), swowscomp("isInDefaultInput")).length > 0
+				|| graph.find(endpointURI, rdf("type"), swowscompOld("isInDefaultInput")).length > 0
 	}
 	return Endpoint.createInputEndpoint(componentObject, properties);
 }
